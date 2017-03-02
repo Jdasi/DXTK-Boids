@@ -50,9 +50,9 @@ HRESULT Application::InitWindow( HINSTANCE _hInstance, int _nCmdShow )
     // Create window
     m_hInst = _hInstance;
 #ifdef DEBUG
-	RECT rc = { 0, 0, 800, 600 };
+	RECT rc = { 0, 0, 1024, 768 };
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-	m_hWnd = CreateWindow(L"GEAWindowClass", L"GEA GROUP PROJECT", WS_OVERLAPPEDWINDOW,
+	m_hWnd = CreateWindow(L"GEAWindowClass", L"DXTK Boids Simulation", WS_OVERLAPPEDWINDOW,
 		600, 100, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, _hInstance,
 		nullptr);
 #else
@@ -61,7 +61,7 @@ HRESULT Application::InitWindow( HINSTANCE _hInstance, int _nCmdShow )
 	//Go to Fullscreen in Release
 	hWnd_ = CreateWindowEx(NULL,
 		L"GEAWindowClass",
-		L"GEA GROUP PROJECT",
+		L"DXTK Boids Simulation",
 		WS_EX_TOPMOST | WS_POPUP,    // fullscreen values
 		0, 0,    // the starting x and y positions should be 0
 		SCREEN_WIDTH, SCREEN_HEIGHT,
@@ -78,9 +78,6 @@ HRESULT Application::InitWindow( HINSTANCE _hInstance, int _nCmdShow )
 
 	//actually display the window
     ShowWindow( m_hWnd, _nCmdShow );
-
-	//Hide the mouse pointer
-	ShowCursor(false);
 	
     return S_OK;
 }

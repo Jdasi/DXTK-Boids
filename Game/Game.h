@@ -39,6 +39,8 @@ protected:
 	DWORD play_time_; //amount of time since the game started
     HWND hWnd_;
 
+    float test_float = 0;
+
     std::unique_ptr<InputHandler> input_handler_;
 
 	Camera* camera_;            //principle camera

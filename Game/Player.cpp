@@ -13,34 +13,17 @@ Player::Player(const std::string& _file_name, ID3D11Device* _d3d_device, IEffect
 
 void Player::tick(GameData* _GD)
 {
-	switch (_GD->game_state)
+	// Keyboard controls.
+	Vector3 forwardMove = 40.0f * Vector3::Forward;
+	Matrix rotMove = Matrix::CreateRotationY(yaw_);
+	forwardMove = Vector3::Transform(forwardMove, rotMove);
+	if (_GD->input_handler->get_button(DIK_W))
 	{
-	case GS_PLAY_MAIN_CAM:
-	{
-		{
-			// Mouse controls.
-			float speed = 10.0f;
-			acceleration_.x += speed * _GD->input_handler->get_mouse_state().lX;
-			acceleration_.z += speed * _GD->input_handler->get_mouse_state().lY;
-			break;
-		}
+		acceleration_ += forwardMove;
 	}
-	case GS_PLAY_TPS_CAM:
+	if (_GD->input_handler->get_button(DIK_S))
 	{
-		// Keyboard controls.
-		Vector3 forwardMove = 40.0f * Vector3::Forward;
-		Matrix rotMove = Matrix::CreateRotationY(yaw_);
-		forwardMove = Vector3::Transform(forwardMove, rotMove);
-		if (_GD->input_handler->get_button(DIK_W))
-		{
-			acceleration_ += forwardMove;
-		}
-		if (_GD->input_handler->get_button(DIK_S))
-		{
-			acceleration_ -= forwardMove;
-		}
-		break;
-	}
+		acceleration_ -= forwardMove;
 	}
 
 	// Player rotation.

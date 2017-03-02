@@ -2,6 +2,7 @@
 #include "ObjectList.h"
 
 #include "SimpleMath.h"
+#include <AntTweakBar.h>
 
 #include <windows.h>
 #include <time.h>
@@ -10,7 +11,6 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
     : play_time_()
     , hWnd_(_hWnd)
 {
-
 	//set up audio
 	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	AUDIO_ENGINE_FLAGS eflags = AudioEngine_Default;
@@ -28,6 +28,12 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
 
 	//seed the random number generator
 	srand((UINT)time(NULL));
+
+    // Ant Tweak Bar initialisation.
+    TwInit(TW_DIRECT3D11, _d3d_device); // for Direct3D 11
+    TwWindowSize(1024, 768);
+    TwBar *myBar = TwNewBar("Test");
+    TwAddVarRW(myBar, "Test Float", TW_TYPE_FLOAT, &test_float, "");
 
 	//Direct Input Stuff
     input_handler_ = std::make_unique<InputHandler>(_hWnd, _hInstance);
@@ -120,6 +126,7 @@ Game::~Game()
 
 	delete DD2D_;
 
+    TwTerminate();
 }
 
 bool Game::tick() 
@@ -143,11 +150,6 @@ bool Game::tick()
 	{
 		return false;
 	}
-
-	//lock the cursor to the centre of the window
-	RECT window;
-	GetWindowRect(hWnd_, &window);
-	SetCursorPos((window.left + window.right) >> 1, (window.bottom + window.top) >> 1);
 
 	//calculate frame time-step dt for passing down to game objects
 	DWORD currentTime = GetTickCount();
@@ -230,4 +232,6 @@ void Game::draw(ID3D11DeviceContext* _d3d_immediate_context)
 
 	//drawing text screws up the Depth Stencil State, this puts it back again!
     _d3d_immediate_context->OMSetDepthStencilState(states_->DepthDefault(), 0);
+
+    TwDraw();
 };
