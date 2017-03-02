@@ -1,17 +1,15 @@
 #include "Tree.h"
 #include "TreeBit.h"
 
-
-Tree::Tree(int _levels, int _perLevel, float _scale, Vector3 _shift, float _lean, string _bitFileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF)
+Tree::Tree(int _levels, int _per_level, float _scale, Vector3 _shift, float _lean, const std::string& _bit_file_name, ID3D11Device* _pd3dDevice, IEffectFactory* _EF)
 {
-	//recursively create the tree
-	new TreeBit(_levels,_perLevel,-1,_scale,_shift,_lean,_bitFileName,_pd3dDevice,_EF, nullptr, &m_Tree);
+	// Recursively create the tree.
+	new TreeBit(_levels, _per_level, -1, _scale, _shift, _lean, _bit_file_name, _pd3dDevice, _EF, nullptr, &m_Tree);
 }
 
 Tree::~Tree()
 {
-	//get rid of the tree parts here
-	for (list<TreeBit *>::iterator it = m_Tree.begin(); it != m_Tree.end(); it++)
+	for (std::list<TreeBit *>::iterator it = m_Tree.begin(); it != m_Tree.end(); ++it)
 	{
 		delete (*it);
 	}
@@ -20,20 +18,20 @@ Tree::~Tree()
 }
 
 
-void Tree::Tick(GameData* _GD)
+void Tree::tick(GameData* _GD)
 {
 	//update all tree parts
-	for (list<TreeBit *>::iterator it = m_Tree.begin(); it != m_Tree.end(); it++)
+	for (std::list<TreeBit *>::iterator it = m_Tree.begin(); it != m_Tree.end(); it++)
 	{
-		(*it)->Tick(_GD);
+		(*it)->tick(_GD);
 	}
 }
 
-void Tree::Draw(DrawData* _DD)
+void Tree::draw(DrawData* _DD)
 {
 	//draw all tree parts
-	for (list<TreeBit *>::iterator it = m_Tree.begin(); it != m_Tree.end(); it++)
+	for (std::list<TreeBit *>::iterator it = m_Tree.begin(); it != m_Tree.end(); it++)
 	{
-		(*it)->Draw(_DD);
+		(*it)->draw(_DD);
 	}
 }

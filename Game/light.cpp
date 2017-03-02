@@ -1,23 +1,39 @@
-#include "light.h"
-#include "gamedata.h"
+#include "Light.h"
+#include "GameData.h"
 
-Light::Light(Vector3 _pos, Color _colour, Color _ambientColour)
+Light::Light(Vector3 _pos, Color _colour, Color _ambient_colour)
+    : colour_ (_colour)
+    , ambient_colour_(_ambient_colour)
 {
-	m_pos = _pos;
-	m_colour = _colour;
-	m_ambientColour = _ambientColour;
+	pos_ = _pos;
 }
 
-Light::~Light()
-{
-}
-
-void Light::Tick(GameData* _GD)
+void Light::tick(GameData* _GD)
 {
 	//not really needed but spins the light around to show off the lambert default VBGO shader
 	/*static float time = 0.0f;
-	time += _GD->m_dt;
-	m_pos.x = 100.0f * cos(time);
-	m_pos.z = 100.0f * sin(time);
+	time += _GD->delta_time;
+	pos.x = 100.0f * cos(time);
+	pos.z = 100.0f * sin(time);
 	if (time > XM_2PI) time -= XM_2PI;*/
+}
+
+void Light::set_colour(Color _colour)
+{
+    colour_ = _colour;
+}
+
+Color Light::get_colour() const
+{
+    return colour_;
+}
+
+void Light::set_ambient_colour(Color _colour)
+{
+    ambient_colour_ = _colour;
+}
+
+Color Light::get_ambient_colour() const
+{
+    return ambient_colour_;
 }

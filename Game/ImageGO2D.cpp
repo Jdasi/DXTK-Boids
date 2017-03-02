@@ -1,51 +1,46 @@
 #include "ImageGO2D.h"
-#include "DDSTextureLoader.h"
 #include "DrawData2D.h"
 #include "GameData.h"
-#include "helper.h"
+#include "StringUtils.h"
 
-ImageGO2D::ImageGO2D(string _fileName, ID3D11Device* _GD) :m_pTextureRV(nullptr)
+#include "DDSTextureLoader.h"
+
+ImageGO2D::ImageGO2D(const std::string& _file_name, ID3D11Device* _GD)
+    : texture_rv(nullptr)
 {
-	string fullfilename =
+	std::string fullfilename =
 #if DEBUG
 		"../Debug/"
 #else
 		"../Release/"
 #endif
-		+ _fileName + ".dds";
-	HRESULT hr = CreateDDSTextureFromFile(_GD, Helper::charToWChar(fullfilename.c_str()), nullptr, &m_pTextureRV);
+		+ _file_name + ".dds";
+	HRESULT hr = CreateDDSTextureFromFile(_GD, StringUtils::charToWChar(fullfilename.c_str()), nullptr, &texture_rv);
 
 	//this nasty thing is required to find out the size of this image!
 	ID3D11Resource *pResource;
 	D3D11_TEXTURE2D_DESC Desc;
-	m_pTextureRV->GetResource(&pResource);
+	texture_rv->GetResource(&pResource);
 	((ID3D11Texture2D *)pResource)->GetDesc(&Desc);
 
-	m_origin = 0.5f*Vector2((float)Desc.Width, (float)Desc.Height);//around which rotation and scaing is done
-
+	origin_ = 0.5f*Vector2((float)Desc.Width, (float)Desc.Height);//around which rotation and scaing is done
 }
 
 ImageGO2D::~ImageGO2D()
 {
-	if (m_pTextureRV)
+	if (texture_rv)
 	{
-		m_pTextureRV->Release();
-		m_pTextureRV = nullptr;
+		texture_rv->Release();
+		texture_rv = nullptr;
 	}
 }
 
-void ImageGO2D::Tick(GameData* _GD)
+void ImageGO2D::tick(GameData* _GD)
 {
-	//spins!
-	m_rotation += _GD->m_dt;
+
 }
 
-
-
-void ImageGO2D::Draw(DrawData2D* _DD)
+void ImageGO2D::draw(DrawData2D* _DD)
 {
-	//nullptr can be changed to a RECT* to define what area of this image to grab
-	//you can also add an extra value at the end to define layer depth
-	//right click and "Go to Defintion/Declaration" to see other version of this in DXTK
-	_DD->m_Sprites->Draw(m_pTextureRV, m_pos, nullptr, m_colour, m_rotation, m_origin, m_scale, SpriteEffects_None);
+	_DD->sprites->Draw(texture_rv, pos_, nullptr, colour_, rot_, origin_, scale_, SpriteEffects_None);
 }

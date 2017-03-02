@@ -1,8 +1,9 @@
 #include "MarchCubes.h"
-#include "vertex.h"
+#include "Vertex.h"
+#include "GameData.h"
+
 #include <vector>
 #include <fstream>
-#include "GameData.h"
 
 //Marching Cube stuff: http://paulbourke.net/geometry/polygonise/
 typedef Vector3 XYZ;
@@ -427,9 +428,9 @@ void VBMarchCubes::init(Vector3 _min, Vector3 _max, Vector3 _size, float _isoLev
 
 void VBMarchCubes::init(Vector3 _size, float _isolevel, Vector3 _scale, Vector3 _origin, ID3D11Device* _GD)
 {
-	m_scale = Vector3(1.0f / _scale.x, 1.0f / _scale.y, 1.0f / _scale.z);
+	scale_ = Vector3(1.0f / _scale.x, 1.0f / _scale.y, 1.0f / _scale.z);
 	std::vector<myVertex> m_vertices;
-	m_numPrims=0; 
+	num_prims_=0; 
 	TRIANGLE newTriangles[5];
 	for (int i = 0; i < _size.x; i++)
 	{
@@ -445,23 +446,23 @@ void VBMarchCubes::init(Vector3 _size, float _isolevel, Vector3 _scale, Vector3 
 				}
 				
 				int newTris = Polygonise(GC, _isolevel, &newTriangles[0]);
-				m_numPrims += newTris;
+				num_prims_ += newTris;
 				for (int l = 0; l < newTris; l++)
 				{
 					for (int m = 0; m < 3;m++)
 					{
 						myVertex newVert;
-						newVert.Pos = newTriangles[l].p[m];
+						newVert.pos = newTriangles[l].p[m];
 						m_vertices.push_back(newVert);
 					}					
 				}
 			}
 		}
 	}
-	int numVerts = m_numPrims * 3;
+	int numVerts = num_prims_ * 3;
 
 	//calculate the normals for the basic lighting in the base shader
-	for (unsigned int i = 0; i<m_numPrims; i++)
+	for (unsigned int i = 0; i<num_prims_; i++)
 	{
 		int V1 = 3 * i;
 		int V2 = 3 * i + 1;
@@ -469,14 +470,14 @@ void VBMarchCubes::init(Vector3 _size, float _isolevel, Vector3 _scale, Vector3 
 
 		//build normals
 		Vector3 norm;
-		Vector3 vec2 = m_vertices[V1].Pos - m_vertices[V2].Pos;
-		Vector3 vec1 = m_vertices[V3].Pos - m_vertices[V2].Pos;
+		Vector3 vec2 = m_vertices[V1].pos - m_vertices[V2].pos;
+		Vector3 vec1 = m_vertices[V3].pos - m_vertices[V2].pos;
 		norm = vec1.Cross(vec2);
 		norm.Normalize();
 
-		m_vertices[V1].Norm = norm;
-		m_vertices[V2].Norm = norm;
-		m_vertices[V3].Norm = norm;
+		m_vertices[V1].norm = norm;
+		m_vertices[V2].norm = norm;
+		m_vertices[V3].norm = norm;
 	}
 
 	int* indices = new int[numVerts];
@@ -485,8 +486,8 @@ void VBMarchCubes::init(Vector3 _size, float _isolevel, Vector3 _scale, Vector3 
 	for (int i = 0; i<numVerts; i++)
 	{
 		indices[i] = i;
-		m_vertices[i].texCoord = Vector2::One;
-		m_vertices[i].Color = Color(1.0, 0.0, 0.0, 1.0);
+		m_vertices[i].tex_coord = Vector2::One;
+		m_vertices[i].color = Color(1.0, 0.0, 0.0, 1.0);
 	}
 
 	BuildIB(_GD, indices);
@@ -499,13 +500,13 @@ void VBMarchCubes::init(Vector3 _size, float _isolevel, Vector3 _scale, Vector3 
 	//build index buffer
 	ZeroMemory(&bd, sizeof(bd));
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(int) * 3 * m_numPrims;
+	bd.ByteWidth = sizeof(int) * 3 * num_prims_;
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	InitData.pSysMem = indices;
-	hr = _GD->CreateBuffer(&bd, &InitData, &m_IndexBuffer);
+	hr = _GD->CreateBuffer(&bd, &InitData, &index_buffer_);
 
-	m_IndexFormat = DXGI_FORMAT_R32_UINT;
+	index_format_ = DXGI_FORMAT_R32_UINT;
 
 	BuildVB(_GD, numVerts, &m_vertices[0]);
 
@@ -517,11 +518,11 @@ void VBMarchCubes::init(Vector3 _size, float _isolevel, Vector3 _scale, Vector3 
 		output << "g TEST\n\n";
 		for (int i = 0; i < numVerts; i++)
 		{
-			output << "v " << m_vertices[i].Pos.x << " " << m_vertices[i].Pos.y << " " << m_vertices[i].Pos.z << "\n";
+			output << "v " << m_vertices[i].pos.x << " " << m_vertices[i].pos.y << " " << m_vertices[i].pos.z << "\n";
 		}
 		int count = 0;
 		output << "\n";
-		for (unsigned int i = 0; i < m_numPrims; i++)
+		for (unsigned int i = 0; i < num_prims_; i++)
 		{
 			output << "f " << 1+indices[count++] << " " << 1 + indices[count++] << " " << 1 + indices[count++] << "\n";
 		}
@@ -545,12 +546,12 @@ void VBMarchCubes::init(Vector3 _size, float _isolevel, Vector3 _scale, Vector3 
 	rasterDesc.SlopeScaledDepthBias = 0.0f;
 
 	// Create the rasterizer state from the description we just filled out.
-	hr = _GD->CreateRasterizerState(&rasterDesc, &m_pRasterState);
+	hr = _GD->CreateRasterizerState(&rasterDesc, &raster_state_);
 
 	//use the 2 sided version
 	ID3DBlob* pPixelShaderBuffer = NULL;
 	hr = CompileShaderFromFile(L"../Assets/shader.fx", "PS2", "ps_4_0_level_9_1", &pPixelShaderBuffer);
-	_GD->CreatePixelShader(pPixelShaderBuffer->GetBufferPointer(), pPixelShaderBuffer->GetBufferSize(), NULL, &m_pPixelShader);
+	_GD->CreatePixelShader(pPixelShaderBuffer->GetBufferPointer(), pPixelShaderBuffer->GetBufferSize(), NULL, &pixel_shader_);
 
 }
 
@@ -564,7 +565,7 @@ float VBMarchCubes::function(Vector3 _pos)
 	//VBMC->init(Vector3(-8.5, -8.5, -17), Vector3(8.5, 8.5,23), Vector3(100, 100, 100), 0.01, _pd3dDevice);
 }
 
-void VBMarchCubes::Tick(GameData* _GD)
+void VBMarchCubes::tick(GameData* _GD)
 {
-	VBGO::Tick(_GD);
+	VBGO::tick(_GD);
 }

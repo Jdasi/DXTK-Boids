@@ -1,5 +1,4 @@
-#ifndef _PILLOW_H_
-#define _PILLOW_H_
+#pragma once
 #include "VBCube.h"
 
 //=================================================================
@@ -14,22 +13,20 @@ public:
 protected:
 	virtual void Transform() override
 	{
-		for (unsigned int i = 0; i<m_numPrims * 3; i++)
+		for (unsigned int i = 0; i<num_prims_ * 3; i++)
 		{
-			m_vertices[i].Color *= ((i / 3) % 2) ? 1.0f : 0.5f;
-			m_vertices[i].Color.w = 1.0f;
+			vertices_[i].color *= ((i / 3) % 2) ? 1.0f : 0.5f;
+			vertices_[i].color.w = 1.0f;
 
-			Vector3 vertPos = m_vertices[i].Pos;
-			Vector3 spherePos = m_vertices[i].Pos;
+			Vector3 vertPos = vertices_[i].pos;
+			Vector3 spherePos = vertices_[i].pos;
 
 			spherePos.Normalize();
 
-			Vector3 newPos = 0.5f * (vertPos + (float)(m_size - 1) * spherePos);
+			Vector3 newPos = 0.5f * (vertPos + (float)(size_ - 1) * spherePos);
 
-			m_vertices[i].Pos = newPos;
+			vertices_[i].pos = newPos;
 		}
 	}
 
 };
-
-#endif

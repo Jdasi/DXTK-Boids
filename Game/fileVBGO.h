@@ -1,5 +1,4 @@
-#ifndef _FILE_VB_GO_H_
-#define _FILE_VB_GO_H_
+#pragma once
 #include "VBGO.h"
 
 //=================================================================
@@ -10,14 +9,11 @@
 class FileVBGO : public VBGO
 {
 public:
-	FileVBGO(std::string _fileName, ID3D11Device* _GD);
-	virtual ~FileVBGO();
+	FileVBGO(const std::string& _file_name, ID3D11Device* _GD);
+	virtual ~FileVBGO() = default;
 
 private:
+	bool tex_coords_;
+	bool colour_;
 
-	//data supplied by file tex coordinates or colours
-	bool m_texCoords;
-	bool m_colour;
 };
-
-#endif

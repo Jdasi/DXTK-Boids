@@ -1,15 +1,13 @@
-#ifndef _GAME_OBJECT_H
-#define _GAME_OBJECT_H
+#pragma once
+#include "CommonStates.h"
+#include "SimpleMath.h"
 
 //=================================================================
 //Base Game Object Class
 //=================================================================
 
-#include "CommonStates.h"
-#include "SimpleMath.h"
-
 using namespace DirectX;
-using namespace DirectX::SimpleMath;
+using namespace SimpleMath;
 
 class Camera;
 struct ID3D11DeviceContext;
@@ -20,54 +18,51 @@ class GameObject
 {
 public:
 	GameObject();
-	virtual ~GameObject();
+	virtual ~GameObject() = default;
 
-	virtual void Tick(GameData* _GD);
-	virtual void Draw(DrawData* _DD) = 0;
+	virtual void tick(GameData* _GD);
+	virtual void draw(DrawData* _DD) = 0;
 
-	//getters
-	Vector3		GetPos() { return m_pos; }
-	Vector3		GetScale() { return m_scale; }
+    Vector3 get_pos() const;
+    void set_pos(Vector3 _pos);
 
-	float		GetPitch() { return m_pitch; }
-	float		GetYaw() { return m_yaw; }
-	float		GetRoll() { return m_roll; }
+    Vector3 get_scale() const;
+    void set_scale(float _scale);
+    void set_scale(float _x, float _y, float _z);
+    void set_scale(Vector3 _scale);
 
-	bool		IsPhysicsOn() { return m_physicsOn; }
-	float		GetDrag() { return m_drag; }
+    float get_yaw() const;
+    void set_yaw(float _yaw);
 
-	//setters
-	void		SetPos(Vector3 _pos) { m_pos = _pos; }
+    float get_pitch() const;
+    void set_pitch(float _pitch);
 
-	void		SetScale(float _scale) { m_scale = _scale * Vector3::One; }
-	void		SetScale(float _x, float _y, float _z) { m_scale = Vector3(_x, _y, _z); }
-	void		SetScale(Vector3 _scale) { m_scale = _scale; }
+    float get_roll() const;
+    void set_roll(float _roll);
 
-	void		SetPitch(float _pitch) { m_pitch = _pitch; }
-	void		SetYaw(float _yaw) { m_yaw = _yaw; }
-	void		SetRoll(float _roll) { m_roll = _roll; }
-	void		SetPitchYawRoll(float _pitch, float _yaw, float _roll) { m_pitch = _pitch; m_yaw = _yaw; m_roll = _roll; }
+    void set_yaw_pitch_roll(float _yaw, float _pitch, float _roll);
 
-	void		SetPhysicsOn(bool _physics) { m_physicsOn = _physics; }
-	void		TogglePhysics() { m_physicsOn = !m_physicsOn; }
-	void		SetDrag(float _drag) { m_drag = _drag; }
+    bool is_physics_enabled() const;
+    void set_physics_enabled(bool _physics);
+    void toggle_physics();
 
+    float get_drag() const;
+    void set_drag(float _drag);
 
 protected:
-
-	//World transform/matrix of this GO and it components
-	Matrix m_worldMat;
-	Matrix m_rotMat;
-	Matrix m_fudge;
-	Vector3 m_pos;
-	float m_pitch, m_yaw, m_roll;
-	Vector3 m_scale;
+    Vector3 pos_;
+    Vector3 scale_;
+    float yaw_;
+    float pitch_;
+    float roll_;
+    Matrix rot_;
+	Matrix world_;
+	Matrix fudge_;
 
 	//very basic physics
-	bool m_physicsOn = false;
-	float m_drag = 0.0f;
-	Vector3 m_vel = Vector3::Zero;
-	Vector3 m_acc = Vector3::Zero;
-};
+	bool physics_enabled_ = false;
+	float drag_ = 0.0f;
+	Vector3 velocity_ = Vector3::Zero;
+	Vector3 acceleration_ = Vector3::Zero;
 
-#endif
+};

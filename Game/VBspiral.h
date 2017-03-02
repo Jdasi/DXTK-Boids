@@ -1,5 +1,4 @@
-#ifndef _SPIRAL_H_
-#define _SPIRAL_H_
+#pragma once
 #include "VBCube.h"
 
 //=================================================================
@@ -10,20 +9,19 @@ class VBSpiral : public VBCube
 {
 public:
 	VBSpiral(){};
+
 protected:
 	virtual void Transform() override
 	{
-		for (int i = 0; i<m_numPrims * 3; i++)
+		for (int i = 0; i<num_prims_ * 3; i++)
 		{
-			Vector3 vertPos = m_vertices[i].Pos;
+			Vector3 vertPos = vertices_[i].pos;
 
 			Matrix rotMat = Matrix::CreateFromYawPitchRoll(XM_PI*(vertPos.y + 5.0f) / 20.0f, 0.0f, 0.0f);
 			
 			Vector3 newPos = Vector3::Transform(vertPos, rotMat);
 
-			m_vertices[i].Pos = newPos;
+			vertices_[i].pos = newPos;
 		}
 	}
 };
-
-#endif

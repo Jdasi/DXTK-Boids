@@ -1,5 +1,4 @@
-#ifndef _PLAYER_H_
-#define _PLAYER_H_
+#pragma once
 #include "CMOGO.h"
 
 //=================================================================
@@ -8,15 +7,13 @@
 
 class Player : public CMOGO
 {
-
 public:
-	Player(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF);
-	~Player();
+	Player(const std::string& _file_name, ID3D11Device* _d3d_device, IEffectFactory* _EF);
+	~Player() = default;
 
-	virtual void Tick(GameData* _GD) override;
+	virtual void tick(GameData* _GD) override;
 
 protected:
 
-};
 
-#endif
+};

@@ -1,6 +1,5 @@
-#ifndef _VB_GO_H_
-#define _VB_GO_H_
-#include "gameobject.h"
+#pragma once
+#include "GameObject.h"
 #include "ConstantBuffer.h"
 
 //=================================================================
@@ -15,58 +14,44 @@ public:
 	VBGO();
 	virtual ~VBGO();
 
-	virtual void Tick(GameData* _GD) override;
-	virtual void Draw(DrawData* _DD) override;
+	virtual void tick(GameData* _GD) override;
+	virtual void draw(DrawData* _DD) override;
 
 	//set up and then destroy all static default render stuff for VBGOs
-	static void Init(ID3D11Device* _GD);//Graphics Device NOT GameData
-	static void CleanUp();
+	static void init(ID3D11Device* _graphics_device);
+	static void clean_up();
 
 	//Update static const buffer required for deafult rendering
-	static void UpdateConstantBuffer(DrawData* _DD);
+	static void update_constant_buffer(DrawData* _DD);
 
 protected:
-
 	//Direct X information for the model for this GameObject
-	ID3D11Buffer* m_VertexBuffer;
-	ID3D11Buffer* m_IndexBuffer;
-	DXGI_FORMAT m_IndexFormat = DXGI_FORMAT_R16_UINT;
-	UINT m_numPrims;
+	ID3D11Buffer* vertex_buffer_;
+	ID3D11Buffer* index_buffer_;
+	DXGI_FORMAT index_format_;
+	UINT num_prims_;
 
 	//vertex topology in VB
-	D3D_PRIMITIVE_TOPOLOGY m_topology;
+	D3D_PRIMITIVE_TOPOLOGY topology_;
 
-	//default vertexshader
-	static ID3D11VertexShader*     s_pVertexShader;
-	//default vertex layout
-	static ID3D11InputLayout*      s_pVertexLayout;
-	//default pixelshader
-	static ID3D11PixelShader*      s_pPixelShader;
-	//default texture (white square)
-	static ID3D11ShaderResourceView* s_pTextureRV;
-	//deafult const buffer
-	static ID3D11Buffer*           s_pConstantBuffer;	//GPU side
-	static ConstantBuffer*			s_pCB;				//CPU side
-	//default sampler
-	static ID3D11SamplerState*		s_pSampler;
-	//default raster state
-	static ID3D11RasterizerState*  s_pRasterState;
+	static ID3D11VertexShader* VERTEX_SHADER;
+	static ID3D11InputLayout* VERTEX_LAYOUT;
+	static ID3D11PixelShader* PIXEL_SHADER;
+	static ID3D11ShaderResourceView* TEXTURE_RV;
+	static ID3D11Buffer* CONSTANT_BUFFER;	        //GPU side
+	static ConstantBuffer* CPU_CB;			        //CPU side
+	static ID3D11SamplerState* SAMPLER;
+	static ID3D11RasterizerState* RASTER_STATE;
 
-	//my vertexshader
-	ID3D11VertexShader*     m_pVertexShader;
-	//my vertex layout
-	ID3D11InputLayout*      m_pVertexLayout;
-	//my pixelshader
-	ID3D11PixelShader*      m_pPixelShader;
-	//my texture
-	ID3D11ShaderResourceView* m_pTextureRV;
-	//my const buffer
-	ID3D11Buffer*           m_pConstantBuffer; //GPU side
-	void*					m_pCB;//CPU side
-								  //my sampler
-	ID3D11SamplerState*		m_pSampler;
-	//my raster state
-	ID3D11RasterizerState*  m_pRasterState;
+	ID3D11VertexShader* vertex_shader_;
+	ID3D11InputLayout* vertex_layout_;
+	ID3D11PixelShader* pixel_shader_;
+	ID3D11ShaderResourceView* texture_rv_;
+	ID3D11Buffer* constant_buffer_;                 //GPU side
+	void* cpu_cb_;                                  //CPU side
+
+	ID3D11SamplerState* sampler_;
+	ID3D11RasterizerState* raster_state_;
 
 	//once populated build an Index Buffer
 	void BuildIB(ID3D11Device* _GD, void* _indices);
@@ -76,7 +61,4 @@ protected:
 
 	static HRESULT CompileShaderFromFile(WCHAR* _szFileName, LPCSTR _szEntryPoint, LPCSTR _szShaderModel, ID3DBlob** _ppBlobOut);
 
-
 };
-
-#endif

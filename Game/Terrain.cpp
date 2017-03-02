@@ -1,17 +1,14 @@
-#include "terrain.h"
+#include "Terrain.h"
 
-Terrain::Terrain(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF, Vector3 _pos, float _pitch, float _yaw, float _roll, Vector3 _scale) :CMOGO(_fileName, _pd3dDevice, _EF)
+Terrain::Terrain(const std::string& _file_name, ID3D11Device* _d3d_device, IEffectFactory* _EF, Vector3 _pos, float _yaw, float _pitch, float _roll, Vector3 _scale)
+    : CMOGO(_file_name, _d3d_device, _EF)
 {
-	m_pos = _pos;
-	m_pitch = _pitch;
-	m_roll = _roll;
-	m_yaw = _yaw;
-	m_scale = _scale;
+	pos_ = _pos;
+    yaw_ = _yaw;
+	pitch_ = _pitch;
+	roll_ = _roll;
+	scale_ = _scale;
 
-	GameObject::Tick(nullptr); //update my world_transform
-}
-
-Terrain::~Terrain()
-{
-	//Nothing additional here but add this just in case
+    // Update world transform.
+	GameObject::tick(nullptr);
 }

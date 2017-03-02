@@ -1,6 +1,5 @@
-#ifndef _LIGHT_H_
-#define _LIGHT_H_
-#include "gameobject.h"
+#pragma once
+#include "GameObject.h"
 
 //=================================================================
 //a simple light defined by a colour and and ambient colour and 
@@ -13,25 +12,20 @@ struct DrawData;
 class Light : public GameObject
 {
 public:
-	Light(Vector3 _pos, Color _colour, Color _ambientColour);
-	~Light();
+	Light(Vector3 _pos, Color _colour, Color _ambient_colour);
+	~Light() = default;
 
-	virtual void Draw(DrawData* _DD) override { _DD; }; //draws nothing
+	virtual void draw(DrawData* _DD) override {};
+	virtual void tick(GameData* _GD) override;
 
-	virtual void Tick(GameData* _GD) override;
+    void set_colour(Color _colour);
+    Color get_colour() const;
 
-	//getters
-	Color GetColour() { return m_colour; }
-	Color GetAmbCol() { return m_ambientColour; }
-
-	//setters
-	void SetColor(Color _colour) { m_colour = _colour; }
-	void SetAmbCol(Color _colour) { m_ambientColour = _colour; }
+    void set_ambient_colour(Color _colour);
+    Color get_ambient_colour() const;
 
 protected:
+	Color colour_;
+	Color ambient_colour_;
 
-	Color m_colour;
-	Color m_ambientColour;
 };
-
-#endif

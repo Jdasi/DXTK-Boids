@@ -1,5 +1,4 @@
-#ifndef _DRAW_STATE_H_
-#define _DRAW_STATE_H_
+#pragma once
 
 //=================================================================
 //Data to be passed by game to all Game Objects via Draw 
@@ -14,11 +13,8 @@ class Light;
 
 struct DrawData
 {
-	ID3D11DeviceContext* m_pd3dImmediateContext;
-	CommonStates* m_states;
-	Camera* m_cam;
-	Light* m_light;
-
+	ID3D11DeviceContext* d3d_immediate_context;
+	CommonStates* states;
+	Camera* camera;
+	Light* light;
 };
-
-#endif

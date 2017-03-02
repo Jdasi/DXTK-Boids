@@ -1,20 +1,17 @@
 #include "TextGO2D.h"
 #include "DrawData2D.h"
-#include "helper.h"
+#include "StringUtils.h"
 
-TextGO2D::TextGO2D(string _text)
-{
-	m_text = _text;
-}
-
-
-void TextGO2D::Tick(GameData* _GD)
+TextGO2D::TextGO2D(const std::string& _text)
+    : text_(_text)
 {
 }
 
-
-void TextGO2D::Draw(DrawData2D* _DD)
+void TextGO2D::tick(GameData* _GD)
 {
-	//right click and "Go to Defintion/Declaration" to see other version of this in DXTK
-	_DD->m_Font->DrawString(_DD->m_Sprites.get(), Helper::charToWChar(m_text.c_str()), m_pos, m_colour,m_rotation,m_origin,m_scale);
+}
+
+void TextGO2D::draw(DrawData2D* _DD)
+{
+	_DD->font->DrawString(_DD->sprites.get(), StringUtils::charToWChar(text_.c_str()), pos_, colour_,rot_,origin_,scale_);
 }

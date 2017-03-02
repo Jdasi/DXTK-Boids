@@ -1,5 +1,4 @@
-#ifndef _CONSTBUFFER_H_
-#define _CONSTBUFFER_H_
+#pragma once
 
 //=================================================================
 //constant buffer for the base shader used for the VBGO renderer
@@ -20,9 +19,7 @@ struct ConstantBuffer
 	Matrix	view;
 	Matrix	projection;
 	Matrix	rot;
-	Color	lightCol;
-	Color	ambientCol;
-	Vector3 lightPos;
+	Color	light_colour;
+	Color	ambient_colour;
+	Vector3 pos;
 };
-
-#endif

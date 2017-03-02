@@ -1,8 +1,7 @@
 #pragma once
 
-//to save you typing in all the headers of all the classes derived from the GameObject class lets put them all here
-#include "gameobject.h"
-#include "camera.h"
+#include "GameObject.h"
+#include "Camera.h"
 #include "CMOGO.h"
 #include "VBGO.h"
 #include "Light.h"
@@ -10,8 +9,9 @@
 #include "Player.h"
 #include "Terrain.h"
 #include "Tree.h"
+#include "InputHandler.h"
 
-//VBGO examples
+// VBGO examples.
 #include "VBCube.h"
 #include "VBPillow.h"
 #include "VBSpiked.h"
@@ -20,7 +20,12 @@
 #include "fileVBGO.h"
 #include "MarchCubes.h"
 
-//and 2-D ones here
+// 2D Examples.
 #include "GameObject2D.h"
 #include "ImageGO2D.h"
 #include "TextGO2D.h"
+
+// Data.
+#include "GameData.h"
+#include "DrawData.h"
+#include "DrawData2D.h"

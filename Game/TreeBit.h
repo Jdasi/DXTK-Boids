@@ -1,27 +1,21 @@
-#ifndef _TREE_BIT_H_
-#define _TREE_BIT_H_
+#pragma once
+#include "CMOGO.h"
+
+#include <list>
 
 //=================================================================
 //A component of the L-System (ish) tree
 //=================================================================
 
-#include "CMOGO.h"
-#include <list>
-
-using namespace std;
-
 class TreeBit :public CMOGO
 {
 public:
-	TreeBit(int _levels, int _perLevel, int _ofLevel, float _scale, Vector3 _shift, float _lean, string _bitFileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF, TreeBit* _parent, list<TreeBit*>* _tree);
-	~TreeBit();
+	TreeBit(int _levels, int _perLevel, int _ofLevel, float _scale, Vector3 _shift, float _lean, const std::string& _bitFileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF, TreeBit* _parent, std::list<TreeBit*>* _tree);
+	~TreeBit() = default;
 
-	virtual void Tick(GameData* _GD) override;
+	virtual void tick(GameData* _GD) override;
 
 protected:
-
-	TreeBit* m_parent;		//my parent part in the tree
+	TreeBit* parent_;
 
 };
-
-#endif

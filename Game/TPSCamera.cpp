@@ -1,26 +1,20 @@
 #include "TPSCamera.h"
 #include "GameData.h"
 
-TPSCamera::TPSCamera(float _fieldOfView, float _aspectRatio, float _nearPlaneDistance, float _farPlaneDistance, GameObject* _target, Vector3 _up, Vector3 _dpos)
-	:Camera(_fieldOfView, _aspectRatio, _nearPlaneDistance, _farPlaneDistance, _up)
+TPSCamera::TPSCamera(float _fov, float _aspect_ratio, float _near_plane_dist, float _far_plane_dist, GameObject* _target, Vector3 _up, Vector3 _dpos)
+	: Camera(_fov, _aspect_ratio, _near_plane_dist, _far_plane_dist, _up)
+    , target_object_(_target)
+    , dpos_(_dpos)
 {
-	m_targetObject = _target;
-	m_dpos = _dpos;
 }
 
-TPSCamera::~TPSCamera()
+void TPSCamera::tick(GameData* _GD)
 {
+	// Set up position of camera and target position of camera based on new position and orientation of target object.
+	Matrix rotCam = Matrix::CreateFromYawPitchRoll(target_object_->get_yaw(), 0.0f, 0.0f);
+	target_ = target_object_->get_pos();
+	pos_ = target_ + Vector3::Transform(dpos_, rotCam) ;
 
+	// Set up proj and view matrices.
+	Camera::tick(_GD);
 }
-
-void TPSCamera::Tick(GameData* _GD)
-{
-	//Set up position of camera and target position of camera based on new position and orientation of target object
-	Matrix rotCam = Matrix::CreateFromYawPitchRoll(m_targetObject->GetYaw(), 0.0f, 0.0f);
-	m_target = m_targetObject->GetPos();
-	m_pos = m_target + Vector3::Transform(m_dpos, rotCam) ;
-
-	//and then set up proj and view matrices
-	Camera::Tick(_GD);
-}
-

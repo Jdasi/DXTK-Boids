@@ -1,88 +1,80 @@
 #include "Player.h"
-#include <dinput.h>
 #include "GameData.h"
+#include "InputHandler.h"
 
-Player::Player(string _fileName, ID3D11Device* _pd3dDevice, IEffectFactory* _EF) : CMOGO(_fileName, _pd3dDevice, _EF)
+Player::Player(const std::string& _file_name, ID3D11Device* _d3d_device, IEffectFactory* _EF)
+    : CMOGO(_file_name, _d3d_device, _EF)
 {
-	//any special set up for Player goes here
-	m_fudge = Matrix::CreateRotationY(XM_PI);
+	fudge_ = Matrix::CreateRotationY(XM_PI);
 
-	m_pos.y = 10.0f;
-
-	SetDrag(0.7);
-	SetPhysicsOn(true);
+	set_drag(0.7f);
+	set_physics_enabled(true);
 }
 
-Player::~Player()
+void Player::tick(GameData* _GD)
 {
-	//tidy up anything I've created
-}
-
-
-void Player::Tick(GameData* _GD)
-{
-	switch (_GD->m_GS)
+	switch (_GD->game_state)
 	{
 	case GS_PLAY_MAIN_CAM:
 	{
 		{
-			//MOUSE CONTROL SCHEME HERE
+			// Mouse controls.
 			float speed = 10.0f;
-			m_acc.x += speed * _GD->m_mouseState->lX;
-			m_acc.z += speed * _GD->m_mouseState->lY;
+			acceleration_.x += speed * _GD->input_handler->get_mouse_state().lX;
+			acceleration_.z += speed * _GD->input_handler->get_mouse_state().lY;
 			break;
 		}
 	}
 	case GS_PLAY_TPS_CAM:
 	{
-		//TURN AND FORWARD CONTROL HERE
+		// Keyboard controls.
 		Vector3 forwardMove = 40.0f * Vector3::Forward;
-		Matrix rotMove = Matrix::CreateRotationY(m_yaw);
+		Matrix rotMove = Matrix::CreateRotationY(yaw_);
 		forwardMove = Vector3::Transform(forwardMove, rotMove);
-		if (_GD->m_keyboardState[DIK_W] & 0x80)
+		if (_GD->input_handler->get_button(DIK_W))
 		{
-			m_acc += forwardMove;
+			acceleration_ += forwardMove;
 		}
-		if (_GD->m_keyboardState[DIK_S] & 0x80)
+		if (_GD->input_handler->get_button(DIK_S))
 		{
-			m_acc -= forwardMove;
+			acceleration_ -= forwardMove;
 		}
 		break;
 	}
 	}
 
-	//change orinetation of player
-	float rotSpeed = 2.0f * _GD->m_dt;
-	if (_GD->m_keyboardState[DIK_A] & 0x80)
+	// Player rotation.
+	float rotSpeed = 2.0f * _GD->delta_time;
+	if (_GD->input_handler->get_button(DIK_A))
 	{
-		m_yaw += rotSpeed;
+		yaw_ += rotSpeed;
 	}
-	if (_GD->m_keyboardState[DIK_D] & 0x80)
+	if (_GD->input_handler->get_button(DIK_D))
 	{
-		m_yaw -= rotSpeed;
-	}
-
-	//move player up and down
-	if (_GD->m_keyboardState[DIK_R] & 0x80)
-	{
-		m_acc.y += 40.0f;
+		yaw_ -= rotSpeed;
 	}
 
-	if (_GD->m_keyboardState[DIK_F] & 0x80)
+	// Up-down movement.
+	if (_GD->input_handler->get_button(DIK_R))
 	{
-		m_acc.y -= 40.0f;
+		acceleration_.y += 40.0f;
 	}
 
-	//limit motion of the player
-	float length = m_pos.Length();
+	if (_GD->input_handler->get_button(DIK_F))
+	{
+		acceleration_.y -= 40.0f;
+	}
+
+	// Limit speed.
+	float length = pos_.Length();
 	float maxLength = 500.0f;
 	if (length > maxLength)
 	{
-		m_pos.Normalize();
-		m_pos *= maxLength;
-		m_vel *= -0.9; //VERY simple bounce back
+		pos_.Normalize();
+		pos_ *= maxLength;
+		velocity_ *= -0.9f; //VERY simple bounce back
 	}
 
-	//apply my base behaviour
-	CMOGO::Tick(_GD);
+	// Base behaviour.
+	CMOGO::tick(_GD);
 }

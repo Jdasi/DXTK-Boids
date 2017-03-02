@@ -59,7 +59,7 @@ HRESULT Application::InitWindow( HINSTANCE _hInstance, int _nCmdShow )
 	int SCREEN_WIDTH = GetSystemMetrics(SM_CXSCREEN);
 	int SCREEN_HEIGHT = GetSystemMetrics(SM_CYSCREEN);
 	//Go to Fullscreen in Release
-	m_hWnd = CreateWindowEx(NULL,
+	hWnd_ = CreateWindowEx(NULL,
 		L"GEAWindowClass",
 		L"GEA GROUP PROJECT",
 		WS_EX_TOPMOST | WS_POPUP,    // fullscreen values
@@ -310,7 +310,7 @@ void Application::Render()
 	m_pImmediateContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0, 0);
 
 	//Render the next frame from the game
-	if (m_Game) m_Game->Draw(m_pImmediateContext); 
+	if (m_Game) m_Game->draw(m_pImmediateContext); 
 
 	m_pSwapChain->Present(0, 0);
 }
@@ -323,7 +323,7 @@ bool Application::Update()
 {
 	if (m_Game)
 	{
-		return m_Game->Tick();
+		return m_Game->tick();
 	}
 
 	return false;

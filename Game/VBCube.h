@@ -1,7 +1,6 @@
-#ifndef _VB_CUBE_H_
-#define _VB_CUBE_H_
+#pragma once
 #include "VBGO.h"
-#include "vertex.h"
+#include "Vertex.h"
 
 //=================================================================
 //procedurally generate a VBGO Cube
@@ -11,8 +10,8 @@
 class VBCube : public VBGO
 {
 public:
-	VBCube(){};
-	virtual ~VBCube(){};
+	VBCube() = default;
+	virtual ~VBCube() = default;
 
 	//initialise the Veretx and Index buffers for the cube
 	void init(int _size, ID3D11Device* _GD);
@@ -20,10 +19,9 @@ public:
 protected:
 	//this is to allow custom versions of this which create the basic cube and then distort it
 	//see VBSpiral, VBSpiked and VBPillow
-	virtual void Transform(){};
+	virtual void Transform() = 0;
 
-	int m_size;
-	myVertex* m_vertices;
+	int size_;
+	myVertex* vertices_;
+
 };
-
-#endif

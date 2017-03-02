@@ -1,21 +1,15 @@
-#ifndef _DRAW_DATA_2D_H_
-#define _DRAW_DATA_2D_H_
+#pragma once
+#include "SpriteBatch.h"
+#include "SpriteFont.h"
 
 //=================================================================
 //Data to be passed by game to all 2D Game Objects via Draw 
 //=================================================================
 
-#include "SpriteBatch.h"
-#include "SpriteFont.h"
-
 using namespace DirectX;
-using namespace std;
 
 struct DrawData2D
 {
-	//spritebatch stuff
-	unique_ptr<SpriteBatch>	m_Sprites;
-	unique_ptr<SpriteFont> m_Font;
+    std::unique_ptr<SpriteBatch>	sprites;
+	std::unique_ptr<SpriteFont> font;
 };
-
-#endif

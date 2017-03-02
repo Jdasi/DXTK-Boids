@@ -1,5 +1,4 @@
-#ifndef _MARCHCUBES_H_
-#define _MARCHCUBES_H_
+#pragma once
 #include "VBGO.h"
 
 //=================================================================
@@ -18,10 +17,9 @@ public:
 	void init(Vector3 _size, float _isolevel, Vector3 _scale, Vector3 _origin, ID3D11Device* _GD);
 	void init(Vector3 _min,Vector3 _max,Vector3 _size, float _isoLevel, ID3D11Device* _GD); //2
 
-	void Tick(GameData* _GD) override;
+	void tick(GameData* _GD) override;
 
 protected:
 	float function(Vector3 _pos);
-};
 
-#endif
+};

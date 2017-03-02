@@ -1,11 +1,11 @@
-#ifndef _GAME_STATE_H_
-#define _GAME_STATE_H_
+#pragma once
 
 //=================================================================
 //Possible GameStates
 //=================================================================
 
-enum GameState {
+enum GameState
+{
 	GS_NULL = 0,
 	GS_ATTRACT,
 	GS_PLAY_MAIN_CAM,
@@ -14,5 +14,3 @@ enum GameState {
 	GS_GAME_OVER,
 	GS_COUNT
 };
-
-#endif

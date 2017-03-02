@@ -1,35 +1,34 @@
-#include <iostream>
-#include <fstream>
 #include "fileVBGO.h"
-#include "helper.h"
+#include "StringUtils.h"
+#include "Vertex.h"
+
 #include "DDSTextureLoader.h"
-#include "vertex.h"
 #include <DirectXColors.h>
 
-using namespace DirectX;
-using namespace std;
+#include <iostream>
+#include <fstream>
 
-FileVBGO::FileVBGO(string _fileName, ID3D11Device* _GD)
+FileVBGO::FileVBGO(const std::string& _file_name, ID3D11Device* _GD)
 {
 	//open file
-	ifstream meshFile;
-	meshFile.open(_fileName);
+	std::ifstream meshFile;
+	meshFile.open(_file_name);
 
 	//what data does this file give
-	m_texCoords = false;
-	m_colour = false;
+	tex_coords_ = false;
+	colour_ = false;
 
 	char texOrColour;
 	meshFile >> texOrColour;
 
 	if (texOrColour == 'T')
 	{
-		m_texCoords = true;
+		tex_coords_ = true;
 		//get texture fileName
 		char  texFileName[256];
 		meshFile >> texFileName;
 
-		string fullfilename =
+		std::string fullfilename =
 #if DEBUG
 			"../Debug/";
 #else
@@ -40,11 +39,11 @@ FileVBGO::FileVBGO(string _fileName, ID3D11Device* _GD)
 		fullfilename += ".dds";
 
 		//load texture 
-		HRESULT hr = CreateDDSTextureFromFile(_GD, Helper::charToWChar(fullfilename.c_str()), nullptr, &m_pTextureRV);		
+		HRESULT hr = CreateDDSTextureFromFile(_GD, StringUtils::charToWChar(fullfilename.c_str()), nullptr, &texture_rv_);
 	}
 	else
 	{
-		m_colour = true;
+		colour_ = true;
 	}
 
 	//get number of vertices
@@ -56,27 +55,27 @@ FileVBGO::FileVBGO(string _fileName, ID3D11Device* _GD)
 	int dummy;
 	for (int i = 0; i< numVerts; i++)
 	{
-		meshFile >> dummy >> vertices[i].Pos.x >> vertices[i].Pos.y >> vertices[i].Pos.z;
+		meshFile >> dummy >> vertices[i].pos.x >> vertices[i].pos.y >> vertices[i].pos.z;
 
-		if (m_texCoords)
+		if (tex_coords_)
 		{
-			meshFile >> vertices[i].texCoord.x >> vertices[i].texCoord.y;
-			vertices[i].Color = Color(1.0f, 1.0f, 1.0f, 1.0f);
+			meshFile >> vertices[i].tex_coord.x >> vertices[i].tex_coord.y;
+			vertices[i].color = Color(1.0f, 1.0f, 1.0f, 1.0f);
 		}
 
-		if (m_colour)
+		if (colour_)
 		{
 			float R, G, B, A;
 			meshFile >> R >> G >> B >> A;
-			vertices[i].Color = Color(R, G, B, A);
-			vertices[i].texCoord = Vector2::One;
+			vertices[i].color = Color(R, G, B, A);
+			vertices[i].tex_coord = Vector2::One;
 		}
 	}
 
 	//load indices
-	meshFile >> m_numPrims;
-	WORD* indices = new WORD[3 * m_numPrims];
-	for (unsigned int i = 0; i<m_numPrims; i++)
+	meshFile >> num_prims_;
+	WORD* indices = new WORD[3 * num_prims_];
+	for (unsigned int i = 0; i<num_prims_; i++)
 	{
 		WORD V1, V2, V3;
 		meshFile >> dummy >> V1 >> V2 >> V3;
@@ -87,14 +86,14 @@ FileVBGO::FileVBGO(string _fileName, ID3D11Device* _GD)
 
 		//build normals
 		Vector3 norm;
-		Vector3 vec1 = vertices[V1].Pos - vertices[V2].Pos;
-		Vector3 vec2 = vertices[V3].Pos - vertices[V2].Pos;
+		Vector3 vec1 = vertices[V1].pos - vertices[V2].pos;
+		Vector3 vec2 = vertices[V3].pos - vertices[V2].pos;
 		norm = vec1.Cross(vec2);
 		norm.Normalize();
 
-		vertices[V1].Norm = norm;
-		vertices[V2].Norm = norm;
-		vertices[V3].Norm = norm;
+		vertices[V1].norm = norm;
+		vertices[V2].norm = norm;
+		vertices[V3].norm = norm;
 	}
 
 	BuildIB(_GD, indices);
@@ -103,9 +102,4 @@ FileVBGO::FileVBGO(string _fileName, ID3D11Device* _GD)
 	//tidy up
 	meshFile.close();
 	delete[] vertices;
-}
-
-FileVBGO::~FileVBGO()
-{
-
 }
