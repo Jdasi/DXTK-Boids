@@ -52,6 +52,12 @@
     <Filter Include="Source\Resources">
       <UniqueIdentifier>{23644783-c154-45cd-87be-cbd358a37264}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headers\Boids\Rules">
+      <UniqueIdentifier>{c988fb7a-70d7-4059-b65c-541a8c6efa2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Boids\Rules">
+      <UniqueIdentifier>{a5103874-0a7a-41a3-b266-7b65f078d64c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputHandler.h">
@@ -153,6 +159,27 @@
     <ClInclude Include="ObjectList.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="RandomEngine.h">
+      <Filter>Headers\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Rule.h">
+      <Filter>Headers\Boids</Filter>
+    </ClInclude>
+    <ClInclude Include="Separation.h">
+      <Filter>Headers\Boids\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="Alignment.h">
+      <Filter>Headers\Boids\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="Cohesion.h">
+      <Filter>Headers\Boids\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="Rules.h">
+      <Filter>Headers\Boids</Filter>
+    </ClInclude>
+    <ClInclude Include="BoidSettings.h">
+      <Filter>Headers\Boids</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InputHandler.cpp">
@@ -220,6 +247,18 @@
     </ClCompile>
     <ClCompile Include="CMOModel.cpp">
       <Filter>Source\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomEngine.cpp">
+      <Filter>Source\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Alignment.cpp">
+      <Filter>Source\Boids\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="Cohesion.cpp">
+      <Filter>Source\Boids\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="Separation.cpp">
+      <Filter>Source\Boids\Rules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

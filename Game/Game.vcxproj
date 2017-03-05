@@ -125,12 +125,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Alignment.h" />
     <ClInclude Include="Boid.h" />
     <ClInclude Include="BoidData.h" />
     <ClInclude Include="BoidManager.h" />
+    <ClInclude Include="BoidSettings.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CMOGO.h" />
     <ClInclude Include="CMOModel.h" />
+    <ClInclude Include="Cohesion.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="DrawData2D.h" />
     <ClInclude Include="DrawData.h" />
@@ -147,6 +150,10 @@
     <ClInclude Include="CMOManager.h" />
     <ClInclude Include="ObjectList.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="RandomEngine.h" />
+    <ClInclude Include="Rule.h" />
+    <ClInclude Include="Rules.h" />
+    <ClInclude Include="Separation.h" />
     <ClInclude Include="StringUtils.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="TextGO2D.h" />
@@ -160,12 +167,14 @@
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Alignment.cpp" />
     <ClCompile Include="Boid.cpp" />
     <ClCompile Include="BoidManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CMOGO.cpp" />
     <ClCompile Include="CMOManager.cpp" />
     <ClCompile Include="CMOModel.cpp" />
+    <ClCompile Include="Cohesion.cpp" />
     <ClCompile Include="FileVBGO.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -175,6 +184,8 @@
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="MarchCubes.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="RandomEngine.cpp" />
+    <ClCompile Include="Separation.cpp" />
     <ClCompile Include="StringUtils.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TextGO2D.cpp" />

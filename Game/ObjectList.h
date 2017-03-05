@@ -10,6 +10,7 @@
 #include "Terrain.h"
 #include "InputHandler.h"
 #include "CMOManager.h"
+#include "BoidManager.h"
 
 // VBGO examples.
 #include "VBCube.h"

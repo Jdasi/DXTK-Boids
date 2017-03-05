@@ -35,20 +35,20 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
     TwBar *myBar = TwNewBar("Test");
     TwAddVarRW(myBar, "Test Float", TW_TYPE_FLOAT, &test_float, "");
 
-	// Systems.
     fx_factory_ = std::make_unique<EffectFactory>(_d3d_device);
-    input_handler_ = std::make_unique<InputHandler>(_hWnd, _hInstance);
-    cmo_manager_ = std::make_unique<CMOManager>(*_d3d_device, *fx_factory_);
+    states_ = new CommonStates(_d3d_device);
 
-	//Tell the fxFactory to look to the correct build directory to pull stuff in from
+    //Tell the fxFactory to look to the correct build directory to pull stuff in from
 #ifdef DEBUG
-	((EffectFactory*)fx_factory_.get())->SetDirectory(L"../Debug");
+    ((EffectFactory*)fx_factory_.get())->SetDirectory(L"../Debug");
 #else
-	((EffectFactory*)fx_factory_.get())->SetDirectory(L"../Release");
+    ((EffectFactory*)fx_factory_.get())->SetDirectory(L"../Release");
 #endif
 
-	// Create other render resources here
-	states_ = new CommonStates(_d3d_device);
+    // Core systems.
+    input_handler_ = std::make_unique<InputHandler>(_hWnd, _hInstance);
+    cmo_manager_ = std::make_unique<CMOManager>(*_d3d_device, *fx_factory_);
+    boid_manager_ = std::make_unique<BoidManager>(*cmo_manager_, 5);
 
     //create GameData struct and populate its pointers
     GD_ = new GameData();
@@ -92,7 +92,7 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
 
 	//add some stuff to show off
 	FileVBGO* terrainBox = new FileVBGO("../Assets/terrainTex.txt", _d3d_device);
-	game_objects_.push_back(terrainBox);
+	//game_objects_.push_back(terrainBox);
 };
 
 Game::~Game() 
@@ -131,6 +131,7 @@ bool Game::tick()
 {
     // tick core systems.
     input_handler_->tick();
+    boid_manager_->tick(GD_);
 
 	//tick audio engine
 	if (!audio_engine_->Update())
@@ -214,6 +215,9 @@ void Game::draw(ID3D11DeviceContext* _d3d_immediate_context)
 	//update the constant buffer for the rendering of VBGOs
 	VBGO::update_constant_buffer(DD_);
 
+    // Draw Boids.
+    boid_manager_->draw(DD_);
+    
 	//draw all objects
     for (auto& obj : game_objects_)
 	{

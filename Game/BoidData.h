@@ -6,5 +6,5 @@ class Boid;
 
 struct BoidData
 {
-    std::vector<std::unique_ptr<Boid>> boids_;
+    std::vector<std::unique_ptr<Boid>> boids;
 };

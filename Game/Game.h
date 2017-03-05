@@ -25,6 +25,7 @@ struct DrawData2D;
 class Light;
 class InputHandler;
 class CMOManager;
+class BoidManager;
 
 class Game
 {
@@ -44,6 +45,7 @@ protected:
 
     std::unique_ptr<InputHandler> input_handler_;
     std::unique_ptr<CMOManager> cmo_manager_;
+    std::unique_ptr<BoidManager> boid_manager_;
 
 	Camera* camera_;            //principle camera
 	TPSCamera* tps_camera_;     //TPS cam
