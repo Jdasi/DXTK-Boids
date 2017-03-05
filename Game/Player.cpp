@@ -2,8 +2,8 @@
 #include "GameData.h"
 #include "InputHandler.h"
 
-Player::Player(const std::string& _file_name, ID3D11Device* _d3d_device, IEffectFactory* _EF)
-    : CMOGO(_file_name, _d3d_device, _EF)
+Player::Player(CMOModel* _model)
+    : CMOGO(_model)
 {
 	fudge_ = Matrix::CreateRotationY(XM_PI);
 

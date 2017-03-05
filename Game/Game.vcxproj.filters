@@ -40,6 +40,18 @@
     <Filter Include="Source\Example VBGOs">
       <UniqueIdentifier>{7a23280a-69b7-4395-b069-8c47af421bd4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headers\Boids">
+      <UniqueIdentifier>{4d2c2998-13e6-4c4c-8721-2d5545461391}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Boids">
+      <UniqueIdentifier>{88923487-f4a2-4306-a7b5-92c2c5be82a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Resources">
+      <UniqueIdentifier>{c07a4d6b-2881-485f-a01a-96572ef4a1cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Resources">
+      <UniqueIdentifier>{23644783-c154-45cd-87be-cbd358a37264}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputHandler.h">
@@ -71,9 +83,6 @@
     </ClInclude>
     <ClInclude Include="VBspiral.h">
       <Filter>Headers\Example VBGOs</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectList.h">
-      <Filter>Source\Utility</Filter>
     </ClInclude>
     <ClInclude Include="GameState.h">
       <Filter>Headers\Enums</Filter>
@@ -108,12 +117,6 @@
     <ClInclude Include="TPSCamera.h">
       <Filter>Headers\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Tree.h">
-      <Filter>Headers\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="TreeBit.h">
-      <Filter>Headers\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="VBGO.h">
       <Filter>Headers\Objects</Filter>
     </ClInclude>
@@ -131,6 +134,24 @@
     </ClInclude>
     <ClInclude Include="Vertex.h">
       <Filter>Headers\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="Boid.h">
+      <Filter>Headers\Boids</Filter>
+    </ClInclude>
+    <ClInclude Include="BoidManager.h">
+      <Filter>Headers\Boids</Filter>
+    </ClInclude>
+    <ClInclude Include="BoidData.h">
+      <Filter>Headers\Boids</Filter>
+    </ClInclude>
+    <ClInclude Include="CMOManager.h">
+      <Filter>Headers\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="CMOModel.h">
+      <Filter>Headers\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectList.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -173,12 +194,6 @@
     <ClCompile Include="TPSCamera.cpp">
       <Filter>Source\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Tree.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="TreeBit.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="VBGO.cpp">
       <Filter>Source\Objects</Filter>
     </ClCompile>
@@ -193,6 +208,18 @@
     </ClCompile>
     <ClCompile Include="TextGO2D.cpp">
       <Filter>Source\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Boid.cpp">
+      <Filter>Source\Boids</Filter>
+    </ClCompile>
+    <ClCompile Include="BoidManager.cpp">
+      <Filter>Source\Boids</Filter>
+    </ClCompile>
+    <ClCompile Include="CMOManager.cpp">
+      <Filter>Source\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="CMOModel.cpp">
+      <Filter>Source\Resources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -13,5 +13,5 @@ void TextGO2D::tick(GameData* _GD)
 
 void TextGO2D::draw(DrawData2D* _DD)
 {
-	_DD->font->DrawString(_DD->sprites.get(), StringUtils::charToWChar(text_.c_str()), pos_, colour_,rot_,origin_,scale_);
+	_DD->font->DrawString(_DD->sprites.get(), StringUtils::char_to_wchar(text_.c_str()), pos_, colour_,rot_,origin_,scale_);
 }

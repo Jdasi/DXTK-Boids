@@ -5,7 +5,7 @@
 /* Splits up a string based on the passed delimiter, and fills the passed container
  * with the results of the split.
  */
-void StringUtils::splitStringByDelim(const std::string& _str, char _delim, std::vector<std::string>& _container)
+void StringUtils::split_string_by_delim(const std::string& _str, char _delim, std::vector<std::string>& _container)
 {
     // Prepares the container for insertions.
     _container.clear();
@@ -23,7 +23,7 @@ void StringUtils::splitStringByDelim(const std::string& _str, char _delim, std::
 
 /* Helper function for converting char strings to WChar.
  */
-wchar_t* StringUtils::charToWChar(const char* _text)
+wchar_t* StringUtils::char_to_wchar(const char* _text)
 {
     size_t size = strlen(_text) + 1;
     static wchar_t* wa = NULL;

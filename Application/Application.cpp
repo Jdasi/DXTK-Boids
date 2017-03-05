@@ -49,13 +49,14 @@ HRESULT Application::InitWindow( HINSTANCE _hInstance, int _nCmdShow )
 
     // Create window
     m_hInst = _hInstance;
-#ifdef DEBUG
+//#ifdef DEBUG
 	RECT rc = { 0, 0, 1024, 768 };
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 	m_hWnd = CreateWindow(L"GEAWindowClass", L"DXTK Boids Simulation", WS_OVERLAPPEDWINDOW,
 		600, 100, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, _hInstance,
 		nullptr);
-#else
+//#else
+/*
 	int SCREEN_WIDTH = GetSystemMetrics(SM_CXSCREEN);
 	int SCREEN_HEIGHT = GetSystemMetrics(SM_CYSCREEN);
 	//Go to Fullscreen in Release
@@ -69,7 +70,8 @@ HRESULT Application::InitWindow( HINSTANCE _hInstance, int _nCmdShow )
 		NULL,
 		_hInstance,
 		NULL);
-#endif
+*/
+//#endif
 
 	if (!m_hWnd)
 	{

@@ -5,10 +5,12 @@
 //Base Player Class (i.e. a GO the player controls)
 //=================================================================
 
+class CMOModel;
+
 class Player : public CMOGO
 {
 public:
-	Player(const std::string& _file_name, ID3D11Device* _d3d_device, IEffectFactory* _EF);
+    explicit Player(CMOModel* _model);
 	~Player() = default;
 
 	virtual void tick(GameData* _GD) override;

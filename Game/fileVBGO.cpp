@@ -39,7 +39,7 @@ FileVBGO::FileVBGO(const std::string& _file_name, ID3D11Device* _GD)
 		fullfilename += ".dds";
 
 		//load texture 
-		HRESULT hr = CreateDDSTextureFromFile(_GD, StringUtils::charToWChar(fullfilename.c_str()), nullptr, &texture_rv_);
+		HRESULT hr = CreateDDSTextureFromFile(_GD, StringUtils::char_to_wchar(fullfilename.c_str()), nullptr, &texture_rv_);
 	}
 	else
 	{

@@ -24,6 +24,7 @@ struct DrawData;
 struct DrawData2D;
 class Light;
 class InputHandler;
+class CMOManager;
 
 class Game
 {
@@ -42,6 +43,7 @@ protected:
     float test_float = 0;
 
     std::unique_ptr<InputHandler> input_handler_;
+    std::unique_ptr<CMOManager> cmo_manager_;
 
 	Camera* camera_;            //principle camera
 	TPSCamera* tps_camera_;     //TPS cam
@@ -52,7 +54,7 @@ protected:
 
 	//required for the CMO model rendering system
 	CommonStates* states_;
-	IEffectFactory* fx_factory_;
+	std::unique_ptr<IEffectFactory> fx_factory_;
 
 	GameData* GD_;		//Data to be shared to all Game Objects as they are ticked
 	DrawData* DD_;		//Data to be shared to all Game Objects as they are drawn

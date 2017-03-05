@@ -125,8 +125,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Boid.h" />
+    <ClInclude Include="BoidData.h" />
+    <ClInclude Include="BoidManager.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CMOGO.h" />
+    <ClInclude Include="CMOModel.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="DrawData2D.h" />
     <ClInclude Include="DrawData.h" />
@@ -140,14 +144,13 @@
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="MarchCubes.h" />
+    <ClInclude Include="CMOManager.h" />
     <ClInclude Include="ObjectList.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="StringUtils.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="TextGO2D.h" />
     <ClInclude Include="TPSCamera.h" />
-    <ClInclude Include="Tree.h" />
-    <ClInclude Include="TreeBit.h" />
     <ClInclude Include="VBCube.h" />
     <ClInclude Include="VBGO.h" />
     <ClInclude Include="VBPillow.h" />
@@ -157,8 +160,12 @@
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Boid.cpp" />
+    <ClCompile Include="BoidManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CMOGO.cpp" />
+    <ClCompile Include="CMOManager.cpp" />
+    <ClCompile Include="CMOModel.cpp" />
     <ClCompile Include="FileVBGO.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -172,8 +179,6 @@
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TextGO2D.cpp" />
     <ClCompile Include="TPSCamera.cpp" />
-    <ClCompile Include="Tree.cpp" />
-    <ClCompile Include="TreeBit.cpp" />
     <ClCompile Include="VBCube.cpp" />
     <ClCompile Include="VBGO.cpp" />
     <ClCompile Include="VBSnail.cpp" />

@@ -8,8 +8,8 @@
 #include "TPSCamera.h"
 #include "Player.h"
 #include "Terrain.h"
-#include "Tree.h"
 #include "InputHandler.h"
+#include "CMOManager.h"
 
 // VBGO examples.
 #include "VBCube.h"

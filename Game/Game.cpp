@@ -35,26 +35,25 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
     TwBar *myBar = TwNewBar("Test");
     TwAddVarRW(myBar, "Test Float", TW_TYPE_FLOAT, &test_float, "");
 
-	//Direct Input Stuff
+	// Systems.
+    fx_factory_ = std::make_unique<EffectFactory>(_d3d_device);
     input_handler_ = std::make_unique<InputHandler>(_hWnd, _hInstance);
-
-	//create GameData struct and populate its pointers
-	GD_ = new GameData();
-    GD_->game_state = GS_PLAY_TPS_CAM;
-    GD_->input_handler = input_handler_.get();
-
-	//set up DirectXTK Effects system
-	fx_factory_ = new EffectFactory(_d3d_device);
+    cmo_manager_ = std::make_unique<CMOManager>(*_d3d_device, *fx_factory_);
 
 	//Tell the fxFactory to look to the correct build directory to pull stuff in from
 #ifdef DEBUG
-	((EffectFactory*)fx_factory_)->SetDirectory(L"../Debug");
+	((EffectFactory*)fx_factory_.get())->SetDirectory(L"../Debug");
 #else
-	((EffectFactory*)fx_factory_)->SetDirectory(L"../Release");
+	((EffectFactory*)fx_factory_.get())->SetDirectory(L"../Release");
 #endif
 
 	// Create other render resources here
 	states_ = new CommonStates(_d3d_device);
+
+    //create GameData struct and populate its pointers
+    GD_ = new GameData();
+    GD_->game_state = GS_PLAY_TPS_CAM;
+    GD_->input_handler = input_handler_.get();
 
 	//init render system for VBGOs
 	VBGO::init(_d3d_device);
@@ -76,7 +75,7 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
 	game_objects_.push_back(light_);
 
 	//add Player
-	Player* pPlayer = new Player("BirdModelV1.cmo", _d3d_device, fx_factory_);
+	Player* pPlayer = new Player(cmo_manager_->get_model("BirdModelV1"));
     pPlayer->set_pos(Vector3(0, 10, 0));
 	game_objects_.push_back(pPlayer);
 
@@ -122,7 +121,6 @@ Game::~Game()
 
 	//clear away CMO render system
 	delete states_;
-	delete fx_factory_;
 
 	delete DD2D_;
 

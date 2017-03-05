@@ -15,7 +15,7 @@ ImageGO2D::ImageGO2D(const std::string& _file_name, ID3D11Device* _GD)
 		"../Release/"
 #endif
 		+ _file_name + ".dds";
-	HRESULT hr = CreateDDSTextureFromFile(_GD, StringUtils::charToWChar(fullfilename.c_str()), nullptr, &texture_rv);
+	HRESULT hr = CreateDDSTextureFromFile(_GD, StringUtils::char_to_wchar(fullfilename.c_str()), nullptr, &texture_rv);
 
 	//this nasty thing is required to find out the size of this image!
 	ID3D11Resource *pResource;
