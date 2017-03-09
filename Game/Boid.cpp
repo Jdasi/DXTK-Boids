@@ -1,6 +1,7 @@
 #include "Boid.h"
 #include "RandomEngine.h"
 #include "Rule.h"
+#include "JMath.h"
 
 Boid::Boid(BoidData& _BD, BoidSettings& _settings)
     : CMOGO(_settings.model)
@@ -67,7 +68,8 @@ void Boid::rotate()
 
 void Boid::wrap()
 {
-    // TODO
+    pos_.x = JMath::iclampf(pos_.x, -200.0f, 200.0f);
+    pos_.z = JMath::iclampf(pos_.z, -200.0f, 200.0f);
 }
 
 void Boid::apply_force(Vector3 _force)

@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "GameData.h"
 #include "InputHandler.h"
+#include <iostream>
 
 Player::Player(CMOModel* _model)
     : CMOGO(_model)
@@ -13,6 +14,8 @@ Player::Player(CMOModel* _model)
 
 void Player::tick(GameData* _GD)
 {
+    auto old_pos = get_pos();
+
 	// Keyboard controls.
 	Vector3 forwardMove = 40.0f * Vector3::Forward;
 	Matrix rotMove = Matrix::CreateRotationY(yaw_);
@@ -60,4 +63,9 @@ void Player::tick(GameData* _GD)
 
 	// Base behaviour.
 	CMOGO::tick(_GD);
+
+    auto new_pos = get_pos();
+
+    if (old_pos != new_pos)
+        std::cout << "Player: [X = " << new_pos.x << "] [Z = " << new_pos.z << "]" << std::endl;
 }

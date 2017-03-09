@@ -47,7 +47,7 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
     // Core systems.
     input_handler_ = std::make_unique<InputHandler>(_hWnd, _hInstance);
     cmo_manager_ = std::make_unique<CMOManager>(*_d3d_device, *fx_factory_);
-    boid_manager_ = std::make_unique<BoidManager>(*cmo_manager_, 20);
+    boid_manager_ = std::make_unique<BoidManager>(*cmo_manager_, 10);
 
     //create GameData struct and populate its pointers
     GD_.game_state = GS_PLAY_MAIN_CAM;
