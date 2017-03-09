@@ -16,14 +16,10 @@ public:
 	virtual void tick(GameData* _GD) override;
 	virtual void draw(DrawData* _DD) override;
 
-	//Getters
     Matrix get_proj() const;
     Matrix get_view() const;
 
-    //Setters
-
 protected:
-
 	//Principle transforms/matrices for this camera
 	Matrix projection_;
 	Matrix view_;

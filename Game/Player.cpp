@@ -17,33 +17,33 @@ void Player::tick(GameData* _GD)
 	Vector3 forwardMove = 40.0f * Vector3::Forward;
 	Matrix rotMove = Matrix::CreateRotationY(yaw_);
 	forwardMove = Vector3::Transform(forwardMove, rotMove);
-	if (_GD->input_handler->get_button(DIK_W))
+	if (_GD->input_handler->get_key(DIK_W))
 	{
 		acceleration_ += forwardMove;
 	}
-	if (_GD->input_handler->get_button(DIK_S))
+	if (_GD->input_handler->get_key(DIK_S))
 	{
 		acceleration_ -= forwardMove;
 	}
 
 	// Player rotation.
 	float rotSpeed = 2.0f * _GD->delta_time;
-	if (_GD->input_handler->get_button(DIK_A))
+	if (_GD->input_handler->get_key(DIK_A))
 	{
 		yaw_ += rotSpeed;
 	}
-	if (_GD->input_handler->get_button(DIK_D))
+	if (_GD->input_handler->get_key(DIK_D))
 	{
 		yaw_ -= rotSpeed;
 	}
 
 	// Up-down movement.
-	if (_GD->input_handler->get_button(DIK_R))
+	if (_GD->input_handler->get_key(DIK_R))
 	{
 		acceleration_.y += 40.0f;
 	}
 
-	if (_GD->input_handler->get_button(DIK_F))
+	if (_GD->input_handler->get_key(DIK_F))
 	{
 		acceleration_.y -= 40.0f;
 	}

@@ -22,9 +22,8 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
 	//Create DirectXTK spritebatch stuff
 	ID3D11DeviceContext* pd3dImmediateContext;
     _d3d_device->GetImmediateContext(&pd3dImmediateContext);
-	DD2D_ = new DrawData2D();
-	DD2D_->sprites.reset(new SpriteBatch(pd3dImmediateContext));
-	DD2D_->font.reset(new SpriteFont(_d3d_device, L"..\\Assets\\italic.spritefont"));
+	DD2D_.sprites.reset(new SpriteBatch(pd3dImmediateContext));
+	DD2D_.font.reset(new SpriteFont(_d3d_device, L"..\\Assets\\italic.spritefont"));
 
 	//seed the random number generator
 	srand((UINT)time(NULL));
@@ -48,12 +47,11 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
     // Core systems.
     input_handler_ = std::make_unique<InputHandler>(_hWnd, _hInstance);
     cmo_manager_ = std::make_unique<CMOManager>(*_d3d_device, *fx_factory_);
-    boid_manager_ = std::make_unique<BoidManager>(*cmo_manager_, 5);
+    boid_manager_ = std::make_unique<BoidManager>(*cmo_manager_, 20);
 
     //create GameData struct and populate its pointers
-    GD_ = new GameData();
-    GD_->game_state = GS_PLAY_TPS_CAM;
-    GD_->input_handler = input_handler_.get();
+    GD_.game_state = GS_PLAY_TPS_CAM;
+    GD_.input_handler = input_handler_.get();
 
 	//init render system for VBGOs
 	VBGO::init(_d3d_device);
@@ -65,30 +63,33 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
 	UINT height = rc.bottom - rc.top;
 	float AR = (float)width / (float)height;
 
-	//create a base camera
+	// Base Camera that views the simulation from a fixed perspective.
 	camera_ = new Camera(0.25f * XM_PI, AR, 1.0f, 10000.0f, Vector3::UnitY, Vector3::Zero);
 	camera_->set_pos(Vector3(0.0f, 100.0f, 100.0f));
 	game_objects_.push_back(camera_);
 
-	//create a base light
+	// Base light.
 	light_ = new Light(Vector3(0.0f, 100.0f, 160.0f), Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.4f, 0.1f, 0.1f, 1.0f));
 	game_objects_.push_back(light_);
 
-	//add Player
+	// Player.
 	Player* pPlayer = new Player(cmo_manager_->get_model("BirdModelV1"));
     pPlayer->set_pos(Vector3(0, 10, 0));
 	game_objects_.push_back(pPlayer);
 
-	//add a secondary camera
+	// TPS Camera to follow the Player's movements.
 	tps_camera_ = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 10.0f, 50.0f));
 	game_objects_.push_back(tps_camera_);
 
+    // Free Camera to orbit around the simulation.
+    free_camera_ = new FreeCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, Vector3::Zero, Vector3::UnitY, Vector3(0.0f, 0.0f, 50.0f));
+    game_objects_.push_back(free_camera_);
+
 	//create DrawData struct and populate its pointers
-	DD_ = new DrawData();
-	DD_->d3d_immediate_context = nullptr;
-	DD_->states = states_;
-	DD_->camera = camera_;
-	DD_->light = light_;
+	DD_.d3d_immediate_context = nullptr;
+	DD_.states = states_;
+	DD_.camera = camera_;
+	DD_.light = light_;
 
 	//add some stuff to show off
 	FileVBGO* terrainBox = new FileVBGO("../Assets/terrainTex.txt", _d3d_device);
@@ -97,10 +98,6 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
 
 Game::~Game() 
 {
-	//delete Game Data & Draw Data
-	delete GD_;
-	delete DD_;
-
 	//tidy up VBGO render system
 	VBGO::clean_up();
 
@@ -122,8 +119,6 @@ Game::~Game()
 	//clear away CMO render system
 	delete states_;
 
-	delete DD2D_;
-
     TwTerminate();
 }
 
@@ -131,7 +126,7 @@ bool Game::tick()
 {
     // tick core systems.
     input_handler_->tick();
-    boid_manager_->tick(GD_);
+    boid_manager_->tick(&GD_);
 
 	//tick audio engine
 	if (!audio_engine_->Update())
@@ -145,18 +140,18 @@ bool Game::tick()
 	}
 
 	//Upon pressing escape QUIT
-	if (input_handler_->get_button_down(DIK_ESCAPE))
+	if (input_handler_->get_key_down(DIK_ESCAPE))
 	{
 		return false;
 	}
 
 	//calculate frame time-step dt for passing down to game objects
 	DWORD currentTime = GetTickCount();
-	GD_->delta_time = min((float)(currentTime - play_time_) / 1000.0f, 0.1f);
+	GD_.delta_time = min((float)(currentTime - play_time_) / 1000.0f, 0.1f);
 	play_time_ = currentTime;
 
 	//start to a VERY simple FSM
-	switch (GD_->game_state)
+	switch (GD_.game_state)
 	{
 	case GS_ATTRACT:
 		break;
@@ -176,61 +171,61 @@ bool Game::tick()
 void Game::play_tick()
 {
 	//upon space bar switch camera state
-	if (input_handler_->get_button_down(DIK_SPACE))
+	if (input_handler_->get_key_down(DIK_SPACE))
 	{
-		if (GD_->game_state == GS_PLAY_MAIN_CAM)
+		if (GD_.game_state == GS_PLAY_MAIN_CAM)
 		{
-			GD_->game_state = GS_PLAY_TPS_CAM;
+			GD_.game_state = GS_PLAY_TPS_CAM;
 		}
 		else
 		{
-			GD_->game_state = GS_PLAY_MAIN_CAM;
+			GD_.game_state = GS_PLAY_MAIN_CAM;
 		}
 	}
 
 	//update all objects
     for (auto& obj : game_objects_)
     {
-		obj->tick(GD_);
+		obj->tick(&GD_);
 	}
 
     for (auto& obj : game_objects_2d_)
     {
-		obj->tick(GD_);
+		obj->tick(&GD_);
 	}
 }
 
 void Game::draw(ID3D11DeviceContext* _d3d_immediate_context)
 {
 	//set immediate context of the graphics device
-	DD_->d3d_immediate_context = _d3d_immediate_context;
+	DD_.d3d_immediate_context = _d3d_immediate_context;
 
 	//set which camera to be used
-	DD_->camera = camera_;
-	if (GD_->game_state == GS_PLAY_TPS_CAM)
+	DD_.camera = free_camera_;
+	if (GD_.game_state == GS_PLAY_TPS_CAM)
 	{
-		DD_->camera = tps_camera_;
+		DD_.camera = tps_camera_;
 	}
 
 	//update the constant buffer for the rendering of VBGOs
-	VBGO::update_constant_buffer(DD_);
+	VBGO::update_constant_buffer(&DD_);
 
     // Draw Boids.
-    boid_manager_->draw(DD_);
+    boid_manager_->draw(&DD_);
     
 	//draw all objects
     for (auto& obj : game_objects_)
 	{
-		obj->draw(DD_);
+		obj->draw(&DD_);
 	}
 
 	// Draw sprite batch stuff 
-	DD2D_->sprites->Begin();
+	DD2D_.sprites->Begin();
     for (auto& obj : game_objects_2d_)
 	{
-		obj->draw(DD2D_);
+		obj->draw(&DD2D_);
 	}
-	DD2D_->sprites->End();
+	DD2D_.sprites->End();
 
 	//drawing text screws up the Depth Stencil State, this puts it back again!
     _d3d_immediate_context->OMSetDepthStencilState(states_->DepthDefault(), 0);

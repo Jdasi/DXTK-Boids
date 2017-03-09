@@ -138,6 +138,7 @@
     <ClInclude Include="DrawData2D.h" />
     <ClInclude Include="DrawData.h" />
     <ClInclude Include="FileVBGO.h" />
+    <ClInclude Include="FreeCamera.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameData.h" />
     <ClInclude Include="GameObject.h" />
@@ -145,6 +146,7 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="ImageGO2D.h" />
     <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="JMath.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="MarchCubes.h" />
     <ClInclude Include="CMOManager.h" />
@@ -176,11 +178,13 @@
     <ClCompile Include="CMOModel.cpp" />
     <ClCompile Include="Cohesion.cpp" />
     <ClCompile Include="FileVBGO.cpp" />
+    <ClCompile Include="FreeCamera.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObject2D.cpp" />
     <ClCompile Include="ImageGO2D.cpp" />
     <ClCompile Include="InputHandler.cpp" />
+    <ClCompile Include="JMath.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="MarchCubes.cpp" />
     <ClCompile Include="Player.cpp" />

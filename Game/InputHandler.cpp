@@ -58,7 +58,7 @@ void InputHandler::tick()
 
 /* Check if a key is pressed. Returns true as long as the key is pressed.
  */
-bool InputHandler::get_button(int _dikb) const
+bool InputHandler::get_key(int _dikb) const
 {
     if (keyboard_state[_dikb] & 0x80)
     {
@@ -72,7 +72,7 @@ bool InputHandler::get_button(int _dikb) const
 /* Check if a key has just been pressed.
  * Returns true the first time it was pressed, otherwise returns false.
  */
-bool InputHandler::get_button_down(int _dikb) const
+bool InputHandler::get_key_down(int _dikb) const
 {
     if ((keyboard_state[_dikb] & 0x80) && !(prev_keyboard_state[_dikb] & 0x80))
     {
@@ -86,9 +86,39 @@ bool InputHandler::get_button_down(int _dikb) const
 /* Check if a key has just been released.
  * Returns true the first time it was released, otherwise returns false.
  */
-bool InputHandler::get_button_up(int _dikb) const
+bool InputHandler::get_key_up(int _dikb) const
 {
-    if (!(keyboard_state[_dikb] & 0x80) && (prev_keyboard_state[_dikb] & 0x80))
+    if (!(keyboard_state[_dikb] & 0x80) && prev_keyboard_state[_dikb] & 0x80)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool InputHandler::get_mouse_button(int _button) const
+{
+    if (mouse_state.rgbButtons[_button] & 0x80)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool InputHandler::get_mouse_button_down(int _button) const
+{
+    if ((mouse_state.rgbButtons[_button] & 0x80) && !(prev_mouse_state.rgbButtons[_button] & 0x80))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool InputHandler::get_mouse_button_up(int _button) const
+{
+    if (!(mouse_state.rgbButtons[_button] & 0x80) && (prev_mouse_state.rgbButtons[_button] & 0x80))
     {
         return true;
     }

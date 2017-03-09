@@ -15,11 +15,14 @@ public:
 
     void tick();
 
-    bool get_button(int _dikb) const;
-    bool get_button_down(int _dikb) const;
-    bool get_button_up(int _dikb) const;
+    bool get_key(int _dikb) const;
+    bool get_key_down(int _dikb) const;
+    bool get_key_up(int _dikb) const;
 
     DIMOUSESTATE& get_mouse_state();
+    bool get_mouse_button(int _button) const;
+    bool get_mouse_button_down(int _button) const;
+    bool get_mouse_button_up(int _button) const;
 
 private:
     bool read_keyboard();

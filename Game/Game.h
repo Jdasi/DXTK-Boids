@@ -5,6 +5,9 @@
 #include "SpriteBatch.h"
 #include "SpriteFont.h"
 #include "Audio.h"
+#include "GameData.h"
+#include "DrawData.h"
+#include "DrawData2D.h"
 
 #include <windows.h>
 #include <list>
@@ -19,9 +22,7 @@ class GameObject;
 class GameObject2D;
 class Camera;
 class TPSCamera;
-struct GameData;
-struct DrawData;
-struct DrawData2D;
+class FreeCamera;
 class Light;
 class InputHandler;
 class CMOManager;
@@ -49,6 +50,7 @@ protected:
 
 	Camera* camera_;            //principle camera
 	TPSCamera* tps_camera_;     //TPS cam
+    FreeCamera* free_camera_;   //Free cam
 	Light* light_;              //base light
 
     std::list<GameObject *> game_objects_;      //data structure storing all GameObjects of this Game
@@ -58,9 +60,9 @@ protected:
 	CommonStates* states_;
 	std::unique_ptr<IEffectFactory> fx_factory_;
 
-	GameData* GD_;		//Data to be shared to all Game Objects as they are ticked
-	DrawData* DD_;		//Data to be shared to all Game Objects as they are drawn
-	DrawData2D* DD2D_;	//Data to be passed by game to all 2D Game Objects via Draw 
+	GameData GD_;		//Data to be shared to all Game Objects as they are ticked
+	DrawData DD_;		//Data to be shared to all Game Objects as they are drawn
+	DrawData2D DD2D_;	//Data to be passed by game to all 2D Game Objects via Draw 
 
 	//sound stuff
 	std::unique_ptr<AudioEngine> audio_engine_;

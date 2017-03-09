@@ -35,7 +35,7 @@ void BoidManager::draw(DrawData* _DD)
 
 void BoidManager::add_boid(Vector3 _pos)
 {
-    auto boid = std::make_unique<Boid>(cmo_manager_.get_model("BirdModelV1"));
+    auto boid = std::make_unique<Boid>(cmo_manager_.get_model("JEMINA vase -up"));
     boid->set_pos(_pos);
 
     boid->add_rule(rules_[Rule::ID::Separation].get());

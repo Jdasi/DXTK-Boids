@@ -2,10 +2,11 @@
 
 #include "GameObject.h"
 #include "Camera.h"
+#include "TPSCamera.h"
+#include "FreeCamera.h"
 #include "CMOGO.h"
 #include "VBGO.h"
 #include "Light.h"
-#include "TPSCamera.h"
 #include "Player.h"
 #include "Terrain.h"
 #include "InputHandler.h"
