@@ -11,8 +11,8 @@ struct BoidSettings
 {
     BoidType type = BoidType::DEFAULT;
 
-    float max_speed = 0.1f;
-    float max_steer = 0.005;
+    float max_speed = 15.0f;
+    float max_steer = 1.5;
 
     float desired_separation = 5.0f;
     float neighbour_scan = 7.0f;

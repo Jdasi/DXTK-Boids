@@ -2,6 +2,7 @@
 #include "RandomEngine.h"
 #include "Rule.h"
 #include "JMath.h"
+#include "GameData.h"
 
 Boid::Boid(BoidData& _BD, BoidSettings& _settings)
     : CMOGO(_settings.model)
@@ -16,7 +17,7 @@ Boid::Boid(BoidData& _BD, BoidSettings& _settings)
 void Boid::tick(GameData* _GD)
 {
     rules(_GD);
-    move();
+    move(_GD);
     rotate();
     wrap();
 
@@ -57,7 +58,7 @@ void Boid::rules(GameData* _GD)
     }
 }
 
-void Boid::move()
+void Boid::move(GameData* _GD)
 {
     velocity_ += acceleration_;
 
@@ -68,7 +69,7 @@ void Boid::move()
         velocity_ *= settings_.max_speed;
     }
 
-    pos_ += velocity_;
+    pos_ += velocity_ * _GD->delta_time;
     acceleration_ *= 0;
 }
 
