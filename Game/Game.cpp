@@ -8,8 +8,7 @@
 #include <time.h>
 
 Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
-    : play_time_()
-    , hWnd_(_hWnd)
+    : hWnd_(_hWnd)
 {
 	//set up audio
 	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
@@ -28,12 +27,6 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
 	//seed the random number generator
 	srand((UINT)time(NULL));
 
-    // Ant Tweak Bar initialisation.
-    TwInit(TW_DIRECT3D11, _d3d_device); // for Direct3D 11
-    TwWindowSize(1024, 768);
-    TwBar *myBar = TwNewBar("Test");
-    TwAddVarRW(myBar, "Test Float", TW_TYPE_FLOAT, &test_float, "");
-
     fx_factory_ = std::make_unique<EffectFactory>(_d3d_device);
     states_ = new CommonStates(_d3d_device);
 
@@ -48,6 +41,8 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
     input_handler_ = std::make_unique<InputHandler>(_hWnd, _hInstance);
     cmo_manager_ = std::make_unique<CMOManager>(*_d3d_device, *fx_factory_);
     boid_manager_ = std::make_unique<BoidManager>(*cmo_manager_, 10);
+
+    init_tweak_bar(_d3d_device);
 
     //create GameData struct and populate its pointers
     GD_.game_state = GS_PLAY_MAIN_CAM;
@@ -125,45 +120,44 @@ Game::~Game()
 
 bool Game::tick() 
 {
-    // tick core systems.
+    // Crude delta-time system.
+    GD_.delta_time = timer_.getTimeDifference();
+    timer_.reset();
+
+    // Tick core systems.
     input_handler_->tick();
     boid_manager_->tick(&GD_);
 
-	//tick audio engine
+	// Tick audio engine.
 	if (!audio_engine_->Update())
 	{
-		// No audio device is active
+		// No audio device is active.
 		if (audio_engine_->IsCriticalError())
 		{
-			//something has gone wrong with audio so QUIT!
 			return false;
 		}
 	}
 
-	//Upon pressing escape QUIT
+    // Quit on ESC.
 	if (input_handler_->get_key_down(DIK_ESCAPE))
 	{
 		return false;
 	}
 
-	//calculate frame time-step dt for passing down to game objects
-	DWORD currentTime = GetTickCount();
-	GD_.delta_time = min((float)(currentTime - play_time_) / 1000.0f, 0.1f);
-	play_time_ = currentTime;
-
-	//start to a VERY simple FSM
 	switch (GD_.game_state)
 	{
-	case GS_ATTRACT:
-		break;
-	case GS_PAUSE:
-		break;
-	case GS_GAME_OVER:
-		break;
-	case GS_PLAY_MAIN_CAM:
-	case GS_PLAY_TPS_CAM:
-		play_tick();
-		break;
+	    case GS_ATTRACT:
+		    break;
+	    case GS_PAUSE:
+		    break;
+	    case GS_GAME_OVER:
+		    break;
+	    case GS_PLAY_MAIN_CAM:
+	    case GS_PLAY_TPS_CAM:
+		    play_tick();
+		    break;
+
+        default: {}
 	}
 	
 	return true;
@@ -232,4 +226,22 @@ void Game::draw(ID3D11DeviceContext* _d3d_immediate_context)
     _d3d_immediate_context->OMSetDepthStencilState(states_->DepthDefault(), 0);
 
     TwDraw();
-};
+}
+
+void Game::init_tweak_bar(ID3D11Device* _d3d_device)
+{
+    // Ant Tweak Bar initialisation.
+    TwInit(TW_DIRECT3D11, _d3d_device); // for Direct3D 11
+    TwWindowSize(1024, 768);
+
+    TwBar *myBar = TwNewBar("Boid Settings");
+
+    int* num_boids = boid_manager_->get_num_boids();
+    TwAddVarRO(myBar, "Num Boids", TW_TYPE_INT32, num_boids, "");
+
+    BoidSettings& human_settings = boid_manager_->get_human_settings();
+    TwAddVarRW(myBar, "Max Speed", TW_TYPE_FLOAT, &human_settings.max_speed, "");
+    TwAddVarRW(myBar, "Max Steer", TW_TYPE_FLOAT, &human_settings.max_steer, "");
+    TwAddVarRW(myBar, "Desired Seperation", TW_TYPE_FLOAT, &human_settings.desired_separation, "");
+    TwAddVarRW(myBar, "neighbour_scan", TW_TYPE_FLOAT, &human_settings.neighbour_scan, "");
+}

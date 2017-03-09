@@ -27,7 +27,10 @@ public:
     void draw(DrawData* _DD) override;
 
     const Vector3& get_velocity() const;
-    BoidSettings& settings() const;
+
+    float get_scan_modifier() const;
+    void set_scan_modifier(float _f);
+    void modify_scan_modifier(float _f);
 
 private:
     void rules(GameData* _GD);
@@ -38,6 +41,7 @@ private:
 
     Vector3 velocity_;
     Vector3 acceleration_;
+    float scan_modifier_;
 
     BoidData& BD_;
     BoidSettings& settings_;

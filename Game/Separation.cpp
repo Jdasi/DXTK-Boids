@@ -16,7 +16,7 @@ Vector3 Separation::force(GameData* _GD, BoidData& _BD)
 
         float distance = Vector3::Distance(this_boid_->get_pos(), boid->get_pos());
 
-        if (distance > 0 && distance < this_boid_->settings().desired_separation)
+        if (distance > 0 && distance < boid_settings_->desired_separation)
         {
             Vector3 difference = this_boid_->get_pos() - boid->get_pos();
             difference.Normalize();
@@ -35,13 +35,13 @@ Vector3 Separation::force(GameData* _GD, BoidData& _BD)
     if (steer.Length() > 0)
     {
         steer.Normalize();
-        steer *= this_boid_->settings().max_speed;
+        steer *= boid_settings_->max_speed;
         steer -= this_boid_->get_velocity();
 
-        if (steer.Length() > this_boid_->settings().max_steer)
+        if (steer.Length() > boid_settings_->max_steer)
         {
             steer.Normalize();
-            steer *= this_boid_->settings().max_steer;
+            steer *= boid_settings_->max_steer;
         }
     }
 

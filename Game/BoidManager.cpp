@@ -3,9 +3,12 @@
 #include "BoidType.h"
 #include "CMOManager.h"
 #include "Rules.h"
+#include "GameData.h"
+#include "InputHandler.h"
 
 BoidManager::BoidManager(CMOManager& _cmo_manager, unsigned int _initial_humans)
     : cmo_manager_(_cmo_manager)
+    , num_boids_(0)
 {
     // Register rules.
     rules_[Rule::ID::Separation] = std::make_unique<Separation>();
@@ -27,6 +30,12 @@ BoidManager::BoidManager(CMOManager& _cmo_manager, unsigned int _initial_humans)
 
 void BoidManager::tick(GameData* _GD)
 {
+    if (_GD->input_handler->get_key(DIK_H))
+        add_boid(BoidType::HUMAN, Vector3::Zero);
+
+    if (_GD->input_handler->get_key(DIK_Z))
+        add_boid(BoidType::ZOMBIE, Vector3::Zero);
+
     for (auto& boid : boid_data_.boids)
     {
         boid->tick(_GD);
@@ -41,8 +50,28 @@ void BoidManager::draw(DrawData* _DD)
     }
 }
 
+BoidSettings& BoidManager::get_human_settings()
+{
+    return human_settings_;
+}
+
+BoidSettings& BoidManager::get_zombie_settings()
+{
+    return zombie_settings_;
+}
+
+int* BoidManager::get_num_boids()
+{
+    return &num_boids_;
+}
+
 void BoidManager::add_boid(BoidType _type, Vector3 _pos)
 {
+    if (num_boids_ >= 1000)
+        return;
+
+    ++num_boids_;
+
     auto boid = std::make_unique<Boid>(boid_data_, fetch_settings(_type));
     boid->set_pos(_pos);
 

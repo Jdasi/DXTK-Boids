@@ -16,8 +16,8 @@ Vector3 Cohesion::force(GameData* _GD, BoidData& _BD)
 
         float distance = Vector3::Distance(this_boid_->get_pos(), boid->get_pos());
 
-        if (distance > 0 && distance < (this_boid_->settings().neighbour_scan * 
-            this_boid_->settings().scan_modifier))
+        if (distance > 0 && distance < (boid_settings_->neighbour_scan *
+            this_boid_->get_scan_modifier()))
         {
             sum += boid->get_pos();
             ++count;
@@ -25,9 +25,9 @@ Vector3 Cohesion::force(GameData* _GD, BoidData& _BD)
     }
 
     if (count > 0)
-        this_boid_->settings().scan_modifier = 1.0f;
+        this_boid_->set_scan_modifier(1.0f);
     else
-        this_boid_->settings().scan_modifier += 10.0f * _GD->delta_time;
+        this_boid_->modify_scan_modifier(10.0f * _GD->delta_time);
 
     if (count > 0)
     {
@@ -45,15 +45,15 @@ Vector3 Cohesion::seek(Vector3 _target) const
     Vector3 desired = _target - this_boid_->get_pos();
 
     desired.Normalize();
-    desired *= this_boid_->settings().max_speed;
+    desired *= boid_settings_->max_speed;
 
     Vector3 steer = desired - this_boid_->get_velocity();
-    if (steer.Length() > this_boid_->settings().max_steer)
+    if (steer.Length() > boid_settings_->max_steer)
     {
         steer.Normalize();
-        steer *= this_boid_->settings().max_steer;
+        steer *= boid_settings_->max_steer;
     }
 
-    steer *= 0.8f; // Temporary arbitraty weighting.
+    steer *= 0.8f; // Temporary arbitrary weighting.
     return steer;
 }

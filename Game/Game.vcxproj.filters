@@ -189,6 +189,9 @@
     <ClInclude Include="BoidType.h">
       <Filter>Headers\Boids</Filter>
     </ClInclude>
+    <ClInclude Include="SimpleTimer.h">
+      <Filter>Headers\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InputHandler.cpp">
@@ -273,6 +276,9 @@
       <Filter>Source\Objects</Filter>
     </ClCompile>
     <ClCompile Include="JMath.cpp">
+      <Filter>Source\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleTimer.cpp">
       <Filter>Source\Utility</Filter>
     </ClCompile>
   </ItemGroup>

@@ -25,6 +25,11 @@ public:
     void tick(GameData* _GD);
     void draw(DrawData* _DD);
 
+    BoidSettings& get_human_settings();
+    BoidSettings& get_zombie_settings();
+
+    int* get_num_boids();
+
 private:
     void add_boid(BoidType _type, Vector3 _pos);
     CMOModel* fetch_model(BoidType _type) const;
@@ -33,6 +38,7 @@ private:
     std::map<Rule::ID, std::unique_ptr<Rule>> rules_;
     CMOManager& cmo_manager_;
     BoidData boid_data_;
+    int num_boids_;
 
     BoidSettings human_settings_;
     BoidSettings zombie_settings_;

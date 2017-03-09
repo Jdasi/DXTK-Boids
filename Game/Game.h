@@ -8,6 +8,7 @@
 #include "GameData.h"
 #include "DrawData.h"
 #include "DrawData2D.h"
+#include "SimpleTimer.h"
 
 #include <windows.h>
 #include <list>
@@ -35,14 +36,13 @@ public:
 	virtual ~Game();
 
 	bool tick(); //tick the game state
-
 	void draw(ID3D11DeviceContext* _d3d_immediate_context); //render the current game state
 
 protected:
-	DWORD play_time_; //amount of time since the game started
-    HWND hWnd_;
+    void init_tweak_bar(ID3D11Device* _d3d_device);
 
-    float test_float = 0;
+    HWND hWnd_;
+    SimpleTimer timer_;
 
     std::unique_ptr<InputHandler> input_handler_;
     std::unique_ptr<CMOManager> cmo_manager_;
