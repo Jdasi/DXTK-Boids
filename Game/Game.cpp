@@ -50,7 +50,7 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
     boid_manager_ = std::make_unique<BoidManager>(*cmo_manager_, 20);
 
     //create GameData struct and populate its pointers
-    GD_.game_state = GS_PLAY_TPS_CAM;
+    GD_.game_state = GS_PLAY_MAIN_CAM;
     GD_.input_handler = input_handler_.get();
 
 	//init render system for VBGOs
@@ -93,7 +93,8 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
 
 	//add some stuff to show off
 	FileVBGO* terrainBox = new FileVBGO("../Assets/terrainTex.txt", _d3d_device);
-	//game_objects_.push_back(terrainBox);
+    terrainBox->set_scale(10.0f, 0.5f, 10.0f);
+	game_objects_.push_back(terrainBox);
 };
 
 Game::~Game() 

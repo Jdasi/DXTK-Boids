@@ -20,19 +20,17 @@ struct GameData;
 class Boid : public CMOGO
 {
 public:
-    explicit Boid(CMOModel* _model);
+    explicit Boid(BoidData& _BD, BoidSettings& _settings);
     ~Boid() = default;
 
-    void tick(GameData* _GD, BoidData& _BD);
+    void tick(GameData* _GD) override;
     void draw(DrawData* _DD) override;
 
-    void add_rule(Rule* _rule);
-
     const Vector3& get_velocity() const;
-    BoidSettings& settings();
+    BoidSettings& settings() const;
 
 private:
-    void rules(GameData* _GD, BoidData& _data);
+    void rules(GameData* _GD);
     void move();
     void rotate();
     void wrap();
@@ -41,6 +39,7 @@ private:
     Vector3 velocity_;
     Vector3 acceleration_;
 
-    BoidSettings settings_;
+    BoidData& BD_;
+    BoidSettings& settings_;
 
 };

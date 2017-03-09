@@ -2,16 +2,18 @@
 #include "RandomEngine.h"
 #include "Rule.h"
 
-Boid::Boid(CMOModel* _model)
-    : CMOGO(_model)
+Boid::Boid(BoidData& _BD, BoidSettings& _settings)
+    : CMOGO(_settings.model)
+    , BD_(_BD)
+    , settings_(_settings)
 {
     float angle = RandomEngine::range(0, XM_PI * 2);
     velocity_ = Vector3(cos(angle), 0, sin(angle));
 }
 
-void Boid::tick(GameData* _GD, BoidData& _BD)
+void Boid::tick(GameData* _GD)
 {
-    rules(_GD, _BD);
+    rules(_GD);
     move();
     rotate();
     wrap();
@@ -24,27 +26,22 @@ void Boid::draw(DrawData* _DD)
     CMOGO::draw(_DD);
 }
 
-void Boid::add_rule(Rule* _rule)
-{
-    settings_.rules.push_back(_rule);
-}
-
 const Vector3& Boid::get_velocity() const
 {
     return velocity_;
 }
 
-BoidSettings& Boid::settings()
+BoidSettings& Boid::settings() const
 {
     return settings_;
 }
 
-void Boid::rules(GameData* _GD, BoidData& _BD)
+void Boid::rules(GameData* _GD)
 {
     for (auto& rule : settings_.rules)
     {
         rule->set_boid(this);
-        apply_force(rule->force(_GD, _BD));
+        apply_force(rule->force(_GD, BD_));
     }
 }
 

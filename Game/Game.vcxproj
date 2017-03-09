@@ -130,6 +130,7 @@
     <ClInclude Include="BoidData.h" />
     <ClInclude Include="BoidManager.h" />
     <ClInclude Include="BoidSettings.h" />
+    <ClInclude Include="BoidType.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CMOGO.h" />
     <ClInclude Include="CMOModel.h" />

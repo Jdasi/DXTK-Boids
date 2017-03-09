@@ -14,7 +14,7 @@ FreeCamera::FreeCamera(float _fov, float _aspect_ratio, float _near_plane_dist, 
 
 void FreeCamera::tick(GameData* _GD)
 {
-    orbiting_ = _GD->input_handler->get_mouse_button(1);
+    orbiting_ = _GD->input_handler->get_mouse_button(1) && _GD->game_state == GameState::GS_PLAY_MAIN_CAM;
 
     rotate_cam(_GD);
     zoom_cam(_GD);
