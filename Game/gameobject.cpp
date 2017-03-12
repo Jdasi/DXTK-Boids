@@ -122,6 +122,16 @@ float GameObject::get_drag() const
     return drag_;
 }
 
+Matrix GameObject::get_world_matrix()
+{
+    return world_;
+}
+
+void GameObject::set_world_matrix(Matrix _world)
+{
+    world_ = _world;
+}
+
 void GameObject::set_drag(float _drag)
 {
     drag_ = _drag;

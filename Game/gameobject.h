@@ -49,6 +49,9 @@ public:
     float get_drag() const;
     void set_drag(float _drag);
 
+    Matrix get_world_matrix();
+    void set_world_matrix(Matrix _world);
+
 protected:
     Vector3 pos_;
     Vector3 scale_;

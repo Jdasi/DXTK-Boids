@@ -35,7 +35,6 @@ public:
 private:
     void rules(GameData* _GD);
     void move(GameData* _GD);
-    void rotate();
     void wrap();
     void apply_force(Vector3 _force);
 

@@ -89,6 +89,7 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
 	//add some stuff to show off
 	FileVBGO* terrainBox = new FileVBGO("../Assets/terrainTex.txt", _d3d_device);
     terrainBox->set_scale(10.0f, 0.5f, 10.0f);
+    terrainBox->set_pos({ 0, -0.5f, 0 });
 	game_objects_.push_back(terrainBox);
 };
 

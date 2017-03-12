@@ -82,8 +82,8 @@ CMOModel* BoidManager::fetch_model(BoidType _type) const
 {
     switch (_type)
     {
-        case HUMAN: return cmo_manager_.get_model("JEMINA vase -up");
-        case ZOMBIE: return cmo_manager_.get_model("JEMINA vase -up");
+        case HUMAN: return cmo_manager_.get_model("human");
+        case ZOMBIE: return cmo_manager_.get_model("zombie");
 
         default: throw std::runtime_error("Error in fetch_model");
     }
