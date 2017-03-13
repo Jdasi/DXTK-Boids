@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include "TPSCamera.h"
-#include "FreeCamera.h"
+#include "TabletopCamera.h"
 #include "CMOGO.h"
 #include "VBGO.h"
 #include "Light.h"

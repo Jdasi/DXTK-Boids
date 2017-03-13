@@ -40,7 +40,7 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
     // Core systems.
     input_handler_ = std::make_unique<InputHandler>(_hWnd, _hInstance);
     cmo_manager_ = std::make_unique<CMOManager>(*_d3d_device, *fx_factory_);
-    boid_manager_ = std::make_unique<BoidManager>(*cmo_manager_, 0);
+    boid_manager_ = std::make_unique<BoidManager>(*cmo_manager_);
 
     init_tweak_bar(_d3d_device);
 
@@ -58,31 +58,27 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
 	UINT height = rc.bottom - rc.top;
 	float AR = (float)width / (float)height;
 
-	// Base Camera that views the simulation from a fixed perspective.
-	camera_ = new Camera(0.25f * XM_PI, AR, 1.0f, 10000.0f, Vector3::UnitY, Vector3::Zero);
-	camera_->set_pos(Vector3(0.0f, 100.0f, 100.0f));
-	game_objects_.push_back(camera_);
-
 	// Base light.
 	light_ = new Light(Vector3(0.0f, 100.0f, 160.0f), Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.5f, 0.5f, 0.5f, 1.0f));
 	game_objects_.push_back(light_);
 
+    // Tabletop Simulator style camera to orbit around the simulation.
+    tabletop_camera_ = new TabletopCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, Vector3::UnitY, 20.0f, 50.0f);
+    game_objects_.push_back(tabletop_camera_);
+
 	// Player.
 	Player* pPlayer = new Player(cmo_manager_->get_model("BirdModelV1"));
+    pPlayer->set_pos({ 0, 10, 0 });
 	game_objects_.push_back(pPlayer);
 
 	// TPS Camera to follow the Player's movements.
 	tps_camera_ = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 10.0f, 50.0f));
 	game_objects_.push_back(tps_camera_);
 
-    // Free Camera to orbit around the simulation.
-    free_camera_ = new FreeCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 0.0f, 50.0f));
-    game_objects_.push_back(free_camera_);
-
 	//create DrawData struct and populate its pointers
 	DD_.d3d_immediate_context = nullptr;
 	DD_.states = states_;
-	DD_.camera = camera_;
+	DD_.camera = tabletop_camera_;
 	DD_.light = light_;
 
 	//add some stuff to show off
@@ -196,7 +192,7 @@ void Game::draw(ID3D11DeviceContext* _d3d_immediate_context)
 	DD_.d3d_immediate_context = _d3d_immediate_context;
 
 	//set which camera to be used
-	DD_.camera = free_camera_;
+	DD_.camera = tabletop_camera_;
 	if (GD_.game_state == GS_PLAY_TPS_CAM)
 	{
 		DD_.camera = tps_camera_;

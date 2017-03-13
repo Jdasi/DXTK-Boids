@@ -19,7 +19,7 @@ struct GameData;
 class BoidManager
 {
 public:
-    BoidManager(CMOManager& _cmo_manager, unsigned int _initial_humans = 0);
+    BoidManager(CMOManager& _cmo_manager);
     ~BoidManager() = default;
 
     void tick(GameData* _GD);

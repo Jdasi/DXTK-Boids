@@ -21,10 +21,11 @@ public:
 	virtual ~GameObject() = default;
 
 	virtual void tick(GameData* _GD);
-	virtual void draw(DrawData* _DD) = 0;
+	virtual void draw(DrawData* _DD) {}
 
     Vector3 get_pos() const;
     void set_pos(Vector3 _pos);
+    void modify_pos(Vector3 _pos);
 
     Vector3 get_scale() const;
     void set_scale(float _scale);
@@ -49,7 +50,7 @@ public:
     float get_drag() const;
     void set_drag(float _drag);
 
-    Matrix get_world_matrix();
+    Matrix get_world_matrix() const;
     void set_world_matrix(Matrix _world);
 
 protected:

@@ -12,6 +12,7 @@
 
 CMOGO::CMOGO(CMOModel* _model)
     : model_(_model)
+    , visible_(true)
 {
 }
 
@@ -20,9 +21,19 @@ void CMOGO::tick(GameData* _GD)
 	GameObject::tick(_GD);
 }
 
+bool CMOGO::is_visible() const
+{
+    return visible_;
+}
+
+void CMOGO::set_visible(bool _visible)
+{
+    visible_ = _visible;
+}
+
 void CMOGO::draw(DrawData* _DD)
 {
-    if (!model_)
+    if (!visible_)
         return;
 
 	//a dirty hack as the CMO model drawer breaks the depth stencil state

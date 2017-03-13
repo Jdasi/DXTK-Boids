@@ -6,7 +6,7 @@
 #include "GameData.h"
 #include "InputHandler.h"
 
-BoidManager::BoidManager(CMOManager& _cmo_manager, unsigned int _initial_humans)
+BoidManager::BoidManager(CMOManager& _cmo_manager)
     : cmo_manager_(_cmo_manager)
     , num_boids_(0)
 {
@@ -15,6 +15,7 @@ BoidManager::BoidManager(CMOManager& _cmo_manager, unsigned int _initial_humans)
     rules_[Rule::ID::Alignment] = std::make_unique<Alignment>();
     rules_[Rule::ID::Cohesion] = std::make_unique<Cohesion>();
 
+    // Set up boid settings.
     human_settings_.type = BoidType::HUMAN;
     human_settings_.model = fetch_model(BoidType::HUMAN);
 
@@ -29,20 +30,15 @@ BoidManager::BoidManager(CMOManager& _cmo_manager, unsigned int _initial_humans)
     zombie_settings_.rules.push_back(rules_[Rule::ID::Separation].get());
     zombie_settings_.rules.push_back(rules_[Rule::ID::Alignment].get());
     zombie_settings_.rules.push_back(rules_[Rule::ID::Cohesion].get());
-
-    for (int i = 0; i < _initial_humans; ++i)
-    {
-        add_boid(BoidType::HUMAN, Vector3::Zero);
-    }
 }
 
 void BoidManager::tick(GameData* _GD)
 {
     if (_GD->input_handler->get_key(DIK_H))
-        add_boid(BoidType::HUMAN, Vector3::Zero);
+        add_boid(BoidType::HUMAN, _GD->boid_spawn_pos);
 
     if (_GD->input_handler->get_key(DIK_Z))
-        add_boid(BoidType::ZOMBIE, Vector3::Zero);
+        add_boid(BoidType::ZOMBIE, _GD->boid_spawn_pos);
 
     for (auto& boid : boid_data_.boids)
     {

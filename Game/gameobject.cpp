@@ -45,6 +45,11 @@ void GameObject::set_pos(Vector3 _pos)
     pos_ = _pos;
 }
 
+void GameObject::modify_pos(Vector3 _pos)
+{
+    pos_ += _pos;
+}
+
 Vector3 GameObject::get_scale() const
 {
     return scale_;
@@ -122,7 +127,7 @@ float GameObject::get_drag() const
     return drag_;
 }
 
-Matrix GameObject::get_world_matrix()
+Matrix GameObject::get_world_matrix() const
 {
     return world_;
 }

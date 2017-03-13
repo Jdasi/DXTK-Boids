@@ -23,7 +23,7 @@ class GameObject;
 class GameObject2D;
 class Camera;
 class TPSCamera;
-class FreeCamera;
+class TabletopCamera;
 class Light;
 class InputHandler;
 class CMOManager;
@@ -48,10 +48,9 @@ protected:
     std::unique_ptr<CMOManager> cmo_manager_;
     std::unique_ptr<BoidManager> boid_manager_;
 
-	Camera* camera_;            //principle camera
-	TPSCamera* tps_camera_;     //TPS cam
-    FreeCamera* free_camera_;   //Free cam
-	Light* light_;              //base light
+	TPSCamera* tps_camera_;             //TPS cam
+    TabletopCamera* tabletop_camera_;   //Tabletop cam
+	Light* light_;                      //base light
 
     std::list<GameObject *> game_objects_;      //data structure storing all GameObjects of this Game
     std::list<GameObject2D *> game_objects_2d_; //ditto 2D objects

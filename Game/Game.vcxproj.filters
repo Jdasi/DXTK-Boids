@@ -180,9 +180,6 @@
     <ClInclude Include="BoidSettings.h">
       <Filter>Headers\Boids</Filter>
     </ClInclude>
-    <ClInclude Include="FreeCamera.h">
-      <Filter>Headers\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="JMath.h">
       <Filter>Headers\Utility</Filter>
     </ClInclude>
@@ -191,6 +188,9 @@
     </ClInclude>
     <ClInclude Include="SimpleTimer.h">
       <Filter>Headers\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="TabletopCamera.h">
+      <Filter>Headers\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -272,14 +272,14 @@
     <ClCompile Include="Separation.cpp">
       <Filter>Source\Boids\Rules</Filter>
     </ClCompile>
-    <ClCompile Include="FreeCamera.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="JMath.cpp">
       <Filter>Source\Utility</Filter>
     </ClCompile>
     <ClCompile Include="SimpleTimer.cpp">
       <Filter>Source\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="TabletopCamera.cpp">
+      <Filter>Source\Objects</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
