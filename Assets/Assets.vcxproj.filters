@@ -64,4 +64,9 @@
       <Filter>Textures</Filter>
     </ImageContentTask>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="concrete.jpg">
+      <Filter>Textures</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

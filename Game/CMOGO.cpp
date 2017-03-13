@@ -22,6 +22,9 @@ void CMOGO::tick(GameData* _GD)
 
 void CMOGO::draw(DrawData* _DD)
 {
+    if (!model_)
+        return;
+
 	//a dirty hack as the CMO model drawer breaks the depth stencil state
 	ID3D11DepthStencilState *DSS = nullptr;
 	UINT ref;

@@ -1,62 +1,46 @@
 #include "Player.h"
 #include "GameData.h"
 #include "InputHandler.h"
-#include <iostream>
 
 Player::Player(CMOModel* _model)
-    : CMOGO(_model)
+    : CMOGO(nullptr)
 {
-	fudge_ = Matrix::CreateRotationY(XM_PI);
-
 	set_drag(0.7f);
 	set_physics_enabled(true);
 }
 
 void Player::tick(GameData* _GD)
 {
+    float shift_modifier = _GD->input_handler->get_key(DIK_LSHIFT) ? 3.0f : 1.0f;
+
 	// Keyboard controls.
-	Vector3 forwardMove = 40.0f * Vector3::Forward;
+	Vector3 forwardMove = 20.0f * Vector3::Forward;
+
 	Matrix rotMove = Matrix::CreateRotationY(yaw_);
 	forwardMove = Vector3::Transform(forwardMove, rotMove);
+
+    Vector3 sideMove = 20.0f * Vector3::Left;
+    sideMove = Vector3::Transform(sideMove, rotMove);
+
 	if (_GD->input_handler->get_key(DIK_W))
 	{
-		acceleration_ += forwardMove;
+		pos_ += forwardMove * shift_modifier * _GD->delta_time;
 	}
+
 	if (_GD->input_handler->get_key(DIK_S))
 	{
-		acceleration_ -= forwardMove;
+		pos_ -= forwardMove * shift_modifier * _GD->delta_time;
 	}
 
 	// Player rotation.
-	float rotSpeed = 2.0f * _GD->delta_time;
 	if (_GD->input_handler->get_key(DIK_A))
 	{
-		yaw_ += rotSpeed;
+        pos_ += sideMove * shift_modifier * _GD->delta_time;
 	}
+
 	if (_GD->input_handler->get_key(DIK_D))
 	{
-		yaw_ -= rotSpeed;
-	}
-
-	// Up-down movement.
-	if (_GD->input_handler->get_key(DIK_R))
-	{
-		acceleration_.y += 40.0f;
-	}
-
-	if (_GD->input_handler->get_key(DIK_F))
-	{
-		acceleration_.y -= 40.0f;
-	}
-
-	// Limit speed.
-	float length = pos_.Length();
-	float maxLength = 500.0f;
-	if (length > maxLength)
-	{
-		pos_.Normalize();
-		pos_ *= maxLength;
-		velocity_ *= -0.9f; //VERY simple bounce back
+        pos_ -= sideMove * shift_modifier * _GD->delta_time;
 	}
 
 	// Base behaviour.

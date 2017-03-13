@@ -8,7 +8,7 @@
 class FreeCamera : public Camera
 {
 public:
-    FreeCamera(float _fov, float _aspect_ratio, float _near_plane_dist, float _far_plane_dist, Vector3 _target, Vector3 _up, Vector3 _dpos);
+    FreeCamera(float _fov, float _aspect_ratio, float _near_plane_dist, float _far_plane_dist, GameObject* _follow_target, Vector3 _up, Vector3 _dpos);
     virtual ~FreeCamera() = default;
 
     virtual void tick(GameData* _GD) override;
@@ -17,7 +17,7 @@ protected:
     void rotate_cam(GameData* _GD);
     void zoom_cam(GameData* _GD);
 
-    Vector3 look_at_; // Follow this position.
+    GameObject* follow_object_; // Follow this target.
     Vector3	dpos_; // Hover with this offset.
     bool orbiting_; // Whether or not the camera is in orbiting mode (user input).
 
@@ -26,6 +26,6 @@ protected:
 
     float min_scroll_ = 50.f;
     float max_scroll_ = 500.0f;
-    float scroll_speed_ = 0.25f;
+    float scroll_speed_ = 0.1f;
 
 };

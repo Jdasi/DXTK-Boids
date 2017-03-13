@@ -52,6 +52,11 @@ void Boid::modify_scan_modifier(float _f)
     scan_modifier_ += _f;
 }
 
+const BoidSettings& Boid::getSettings() const
+{
+    return settings_;
+}
+
 const Vector3& Boid::get_velocity() const
 {
     return velocity_;

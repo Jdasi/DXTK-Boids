@@ -40,7 +40,7 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
     // Core systems.
     input_handler_ = std::make_unique<InputHandler>(_hWnd, _hInstance);
     cmo_manager_ = std::make_unique<CMOManager>(*_d3d_device, *fx_factory_);
-    boid_manager_ = std::make_unique<BoidManager>(*cmo_manager_, 10);
+    boid_manager_ = std::make_unique<BoidManager>(*cmo_manager_, 0);
 
     init_tweak_bar(_d3d_device);
 
@@ -64,12 +64,11 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
 	game_objects_.push_back(camera_);
 
 	// Base light.
-	light_ = new Light(Vector3(0.0f, 100.0f, 160.0f), Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.4f, 0.1f, 0.1f, 1.0f));
+	light_ = new Light(Vector3(0.0f, 100.0f, 160.0f), Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.5f, 0.5f, 0.5f, 1.0f));
 	game_objects_.push_back(light_);
 
 	// Player.
 	Player* pPlayer = new Player(cmo_manager_->get_model("BirdModelV1"));
-    pPlayer->set_pos(Vector3(0, 10, 0));
 	game_objects_.push_back(pPlayer);
 
 	// TPS Camera to follow the Player's movements.
@@ -77,7 +76,7 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
 	game_objects_.push_back(tps_camera_);
 
     // Free Camera to orbit around the simulation.
-    free_camera_ = new FreeCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, Vector3::Zero, Vector3::UnitY, Vector3(0.0f, 0.0f, 50.0f));
+    free_camera_ = new FreeCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 0.0f, 50.0f));
     game_objects_.push_back(free_camera_);
 
 	//create DrawData struct and populate its pointers
@@ -241,8 +240,8 @@ void Game::init_tweak_bar(ID3D11Device* _d3d_device)
     TwAddVarRO(myBar, "Num Boids", TW_TYPE_INT32, num_boids, "");
 
     BoidSettings& human_settings = boid_manager_->get_human_settings();
-    TwAddVarRW(myBar, "Max Speed", TW_TYPE_FLOAT, &human_settings.max_speed, "");
-    TwAddVarRW(myBar, "Max Steer", TW_TYPE_FLOAT, &human_settings.max_steer, "");
-    TwAddVarRW(myBar, "Desired Seperation", TW_TYPE_FLOAT, &human_settings.desired_separation, "");
-    TwAddVarRW(myBar, "neighbour_scan", TW_TYPE_FLOAT, &human_settings.neighbour_scan, "");
+    TwAddVarRW(myBar, "Max Speed", TW_TYPE_FLOAT, &human_settings.max_speed, "min=1.0 max=25.0 step=0.2");
+    TwAddVarRW(myBar, "Max Steer", TW_TYPE_FLOAT, &human_settings.max_steer, "min=1.0 max=25.0 step=0.2");
+    TwAddVarRW(myBar, "Desired Seperation", TW_TYPE_FLOAT, &human_settings.desired_separation, "min=1.0 max=25.0 step=0.2");
+    TwAddVarRW(myBar, "Neighbour Scan", TW_TYPE_FLOAT, &human_settings.neighbour_scan, "min=1.0 max=25.0 step=0.2");
 }

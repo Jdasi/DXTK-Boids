@@ -32,6 +32,8 @@ public:
     void set_scan_modifier(float _f);
     void modify_scan_modifier(float _f);
 
+    const BoidSettings& getSettings() const;
+
 private:
     void rules(GameData* _GD);
     void move(GameData* _GD);

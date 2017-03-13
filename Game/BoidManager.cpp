@@ -15,12 +15,20 @@ BoidManager::BoidManager(CMOManager& _cmo_manager, unsigned int _initial_humans)
     rules_[Rule::ID::Alignment] = std::make_unique<Alignment>();
     rules_[Rule::ID::Cohesion] = std::make_unique<Cohesion>();
 
+    human_settings_.type = BoidType::HUMAN;
     human_settings_.model = fetch_model(BoidType::HUMAN);
+
+    zombie_settings_.type = BoidType::ZOMBIE;
     zombie_settings_.model = fetch_model(BoidType::ZOMBIE);
+    zombie_settings_.max_speed = 5.0f;
 
     human_settings_.rules.push_back(rules_[Rule::ID::Separation].get());
     human_settings_.rules.push_back(rules_[Rule::ID::Alignment].get());
     human_settings_.rules.push_back(rules_[Rule::ID::Cohesion].get());
+
+    zombie_settings_.rules.push_back(rules_[Rule::ID::Separation].get());
+    zombie_settings_.rules.push_back(rules_[Rule::ID::Alignment].get());
+    zombie_settings_.rules.push_back(rules_[Rule::ID::Cohesion].get());
 
     for (int i = 0; i < _initial_humans; ++i)
     {

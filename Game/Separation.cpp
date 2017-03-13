@@ -16,7 +16,14 @@ Vector3 Separation::force(GameData* _GD, BoidData& _BD)
 
         float distance = Vector3::Distance(this_boid_->get_pos(), boid->get_pos());
 
-        if (distance > 0 && distance < boid_settings_->desired_separation)
+        float separation_modifier = 1.0f;
+
+        // Humans want a larger separation from zombies.
+        if (this_boid_->getSettings().type == BoidType::HUMAN &&
+            boid->getSettings().type == BoidType::ZOMBIE)
+            separation_modifier = 5.0f;
+
+        if (distance > 0 && distance < boid_settings_->desired_separation * separation_modifier)
         {
             Vector3 difference = this_boid_->get_pos() - boid->get_pos();
             difference.Normalize();
