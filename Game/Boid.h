@@ -10,7 +10,6 @@
 using namespace DirectX;
 using namespace SimpleMath;
 
-class BoidManager;
 class CMOModel;
 struct BoidData;
 class Rule;
@@ -19,8 +18,10 @@ struct GameData;
 
 class Boid : public CMOGO
 {
+friend class BoidManager;
+
 public:
-    explicit Boid(BoidData& _BD, BoidSettings& _settings);
+    explicit Boid(BoidSettings* _settings);
     ~Boid() = default;
 
     void tick(GameData* _GD) override;
@@ -32,7 +33,9 @@ public:
     void set_scan_modifier(float _f);
     void modify_scan_modifier(float _f);
 
-    const BoidSettings& getSettings() const;
+    BoidSettings* getSettings();
+
+    void infect(BoidSettings* _settings);
 
 private:
     void rules(GameData* _GD);
@@ -44,7 +47,8 @@ private:
     Vector3 acceleration_;
     float scan_modifier_;
 
-    BoidData& BD_;
-    BoidSettings& settings_;
+    BoidSettings* settings_;
+
+    std::vector<Boid*> neighbours_;
 
 };

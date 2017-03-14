@@ -31,14 +31,19 @@ public:
     int* get_num_boids();
 
 private:
+    void register_rules();
+    void configure_boid_settings();
+    void spawn_controls(GameData* _GD);
     void add_boid(BoidType _type, Vector3 _pos);
+
     CMOModel* fetch_model(BoidType _type) const;
-    BoidSettings& fetch_settings(BoidType _type);
+    BoidSettings* fetch_settings(BoidType _type);
 
     std::map<Rule::ID, std::unique_ptr<Rule>> rules_;
     CMOManager& cmo_manager_;
-    BoidData boid_data_;
+    std::vector<std::unique_ptr<Boid>> boids_;
     int num_boids_;
+    int max_boids_;
 
     BoidSettings human_settings_;
     BoidSettings zombie_settings_;

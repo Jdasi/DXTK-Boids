@@ -19,6 +19,8 @@ public:
 	virtual void tick(GameData* _GD) override;
 	virtual void draw(DrawData* _DD) override;
 
+    void set_model(CMOModel* _model);
+
     bool is_visible() const;
     void set_visible(bool _visible);
 

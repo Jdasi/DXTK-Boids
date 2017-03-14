@@ -12,10 +12,11 @@ struct BoidSettings
     BoidType type = BoidType::DEFAULT;
 
     float max_speed = 15.0f;
-    float max_steer = 1.5;
+    float max_steer = 1.0f;
 
     float desired_separation = 5.0f;
     float neighbour_scan = 7.0f;
+    float infection_distance = 2.0f;
 
     std::vector<Rule*> rules;
     CMOModel* model = nullptr;

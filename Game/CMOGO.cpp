@@ -59,3 +59,8 @@ void CMOGO::draw(DrawData* _DD)
 		DSS->Release();
 	}
 }
+
+void CMOGO::set_model(CMOModel* _model)
+{
+    model_ = _model;
+}

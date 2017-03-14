@@ -3,28 +3,34 @@
 #include "BoidData.h"
 #include "GameData.h"
 
-Vector3 Cohesion::force(GameData* _GD, BoidData& _BD)
+Vector3 Cohesion::force(GameData* _GD, std::vector<Boid*>& _neighbours)
 {
     Vector3 sum = Vector3::Zero;
 
     int count = 0;
 
-    for (auto& boid : _BD.boids)
+    for (auto& boid : _neighbours)
     {
-        if (this_boid_ == boid.get())
+        if (this_boid_ == boid)
             continue;
 
         // Zombies don't flock.
-        if (this_boid_->getSettings().type == BoidType::ZOMBIE &&
-            boid->getSettings().type == BoidType::ZOMBIE)
-            continue;
-
-        // Humans don't flock with zombies.
-        if (this_boid_->getSettings().type == BoidType::HUMAN &&
-            boid->getSettings().type == BoidType::ZOMBIE)
+        if (this_boid_->getSettings()->type == BoidType::ZOMBIE &&
+            boid->getSettings()->type == BoidType::ZOMBIE)
             continue;
 
         float distance = Vector3::Distance(this_boid_->get_pos(), boid->get_pos());
+
+        // Handle infection.
+        if (this_boid_->getSettings()->type == BoidType::ZOMBIE &&
+            boid->getSettings()->type == BoidType::HUMAN)
+        {
+            if (distance > 0 && distance <= this_boid_->getSettings()->infection_distance)
+            {
+                boid->infect(this_boid_->getSettings());
+                continue;
+            }
+        }
 
         if (distance > 0 && distance < (boid_settings_->neighbour_scan *
             this_boid_->get_scan_modifier()))
@@ -34,10 +40,8 @@ Vector3 Cohesion::force(GameData* _GD, BoidData& _BD)
         }
     }
 
-    if (count > 0)
-        this_boid_->set_scan_modifier(1.0f);
-    else
-        this_boid_->modify_scan_modifier(10.0f * _GD->delta_time);
+    if (count <= 0)
+        this_boid_->modify_scan_modifier(5.0f * _GD->delta_time);
 
     if (count > 0)
     {

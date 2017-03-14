@@ -4,12 +4,13 @@
 #include "JMath.h"
 #include "GameData.h"
 
-Boid::Boid(BoidData& _BD, BoidSettings& _settings)
-    : CMOGO(_settings.model)
+Boid::Boid(BoidSettings* _settings)
+    : CMOGO(_settings->model)
     , scan_modifier_(1.0f)
-    , BD_(_BD)
     , settings_(_settings)
 {
+    neighbours_.reserve(500);
+
     fudge_ = Matrix::CreateRotationY(XM_PI * 1.5f);
     set_scale(0.1f);
 
@@ -52,9 +53,15 @@ void Boid::modify_scan_modifier(float _f)
     scan_modifier_ += _f;
 }
 
-const BoidSettings& Boid::getSettings() const
+BoidSettings* Boid::getSettings()
 {
     return settings_;
+}
+
+void Boid::infect(BoidSettings* _settings)
+{
+    set_model(_settings->model);
+    settings_ = _settings;
 }
 
 const Vector3& Boid::get_velocity() const
@@ -64,10 +71,10 @@ const Vector3& Boid::get_velocity() const
 
 void Boid::rules(GameData* _GD)
 {
-    for (auto& rule : settings_.rules)
+    for (auto& rule : settings_->rules)
     {
         rule->set_boid(this, settings_);
-        apply_force(rule->force(_GD, BD_));
+        apply_force(rule->force(_GD, neighbours_));
     }
 }
 
@@ -76,10 +83,10 @@ void Boid::move(GameData* _GD)
     velocity_ += acceleration_;
 
     // Limit speed.
-    if (velocity_.Length() > settings_.max_speed)
+    if (velocity_.Length() > settings_->max_speed)
     {
         velocity_.Normalize();
-        velocity_ *= settings_.max_speed;
+        velocity_ *= settings_->max_speed;
     }
 
     pos_ += velocity_ * _GD->delta_time;

@@ -7,7 +7,7 @@ public:
     Alignment() = default;
     ~Alignment() = default;
 
-    Vector3 force(GameData* _GD, BoidData& _BD) override;
+    Vector3 force(GameData* _GD, std::vector<Boid*>& _neighbours) override;
 
 private:
 

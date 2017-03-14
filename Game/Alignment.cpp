@@ -3,25 +3,20 @@
 #include "BoidData.h"
 #include "GameData.h"
 
-Vector3 Alignment::force(GameData* _GD, BoidData& _BD)
+Vector3 Alignment::force(GameData* _GD, std::vector<Boid*>& _neighbours)
 {
     Vector3 sum = Vector3::Zero;
 
     int count = 0;
 
-    for (auto& boid : _BD.boids)
+    for (auto& boid : _neighbours)
     {
-        if (boid.get() == this_boid_)
-            continue;
-
-        // Zombies don't flock.
-        if (this_boid_->getSettings().type == BoidType::ZOMBIE &&
-            boid->getSettings().type == BoidType::ZOMBIE)
+        if (this_boid_ == boid)
             continue;
 
         // Humans don't flock with zombies.
-        if (this_boid_->getSettings().type == BoidType::HUMAN &&
-            boid->getSettings().type == BoidType::ZOMBIE)
+        if (this_boid_->getSettings()->type == BoidType::HUMAN &&
+            boid->getSettings()->type == BoidType::ZOMBIE)
             continue;
 
         float distance = Vector3::Distance(this_boid_->get_pos(), boid->get_pos());
@@ -34,10 +29,8 @@ Vector3 Alignment::force(GameData* _GD, BoidData& _BD)
         }
     }
 
-    if (count > 0)
-        this_boid_->set_scan_modifier(1.0f);
-    else
-        this_boid_->modify_scan_modifier(10.0f * _GD->delta_time);
+    if (count <= 0)
+        this_boid_->modify_scan_modifier(5.0f * _GD->delta_time);
 
     if (count > 0)
     {
