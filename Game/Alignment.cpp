@@ -1,6 +1,5 @@
 #include "Alignment.h"
 #include "Boid.h"
-#include "BoidData.h"
 #include "GameData.h"
 
 Vector3 Alignment::force(GameData* _GD, std::vector<Boid*>& _neighbours)

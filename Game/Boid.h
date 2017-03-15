@@ -39,8 +39,9 @@ public:
 
 private:
     void rules(GameData* _GD);
-    void move(GameData* _GD);
     void wrap();
+    void move(GameData* _GD);
+    void update_world();
     void apply_force(Vector3 _force);
 
     Vector3 velocity_;

@@ -21,16 +21,9 @@ Boid::Boid(BoidSettings* _settings)
 void Boid::tick(GameData* _GD)
 {
     rules(_GD);
-    move(_GD);
     wrap();
-
-    auto dir = velocity_;
-    dir.Normalize();
-
-    Matrix scaleMat = Matrix::CreateScale(scale_);
-    Matrix rotTransMat = Matrix::CreateWorld(pos_, dir, Vector3::Up);
-
-    set_world_matrix(fudge_ * scaleMat * rotTransMat);
+    move(_GD);
+    update_world();
 }
 
 void Boid::draw(DrawData* _DD)
@@ -78,6 +71,26 @@ void Boid::rules(GameData* _GD)
     }
 }
 
+void Boid::wrap()
+{
+    if (pos_.x < -200.0f ||
+        pos_.x > 200.0f ||
+        pos_.z < -200.0f ||
+        pos_.z > 200.0f)
+    {
+        Vector3 steer = Vector3::Zero - pos_;
+
+        if (steer.Length() > settings_->max_steer)
+        {
+            steer.Normalize();
+            steer *= settings_->max_steer;
+        }
+
+        steer *= 2.0f;
+        apply_force(steer);
+    }
+}
+
 void Boid::move(GameData* _GD)
 {
     velocity_ += acceleration_;
@@ -93,10 +106,15 @@ void Boid::move(GameData* _GD)
     acceleration_ *= 0;
 }
 
-void Boid::wrap()
+void Boid::update_world()
 {
-    pos_.x = JMath::iclampf(pos_.x, -200.0f, 200.0f);
-    pos_.z = JMath::iclampf(pos_.z, -200.0f, 200.0f);
+    auto dir = velocity_;
+    dir.Normalize();
+
+    Matrix scaleMat = Matrix::CreateScale(scale_);
+    Matrix rotTransMat = Matrix::CreateWorld(pos_, dir, Vector3::Up);
+
+    set_world_matrix(fudge_ * scaleMat * rotTransMat);
 }
 
 void Boid::apply_force(Vector3 _force)

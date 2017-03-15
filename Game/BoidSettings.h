@@ -16,7 +16,7 @@ struct BoidSettings
 
     float desired_separation = 5.0f;
     float neighbour_scan = 7.0f;
-    float infection_distance = 2.0f;
+    float infection_distance = 2.5f;
 
     std::vector<Rule*> rules;
     CMOModel* model = nullptr;

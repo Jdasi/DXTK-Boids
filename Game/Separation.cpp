@@ -1,6 +1,5 @@
 #include "Separation.h"
 #include "Boid.h"
-#include "BoidData.h"
 #include "GameData.h"
 
 Vector3 Separation::force(GameData* _GD, std::vector<Boid*>& _neighbours)
@@ -25,7 +24,7 @@ Vector3 Separation::force(GameData* _GD, std::vector<Boid*>& _neighbours)
         // Humans want a larger separation from zombies.
         if (this_boid_->getSettings()->type == BoidType::HUMAN &&
             boid->getSettings()->type == BoidType::ZOMBIE)
-            separation_modifier = 3.0f;
+            separation_modifier = 10.0f;
 
         if (distance > 0 && distance < boid_settings_->desired_separation * separation_modifier)
         {

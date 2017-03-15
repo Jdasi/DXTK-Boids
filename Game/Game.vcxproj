@@ -127,7 +127,6 @@
   <ItemGroup>
     <ClInclude Include="Alignment.h" />
     <ClInclude Include="Boid.h" />
-    <ClInclude Include="BoidData.h" />
     <ClInclude Include="BoidManager.h" />
     <ClInclude Include="BoidSettings.h" />
     <ClInclude Include="BoidType.h" />

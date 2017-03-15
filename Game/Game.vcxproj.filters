@@ -147,9 +147,6 @@
     <ClInclude Include="BoidManager.h">
       <Filter>Headers\Boids</Filter>
     </ClInclude>
-    <ClInclude Include="BoidData.h">
-      <Filter>Headers\Boids</Filter>
-    </ClInclude>
     <ClInclude Include="CMOManager.h">
       <Filter>Headers\Managers</Filter>
     </ClInclude>

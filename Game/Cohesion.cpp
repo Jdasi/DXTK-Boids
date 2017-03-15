@@ -1,6 +1,5 @@
 #include "Cohesion.h"
 #include "Boid.h"
-#include "BoidData.h"
 #include "GameData.h"
 
 Vector3 Cohesion::force(GameData* _GD, std::vector<Boid*>& _neighbours)
