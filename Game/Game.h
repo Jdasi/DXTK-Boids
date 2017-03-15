@@ -28,6 +28,7 @@ class Light;
 class InputHandler;
 class CMOManager;
 class BoidManager;
+typedef struct CTwBar TwBar;
 
 class Game
 {
@@ -39,7 +40,9 @@ public:
 	void draw(ID3D11DeviceContext* _d3d_immediate_context); //render the current game state
 
 protected:
-    void init_tweak_bar(ID3D11Device* _d3d_device);
+    void init_tweak_bar(ID3D11Device* _d3d_device) const;
+    void tweak_bar_human_settings(TwBar* _twbar) const;
+    void tweak_bar_zombie_settings(TwBar* _twbar) const;
 
     HWND hWnd_;
     SimpleTimer timer_;

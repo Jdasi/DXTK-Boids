@@ -8,7 +8,7 @@ TabletopCamera::TabletopCamera(float _fov, float _aspect_ratio, float _near_plan
     , dpos_(Vector3(0, 0, _initial_zoom))
     , orbiting_(false)
 {
-    pitch_ = JMath::clampf(_initial_pitch, min_pitch_, max_pitch_);
+    pitch_ = JMath::clampf(-_initial_pitch, min_pitch_, max_pitch_);
     dpos_.z = JMath::clampf(dpos_.z, min_scroll_, max_scroll_);
 }
 
