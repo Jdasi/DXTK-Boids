@@ -1,26 +1,23 @@
 #include "Cohesion.h"
 #include "Boid.h"
 #include "GameData.h"
+#include "Constants.h"
 
-Vector3 Cohesion::force(GameData* _GD, std::vector<Boid*>& _neighbours, float _weight)
+Vector3 Cohesion::force(GameData* _GD, std::vector<Boid*>& _neighbours, ParameterisedRule* _rule_params)
 {
     Vector3 sum = Vector3::Zero;
 
     int count = 0;
 
-    for (auto& boid : _neighbours)
+    for (auto& neighbour : _neighbours)
     {
-        if (this_boid_ == boid)
+        if (this_boid_ == neighbour)
             continue;
 
-        /*
-        // Zombies don't flock.
-        if (this_boid_->getSettings()->type == BoidType::ZOMBIE &&
-            boid->getSettings()->type == BoidType::ZOMBIE)
+        if (!_rule_params->concerns_type(neighbour->getSettings()->type))
             continue;
-        */
 
-        float distance = Vector3::Distance(this_boid_->get_pos(), boid->get_pos());
+        float distance = Vector3::Distance(this_boid_->get_pos(), neighbour->get_pos());
 
         /*
         // Handle infection.
@@ -38,18 +35,20 @@ Vector3 Cohesion::force(GameData* _GD, std::vector<Boid*>& _neighbours, float _w
         if (distance > 0 && distance < (boid_settings_->neighbour_scan *
             this_boid_->get_scan_modifier()))
         {
-            sum += boid->get_pos();
+            sum += neighbour->get_pos();
             ++count;
         }
     }
 
     if (count <= 0)
-        this_boid_->modify_scan_modifier(5.0f * _GD->delta_time);
+        this_boid_->modify_scan_modifier(NEIGHBOUR_SCAN_MOD_GROWTH * _GD->delta_time);
+    else
+        this_boid_->modify_scan_modifier(-(NEIGHBOUR_SCAN_MOD_GROWTH * _GD->delta_time));
 
     if (count > 0)
     {
         sum /= static_cast<float>(count);
-        return seek(sum, _weight);
+        return seek(sum, _rule_params->get_weight());
     }
     else
     {

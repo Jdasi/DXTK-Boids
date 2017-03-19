@@ -3,6 +3,7 @@
 #include "Rule.h"
 #include "GameData.h"
 #include "Constants.h"
+#include "JMath.h"
 
 Boid::Boid(BoidSettings* _settings)
     : CMOGO(_settings->model)
@@ -36,14 +37,15 @@ float Boid::get_scan_modifier() const
     return scan_modifier_;
 }
 
-void Boid::set_scan_modifier(float _f)
+void Boid::reset_scan_modifier()
 {
-    scan_modifier_ = _f;
+    scan_modifier_ = NEIGHBOUR_SCAN_MOD_MIN;
 }
 
 void Boid::modify_scan_modifier(float _f)
 {
     scan_modifier_ += _f;
+    scan_modifier_ = JMath::clampf(scan_modifier_, NEIGHBOUR_SCAN_MOD_MIN, NEIGHBOUR_SCAN_MOD_MAX);
 }
 
 BoidSettings* Boid::getSettings() const
@@ -64,10 +66,10 @@ const Vector3& Boid::get_velocity() const
 
 void Boid::rules(GameData* _GD)
 {
-    for (auto& weighted_rule : settings_->weighted_rules)
+    for (auto& parameterised_rule : settings_->parameterised_rules)
     {
-        weighted_rule.rule->set_boid(this);
-        apply_force(weighted_rule.rule->force(_GD, neighbours_, weighted_rule.weight));
+        parameterised_rule.get_rule()->set_boid(this);
+        apply_force(parameterised_rule.get_rule()->force(_GD, neighbours_, &parameterised_rule));
     }
 }
 

@@ -139,7 +139,7 @@
     <ClInclude Include="DrawData.h" />
     <ClInclude Include="FileUtils.h" />
     <ClInclude Include="FileVBGO.h" />
-    <ClInclude Include="WeightedRule.h" />
+    <ClInclude Include="ParameterisedRule.h" />
     <ClInclude Include="TabletopCamera.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameData.h" />
@@ -182,6 +182,7 @@
     <ClCompile Include="Cohesion.cpp" />
     <ClCompile Include="FileUtils.cpp" />
     <ClCompile Include="FileVBGO.cpp" />
+    <ClCompile Include="ParameterisedRule.cpp" />
     <ClCompile Include="TabletopCamera.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />

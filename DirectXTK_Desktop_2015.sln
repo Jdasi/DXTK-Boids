@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK_Desktop_2015", "DirectXTK_Desktop_2015.vcxproj", "{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}"
 EndProject
@@ -14,6 +14,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DXTK Libs", "DXTK Libs", "{C933EF07-5754-4A95-AB5B-F08602BA4F16}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DXTK Tools", "DXTK Tools", "{B322FA8E-3862-4FF8-8CC1-6DFDB98B118F}"
+	ProjectSection(SolutionItems) = preProject
+		Game\ParameterisedRule.cpp = Game\ParameterisedRule.cpp
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Application", "Application\Application.vcxproj", "{06EDC280-1187-4614-A248-E640C095FA6B}"
 	ProjectSection(ProjectDependencies) = postProject

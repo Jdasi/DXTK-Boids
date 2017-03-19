@@ -2,37 +2,25 @@
 #include "Boid.h"
 #include "GameData.h"
 
-Vector3 Separation::force(GameData* _GD, std::vector<Boid*>& _neighbours, float _weight)
+Vector3 Separation::force(GameData* _GD, std::vector<Boid*>& _neighbours, ParameterisedRule* _rule_params)
 {
     Vector3 steer = Vector3::Zero;
 
     int count = 0;
 
-    for (auto& boid : _neighbours)
+    for (auto& neighbour : _neighbours)
     {
-        if (this_boid_ == boid)
+        if (this_boid_ == neighbour)
             continue;
 
-        /*
-        // Zombies don't want separation from humans.
-        if (this_boid_->getSettings()->type == BoidType::ZOMBIE &&
-            boid->getSettings()->type == BoidType::HUMAN)
+        if (!_rule_params->concerns_type(neighbour->getSettings()->type))
             continue;
-        */
 
-        float distance = Vector3::Distance(this_boid_->get_pos(), boid->get_pos());
-        float separation_modifier = 1.0f;
+        float distance = Vector3::Distance(this_boid_->get_pos(), neighbour->get_pos());
 
-        /*
-        // Humans want a larger separation from zombies.
-        if (this_boid_->getSettings()->type == BoidType::HUMAN &&
-            boid->getSettings()->type == BoidType::ZOMBIE)
-            separation_modifier = 10.0f;
-        */
-
-        if (distance > 0 && distance < boid_settings_->desired_separation * separation_modifier)
+        if (distance > 0 && distance < boid_settings_->desired_separation)
         {
-            Vector3 difference = this_boid_->get_pos() - boid->get_pos();
+            Vector3 difference = this_boid_->get_pos() - neighbour->get_pos();
             difference.Normalize();
             difference /= distance;
 
@@ -44,7 +32,7 @@ Vector3 Separation::force(GameData* _GD, std::vector<Boid*>& _neighbours, float 
     if (count > 0)
     {
         steer /= static_cast<float>(count);
-        this_boid_->set_scan_modifier(1.0f);
+        this_boid_->reset_scan_modifier();
     }
 
     if (steer.Length() > 0)
@@ -60,6 +48,6 @@ Vector3 Separation::force(GameData* _GD, std::vector<Boid*>& _neighbours, float 
         }
     }
 
-    steer *= _weight;
+    steer *= _rule_params->get_weight();
     return steer;
 }

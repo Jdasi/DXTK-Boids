@@ -1,37 +1,36 @@
 #include "Alignment.h"
 #include "Boid.h"
 #include "GameData.h"
+#include "Constants.h"
 
-Vector3 Alignment::force(GameData* _GD, std::vector<Boid*>& _neighbours, float _weight)
+Vector3 Alignment::force(GameData* _GD, std::vector<Boid*>& _neighbours, ParameterisedRule* _rule_params)
 {
     Vector3 sum = Vector3::Zero;
 
     int count = 0;
 
-    for (auto& boid : _neighbours)
+    for (auto& neighbour : _neighbours)
     {
-        if (this_boid_ == boid)
+        if (this_boid_ == neighbour)
             continue;
 
-        /*
-        // Humans don't flock with zombies.
-        if (this_boid_->getSettings()->type == BoidType::HUMAN &&
-            boid->getSettings()->type == BoidType::ZOMBIE)
+        if (!_rule_params->concerns_type(neighbour->getSettings()->type))
             continue;
-        */
 
-        float distance = Vector3::Distance(this_boid_->get_pos(), boid->get_pos());
+        float distance = Vector3::Distance(this_boid_->get_pos(), neighbour->get_pos());
 
         if (distance > 0 && distance < (boid_settings_->neighbour_scan *
             this_boid_->get_scan_modifier()))
         {
-            sum += boid->get_velocity();
+            sum += neighbour->get_velocity();
             ++count;
         }
     }
 
     if (count <= 0)
-        this_boid_->modify_scan_modifier(5.0f * _GD->delta_time);
+        this_boid_->modify_scan_modifier(NEIGHBOUR_SCAN_MOD_GROWTH * _GD->delta_time);
+    else
+        this_boid_->modify_scan_modifier(-(NEIGHBOUR_SCAN_MOD_GROWTH * _GD->delta_time));
 
     if (count > 0)
     {
@@ -48,7 +47,7 @@ Vector3 Alignment::force(GameData* _GD, std::vector<Boid*>& _neighbours, float _
             steer *= boid_settings_->max_steer;
         }
 
-        steer *= _weight;
+        steer *= _rule_params->get_weight();
         return steer;
     }
     else

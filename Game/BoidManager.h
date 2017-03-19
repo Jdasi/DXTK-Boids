@@ -35,15 +35,12 @@ private:
     void spawn_controls(GameData* _GD);
     void add_boid(const std::string& _type, Vector3 _pos);
 
-    BoidSettings* fetch_settings(const std::string& _type);
-
     CMOManager& cmo_manager_;
 
     std::map<std::string, std::unique_ptr<Rule>> rules_;
     std::map<std::string, std::unique_ptr<BoidSettings>> boid_types_;
-    std::vector<std::unique_ptr<Boid>> boids_;
 
+    std::vector<std::unique_ptr<Boid>> boids_;
     int num_boids_;
-    int max_boids_;
 
 };

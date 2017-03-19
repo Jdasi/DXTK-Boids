@@ -1,5 +1,5 @@
 #pragma once
-#include "WeightedRule.h"
+#include "ParameterisedRule.h"
 
 #include <vector>
 
@@ -20,5 +20,5 @@ struct BoidSettings
     float neighbour_scan = 7.0f;
     float infection_distance = 2.5f;
 
-    std::vector<WeightedRule> weighted_rules;
+    std::vector<ParameterisedRule> parameterised_rules;
 };

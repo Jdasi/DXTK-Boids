@@ -30,7 +30,7 @@ public:
     const Vector3& get_velocity() const;
 
     float get_scan_modifier() const;
-    void set_scan_modifier(float _f);
+    void reset_scan_modifier();
     void modify_scan_modifier(float _f);
 
     BoidSettings* getSettings() const;

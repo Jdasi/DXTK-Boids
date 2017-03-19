@@ -246,15 +246,17 @@ void Game::enumerate_boid_types() const
         settings->max_steer = data["max_steer"].as_double();
         settings->desired_separation = data["desired_separation"].as_double();
         settings->neighbour_scan = data["neighbour_scan"].as_double();
-        settings->infection_distance = data["infection_distance"].as_double();
 
-        json weighted_rules = json::array{data["weighted_rules"].array_value()};
+        json weighted_rules = json::array{data["parameterised_rules"].array_value()};
         for (auto& rules_entry : weighted_rules.array_value())
         {
             auto fetched_rule = boid_manager_->get_rule(rules_entry["rule"].as_string());
             auto rule_weight = rules_entry["weight"].as_double();
+            auto valid_types = rules_entry["valid_types"].as_vector<std::string>();
 
-            settings->weighted_rules.push_back(WeightedRule(fetched_rule, rule_weight));
+            ParameterisedRule parameterised_rule(fetched_rule, rule_weight, valid_types);
+
+            settings->parameterised_rules.push_back(parameterised_rule);
         }
 
         boid_manager_->add_boid_type(name, std::move(settings));

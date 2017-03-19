@@ -22,7 +22,7 @@ public:
 
     virtual ~Rule() = default;
 
-    virtual Vector3 force(GameData* _GD, std::vector<Boid*>& _neighbours, float _weight) = 0;
+    virtual Vector3 force(GameData* _GD, std::vector<Boid*>& _neighbours, ParameterisedRule* _rule_params) = 0;
 
     void set_boid(Boid* _boid)
     {

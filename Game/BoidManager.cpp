@@ -4,11 +4,11 @@
 #include "Rules.h"
 #include "GameData.h"
 #include "InputHandler.h"
+#include "Constants.h"
 
 BoidManager::BoidManager(CMOManager& _cmo_manager)
     : cmo_manager_(_cmo_manager)
     , num_boids_(0)
-    , max_boids_(1500)
 {
     register_rules();
 }
@@ -87,18 +87,13 @@ void BoidManager::spawn_controls(GameData* _GD)
 
 void BoidManager::add_boid(const std::string& _type, Vector3 _pos)
 {
-    if (num_boids_ >= max_boids_)
+    if (num_boids_ >= MAX_BOIDS)
         return;
 
     ++num_boids_;
 
-    auto boid = std::make_unique<Boid>(fetch_settings(_type));
+    auto boid = std::make_unique<Boid>(boid_types_.at(_type).get());
     boid->set_pos(_pos);
 
     boids_.push_back(std::move(boid));
-}
-
-BoidSettings* BoidManager::fetch_settings(const std::string& _type)
-{
-    return boid_types_.at(_type).get();
 }
