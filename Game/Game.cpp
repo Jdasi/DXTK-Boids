@@ -246,6 +246,17 @@ void Game::enumerate_boid_types() const
         settings->max_steer = data["max_steer"].as_double();
         settings->desired_separation = data["desired_separation"].as_double();
         settings->neighbour_scan = data["neighbour_scan"].as_double();
+        settings->tag_distance = data["tag_distance"].as_double();
+
+        if (data.has_member("tag_functions"))
+        {
+            auto function_names = data["tag_functions"].as_vector<std::string>();
+            
+            for (auto& function_name : function_names)
+            {
+                settings->tag_functions.push_back(boid_manager_->get_tag_function(function_name));
+            }
+        }
 
         json weighted_rules = json::array{data["parameterised_rules"].array_value()};
         for (auto& rules_entry : weighted_rules.array_value())
@@ -295,7 +306,9 @@ void Game::tweak_bar_spawn_selection(TwBar* _twbar) const
     }
 
     TwType spawn_type = TwDefineEnum("spawntypeenum", tw_enum, boid_types.size());
-    TwAddVarRW(_twbar, "spawntype", spawn_type, boid_manager_->get_spawn_selection(), " label='Spawn Type' ");
+    TwAddVarRW(_twbar, "spawntype", spawn_type, boid_manager_->get_editable_spawn_id(), " label='Spawn Type' ");
+
+    
 }
 
 void Game::tweak_bar_human_settings(TwBar* _twbar) const
@@ -331,6 +344,6 @@ void Game::tweak_bar_zombie_settings(TwBar* _twbar) const
     TwAddVarRW(_twbar, "zscan", TW_TYPE_FLOAT, &zombie_settings->neighbour_scan,
         " label='Neighbour Scan' min=1.0 max=30.0 step=0.2 group='ZombieSettings' ");
 
-    TwAddVarRW(_twbar, "zinfect", TW_TYPE_FLOAT, &zombie_settings->infection_distance,
-        " label='Infection Range' min=1.0 max=30.0 step=0.2 group='ZombieSettings' ");
+    TwAddVarRW(_twbar, "ztag", TW_TYPE_FLOAT, &zombie_settings->tag_distance,
+        " label='Tag Range' min=1.0 max=30.0 step=0.2 group='ZombieSettings' ");
 }

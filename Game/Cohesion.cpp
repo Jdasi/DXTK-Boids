@@ -11,26 +11,24 @@ Vector3 Cohesion::force(GameData* _GD, std::vector<Boid*>& _neighbours, Paramete
 
     for (auto& neighbour : _neighbours)
     {
+        // Ignore self.
         if (this_boid_ == neighbour)
             continue;
 
-        if (!_rule_params->concerns_type(neighbour->getSettings()->type))
-            continue;
-
         float distance = Vector3::Distance(this_boid_->get_pos(), neighbour->get_pos());
-
-        /*
-        // Handle infection.
-        if (this_boid_->getSettings()->type == BoidType::ZOMBIE &&
-            boid->getSettings()->type == BoidType::HUMAN)
+        
+        // Perform tag functions.
+        if (distance > 0 && distance <= this_boid_->getSettings()->tag_distance)
         {
-            if (distance > 0 && distance <= this_boid_->getSettings()->infection_distance)
+            for (auto& tag_function : this_boid_->getSettings()->tag_functions)
             {
-                boid->infect(this_boid_->getSettings());
-                continue;
+                tag_function(this_boid_, neighbour);
             }
         }
-        */
+
+        // Don't go any further if neighbour's type is not listed in the rule's params.
+        if (!_rule_params->concerns_type(neighbour->getSettings()->type))
+            continue;
 
         if (distance > 0 && distance < (boid_settings_->neighbour_scan *
             this_boid_->get_scan_modifier()))

@@ -2,9 +2,11 @@
 #include "ParameterisedRule.h"
 
 #include <vector>
+#include <functional>
 
 class Rule;
 class CMOModel;
+class Boid;
 
 // Common settings that are shared amongst all boids that use this data.
 struct BoidSettings
@@ -18,7 +20,8 @@ struct BoidSettings
 
     float desired_separation = 5.0f;
     float neighbour_scan = 7.0f;
-    float infection_distance = 2.5f;
+    float tag_distance = 2.5f;
 
     std::vector<ParameterisedRule> parameterised_rules;
+    std::vector<std::function<void(Boid*, Boid*)>> tag_functions;
 };

@@ -15,6 +15,7 @@ BoidManager::BoidManager(CMOManager& _cmo_manager)
     , current_type_selection_(nullptr)
 {
     register_rules();
+    register_tag_functions();
 }
 
 void BoidManager::tick(GameData* _GD)
@@ -55,6 +56,11 @@ Rule* BoidManager::get_rule(const std::string& _rule) const
     return rules_.at(_rule).get();
 }
 
+std::function<void(Boid*, Boid*)> BoidManager::get_tag_function(const std::string& _str)
+{
+    return tag_functions_.at(_str);
+}
+
 BoidSettings* BoidManager::get_boid_settings(const std::string& _type) const
 {
     return boid_types_.at(_type).get();
@@ -75,7 +81,7 @@ int* BoidManager::get_num_boids()
     return &num_boids_;
 }
 
-int* BoidManager::get_spawn_selection()
+int* BoidManager::get_editable_spawn_id()
 {
     return &editable_spawn_id_;
 }
@@ -95,6 +101,16 @@ void BoidManager::register_rules()
     rules_["separation"] = std::make_unique<Separation>();
     rules_["alignment"] = std::make_unique<Alignment>();
     rules_["cohesion"] = std::make_unique<Cohesion>();
+}
+
+void BoidManager::register_tag_functions()
+{
+    // rhs converts lhs.
+    tag_functions_["infect"] = [](Boid* lhs, Boid* rhs)
+    {
+        rhs->model_ = lhs->settings_->model;
+        rhs->settings_ = lhs->settings_;
+    };
 }
 
 void BoidManager::update_spawn_selection()

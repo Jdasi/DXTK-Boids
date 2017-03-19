@@ -10,9 +10,11 @@ Vector3 Separation::force(GameData* _GD, std::vector<Boid*>& _neighbours, Parame
 
     for (auto& neighbour : _neighbours)
     {
+        // Ignore self.
         if (this_boid_ == neighbour)
             continue;
 
+        // Don't go any further if neighbour's type is not listed in the rule's params.
         if (!_rule_params->concerns_type(neighbour->getSettings()->type))
             continue;
 

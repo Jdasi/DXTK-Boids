@@ -7,6 +7,7 @@
 
 #include <map>
 #include <memory>
+#include <functional>
 
 using namespace DirectX;
 using namespace SimpleMath;
@@ -25,9 +26,10 @@ public:
     void draw(DrawData* _DD);
 
     int* get_num_boids();
-    int* get_spawn_selection();
+    int* get_editable_spawn_id();
 
     Rule* get_rule(const std::string& _rule) const;
+    std::function<void(Boid*, Boid*)> get_tag_function(const std::string& _str);
     BoidSettings* get_boid_settings(const std::string& _type) const;
 
     int get_num_types() const;
@@ -36,6 +38,7 @@ public:
 
 private:
     void register_rules();
+    void register_tag_functions();
     void update_spawn_selection();
     void spawn_controls(GameData* _GD);
     void add_boid(const std::string& _type, Vector3 _pos);
@@ -44,6 +47,7 @@ private:
 
     std::map<std::string, std::unique_ptr<Rule>> rules_;
     std::map<std::string, std::unique_ptr<BoidSettings>> boid_types_;
+    std::map<std::string, std::function<void(Boid*, Boid*)>> tag_functions_;
 
     std::vector<std::unique_ptr<Boid>> boids_;
     int num_boids_;

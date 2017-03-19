@@ -55,8 +55,7 @@ BoidSettings* Boid::getSettings() const
 
 void Boid::infect(BoidSettings* _settings)
 {
-    set_model(_settings->model);
-    settings_ = _settings;
+
 }
 
 const Vector3& Boid::get_velocity() const
@@ -88,7 +87,7 @@ void Boid::wrap()
             steer *= settings_->max_steer;
         }
 
-        steer *= 2.0f; // Temporary arbitrary weighting.
+        steer *= 2.0f; // Steering away from the edge is important to the boid.
         apply_force(steer);
     }
 }
