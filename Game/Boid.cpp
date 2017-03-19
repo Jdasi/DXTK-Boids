@@ -64,11 +64,6 @@ BoidSettings* Boid::getSettings() const
     return settings_;
 }
 
-void Boid::infect(BoidSettings* _settings)
-{
-
-}
-
 const Vector3& Boid::get_velocity() const
 {
     return velocity_;

@@ -8,7 +8,7 @@ class Rule;
 class CMOModel;
 class Boid;
 
-// Common settings that are shared amongst all boids that use this data.
+// Common settings that are shared amongst all boids that use these BoidSettings.
 struct BoidSettings
 {
     std::string type;

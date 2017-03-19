@@ -38,8 +38,6 @@ public:
 
     BoidSettings* getSettings() const;
 
-    void infect(BoidSettings* _settings);
-
 private:
     void rules(GameData* _GD);
     void wrap();
@@ -53,7 +51,6 @@ private:
     bool alive_;
 
     BoidSettings* settings_;
-
     std::vector<Boid*> neighbours_;
 
 };
