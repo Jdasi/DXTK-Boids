@@ -13,13 +13,16 @@ Vector3 Cohesion::force(GameData* _GD, std::vector<Boid*>& _neighbours, float _w
         if (this_boid_ == boid)
             continue;
 
+        /*
         // Zombies don't flock.
         if (this_boid_->getSettings()->type == BoidType::ZOMBIE &&
             boid->getSettings()->type == BoidType::ZOMBIE)
             continue;
+        */
 
         float distance = Vector3::Distance(this_boid_->get_pos(), boid->get_pos());
 
+        /*
         // Handle infection.
         if (this_boid_->getSettings()->type == BoidType::ZOMBIE &&
             boid->getSettings()->type == BoidType::HUMAN)
@@ -30,6 +33,7 @@ Vector3 Cohesion::force(GameData* _GD, std::vector<Boid*>& _neighbours, float _w
                 continue;
             }
         }
+        */
 
         if (distance > 0 && distance < (boid_settings_->neighbour_scan *
             this_boid_->get_scan_modifier()))

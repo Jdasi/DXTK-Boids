@@ -24,27 +24,26 @@ public:
     void tick(GameData* _GD);
     void draw(DrawData* _DD);
 
-    BoidSettings& get_human_settings();
-    BoidSettings& get_zombie_settings();
-
     int* get_num_boids();
+    Rule* get_rule(const std::string& _rule) const;
+    BoidSettings* get_boid_settings(const std::string& _type) const;
+
+    void add_boid_type(const std::string& _str, std::unique_ptr<BoidSettings> _settings);
 
 private:
     void register_rules();
-    void configure_boid_settings();
     void spawn_controls(GameData* _GD);
-    void add_boid(BoidType _type, Vector3 _pos);
+    void add_boid(const std::string& _type, Vector3 _pos);
 
-    CMOModel* fetch_model(BoidType _type) const;
-    BoidSettings* fetch_settings(BoidType _type);
+    BoidSettings* fetch_settings(const std::string& _type);
 
-    std::map<Rule::ID, std::unique_ptr<Rule>> rules_;
     CMOManager& cmo_manager_;
+
+    std::map<std::string, std::unique_ptr<Rule>> rules_;
+    std::map<std::string, std::unique_ptr<BoidSettings>> boid_types_;
     std::vector<std::unique_ptr<Boid>> boids_;
+
     int num_boids_;
     int max_boids_;
-
-    BoidSettings human_settings_;
-    BoidSettings zombie_settings_;
 
 };

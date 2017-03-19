@@ -17,6 +17,7 @@
 
 #include "Application.h"
 #include "../Game/Game.h"
+#include "../Game/Constants.h"
 
 #define DESTROY( x ) if( x ){ x->Release(); x = nullptr;}
 
@@ -50,7 +51,7 @@ HRESULT Application::InitWindow( HINSTANCE _hInstance, int _nCmdShow )
     // Create window
     m_hInst = _hInstance;
 //#ifdef DEBUG
-	RECT rc = { 0, 0, 1024, 768 };
+	RECT rc = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 	m_hWnd = CreateWindow(L"GEAWindowClass", L"DXTK Boids Simulation", WS_OVERLAPPEDWINDOW,
 		600, 100, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, _hInstance,

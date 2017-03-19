@@ -72,13 +72,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>..\Bin\Desktop_2015\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>..\Bin\Desktop_2015\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)\Libs\AntTweakBar\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\Libs\AntTweakBar\include;$(SolutionDir)\Libs\jsoncons\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Libs\AntTweakBar\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>..\Bin\Desktop_2015\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>..\Bin\Desktop_2015\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)\Libs\AntTweakBar\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\Libs\AntTweakBar\include;$(SolutionDir)\Libs\jsoncons\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Libs\AntTweakBar\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -129,14 +129,15 @@
     <ClInclude Include="Boid.h" />
     <ClInclude Include="BoidManager.h" />
     <ClInclude Include="BoidSettings.h" />
-    <ClInclude Include="BoidType.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CMOGO.h" />
     <ClInclude Include="CMOModel.h" />
     <ClInclude Include="Cohesion.h" />
     <ClInclude Include="ConstantBuffer.h" />
+    <ClInclude Include="Constants.h" />
     <ClInclude Include="DrawData2D.h" />
     <ClInclude Include="DrawData.h" />
+    <ClInclude Include="FileUtils.h" />
     <ClInclude Include="FileVBGO.h" />
     <ClInclude Include="WeightedRule.h" />
     <ClInclude Include="TabletopCamera.h" />
@@ -179,6 +180,7 @@
     <ClCompile Include="CMOManager.cpp" />
     <ClCompile Include="CMOModel.cpp" />
     <ClCompile Include="Cohesion.cpp" />
+    <ClCompile Include="FileUtils.cpp" />
     <ClCompile Include="FileVBGO.cpp" />
     <ClCompile Include="TabletopCamera.cpp" />
     <ClCompile Include="Game.cpp" />

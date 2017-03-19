@@ -144,9 +144,6 @@
     <ClInclude Include="JMath.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="BoidType.h">
-      <Filter>Boids</Filter>
-    </ClInclude>
     <ClInclude Include="SimpleTimer.h">
       <Filter>Utility</Filter>
     </ClInclude>
@@ -157,6 +154,10 @@
     <ClInclude Include="ObjectList.h" />
     <ClInclude Include="WeightedRule.h">
       <Filter>Boids</Filter>
+    </ClInclude>
+    <ClInclude Include="Constants.h" />
+    <ClInclude Include="FileUtils.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -245,5 +246,8 @@
       <Filter>Utility</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="FileUtils.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

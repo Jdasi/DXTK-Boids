@@ -95,7 +95,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <GenerateManifest>true</GenerateManifest>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);..\Game;$(SolutionDir)\Libs\AntTweakBar\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);..\Game;$(SolutionDir)\Libs\AntTweakBar\include;$(SolutionDir)\Libs\jsoncons\include</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir);..\Lib\um\x86;..\Bin\Desktop_2015\$(Platform)\$(Configuration)\;$(SolutionDir)\Libs\AntTweakBar\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|X64'">
@@ -106,7 +106,7 @@
     <LinkIncremental>false</LinkIncremental>
     <GenerateManifest>true</GenerateManifest>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir);..\Lib\um\x86;..\Bin\Desktop_2015\$(Platform)\$(Configuration)\;$(SolutionDir)\Libs\AntTweakBar\lib</LibraryPath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);..\Game;$(SolutionDir)\Libs\AntTweakBar\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);..\Game;$(SolutionDir)\Libs\AntTweakBar\include;$(SolutionDir)\Libs\jsoncons\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|X64'">
     <LinkIncremental>false</LinkIncremental>
@@ -115,7 +115,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <GenerateManifest>true</GenerateManifest>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);..\Game;$(SolutionDir)\Libs\AntTweakBar\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);..\Game;$(SolutionDir)\Libs\AntTweakBar\include;$(SolutionDir)\Libs\jsoncons\include</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir);..\Lib\um\x86;..\Bin\Desktop_2015\$(Platform)\$(Configuration)\;$(SolutionDir)\Libs\AntTweakBar\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|X64'">

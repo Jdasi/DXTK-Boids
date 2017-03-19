@@ -13,10 +13,12 @@ Vector3 Alignment::force(GameData* _GD, std::vector<Boid*>& _neighbours, float _
         if (this_boid_ == boid)
             continue;
 
+        /*
         // Humans don't flock with zombies.
         if (this_boid_->getSettings()->type == BoidType::HUMAN &&
             boid->getSettings()->type == BoidType::ZOMBIE)
             continue;
+        */
 
         float distance = Vector3::Distance(this_boid_->get_pos(), boid->get_pos());
 

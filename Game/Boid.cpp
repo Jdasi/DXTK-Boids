@@ -1,8 +1,8 @@
 #include "Boid.h"
 #include "RandomEngine.h"
 #include "Rule.h"
-#include "JMath.h"
 #include "GameData.h"
+#include "Constants.h"
 
 Boid::Boid(BoidSettings* _settings)
     : CMOGO(_settings->model)
@@ -73,10 +73,10 @@ void Boid::rules(GameData* _GD)
 
 void Boid::wrap()
 {
-    if (pos_.x < -200.0f ||
-        pos_.x > 200.0f ||
-        pos_.z < -200.0f ||
-        pos_.z > 200.0f)
+    if (pos_.x < -PLAYABLE_AREA ||
+        pos_.x > PLAYABLE_AREA ||
+        pos_.z < -PLAYABLE_AREA ||
+        pos_.z > PLAYABLE_AREA)
     {
         Vector3 steer = Vector3::Zero - pos_;
 
@@ -86,7 +86,7 @@ void Boid::wrap()
             steer *= settings_->max_steer;
         }
 
-        steer *= 2.0f;
+        steer *= 2.0f; // Temporary arbitrary weighting.
         apply_force(steer);
     }
 }

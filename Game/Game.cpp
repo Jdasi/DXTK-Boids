@@ -1,5 +1,7 @@
 #include "Game.h"
 #include "ObjectList.h"
+#include "Constants.h"
+#include "FileUtils.h"
 
 #include "SimpleMath.h"
 #include <AntTweakBar.h>
@@ -42,6 +44,7 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
     cmo_manager_ = std::make_unique<CMOManager>(*_d3d_device, *fx_factory_);
     boid_manager_ = std::make_unique<BoidManager>(*cmo_manager_);
 
+    enumerate_boid_types();
     init_tweak_bar(_d3d_device);
 
     // Configure initial GameData struct settings.
@@ -224,11 +227,45 @@ void Game::draw(ID3D11DeviceContext* _d3d_immediate_context)
     TwDraw();
 }
 
+void Game::enumerate_boid_types() const
+{
+    auto file = FileUtils::read_json("BoidTypes");
+
+    int type_count = 0;
+    for (const auto& entry : file.members())
+    {
+        auto name = entry.name();
+        const auto& data = entry.value();
+
+        auto settings = std::make_unique<BoidSettings>();
+
+        settings->type = name;
+        settings->type_id = type_count++;
+        settings->model = cmo_manager_->get_model(data["model"].as_string());
+        settings->max_speed = data["max_speed"].as_double();
+        settings->max_steer = data["max_steer"].as_double();
+        settings->desired_separation = data["desired_separation"].as_double();
+        settings->neighbour_scan = data["neighbour_scan"].as_double();
+        settings->infection_distance = data["infection_distance"].as_double();
+
+        json weighted_rules = json::array{data["weighted_rules"].array_value()};
+        for (auto& rules_entry : weighted_rules.array_value())
+        {
+            auto fetched_rule = boid_manager_->get_rule(rules_entry["rule"].as_string());
+            auto rule_weight = rules_entry["weight"].as_double();
+
+            settings->weighted_rules.push_back(WeightedRule(fetched_rule, rule_weight));
+        }
+
+        boid_manager_->add_boid_type(name, std::move(settings));
+    }
+}
+
 void Game::init_tweak_bar(ID3D11Device* _d3d_device) const
 {
     // Ant Tweak Bar initialisation.
     TwInit(TW_DIRECT3D11, _d3d_device); // for Direct3D 11
-    TwWindowSize(1024, 768);
+    TwWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     TwBar* myBar = TwNewBar("Boid Settings");
 
     // Read-only boid counter.
@@ -242,37 +279,37 @@ void Game::init_tweak_bar(ID3D11Device* _d3d_device) const
 
 void Game::tweak_bar_human_settings(TwBar* _twbar) const
 {
-    BoidSettings& human_settings = boid_manager_->get_human_settings();
+    BoidSettings* human_settings = boid_manager_->get_boid_settings("human");
 
-    TwAddVarRW(_twbar, "hmaxspeed", TW_TYPE_FLOAT, &human_settings.max_speed,
+    TwAddVarRW(_twbar, "hmaxspeed", TW_TYPE_FLOAT, &human_settings->max_speed,
         " label='Max Speed' min=1.0 max=30.0 step=0.2 group='HumanSettings' ");
 
-    TwAddVarRW(_twbar, "hmaxsteer", TW_TYPE_FLOAT, &human_settings.max_steer,
+    TwAddVarRW(_twbar, "hmaxsteer", TW_TYPE_FLOAT, &human_settings->max_steer,
         " label='Max Steer' min=0.0 max=5.0 step=0.2 group='HumanSettings' ");
 
-    TwAddVarRW(_twbar, "hdesiredsep", TW_TYPE_FLOAT, &human_settings.desired_separation,
+    TwAddVarRW(_twbar, "hdesiredsep", TW_TYPE_FLOAT, &human_settings->desired_separation,
         " label='Desired Separation' min=0.0 max=30.0 step=0.2 group='HumanSettings' ");
 
-    TwAddVarRW(_twbar, "hscan", TW_TYPE_FLOAT, &human_settings.neighbour_scan,
+    TwAddVarRW(_twbar, "hscan", TW_TYPE_FLOAT, &human_settings->neighbour_scan,
         " label='Neighbour Scan' min=1.0 max=30.0 step=0.2 group='HumanSettings' ");
 }
 
 void Game::tweak_bar_zombie_settings(TwBar* _twbar) const
 {
-    BoidSettings& zombie_settings = boid_manager_->get_zombie_settings();
+    BoidSettings* zombie_settings = boid_manager_->get_boid_settings("zombie");
 
-    TwAddVarRW(_twbar, "zmaxspeed", TW_TYPE_FLOAT, &zombie_settings.max_speed,
+    TwAddVarRW(_twbar, "zmaxspeed", TW_TYPE_FLOAT, &zombie_settings->max_speed,
         " label='Max Speed' min=1.0 max=30.0 step=0.2 group='ZombieSettings' ");
 
-    TwAddVarRW(_twbar, "zmaxsteer", TW_TYPE_FLOAT, &zombie_settings.max_steer,
+    TwAddVarRW(_twbar, "zmaxsteer", TW_TYPE_FLOAT, &zombie_settings->max_steer,
         " label='Max Steer' min=0.0 max=5.0 step=0.2 group='ZombieSettings' ");
 
-    TwAddVarRW(_twbar, "zdesiredsep", TW_TYPE_FLOAT, &zombie_settings.desired_separation,
+    TwAddVarRW(_twbar, "zdesiredsep", TW_TYPE_FLOAT, &zombie_settings->desired_separation,
         " label='Desired Separation' min=0.0 max=30.0 step=0.2 group='ZombieSettings' ");
 
-    TwAddVarRW(_twbar, "zscan", TW_TYPE_FLOAT, &zombie_settings.neighbour_scan,
+    TwAddVarRW(_twbar, "zscan", TW_TYPE_FLOAT, &zombie_settings->neighbour_scan,
         " label='Neighbour Scan' min=1.0 max=30.0 step=0.2 group='ZombieSettings' ");
 
-    TwAddVarRW(_twbar, "zinfect", TW_TYPE_FLOAT, &zombie_settings.infection_distance,
+    TwAddVarRW(_twbar, "zinfect", TW_TYPE_FLOAT, &zombie_settings->infection_distance,
         " label='Infection Range' min=1.0 max=30.0 step=0.2 group='ZombieSettings' ");
 }

@@ -1,6 +1,5 @@
 #include "BoidManager.h"
 #include "Boid.h"
-#include "BoidType.h"
 #include "CMOManager.h"
 #include "Rules.h"
 #include "GameData.h"
@@ -12,7 +11,6 @@ BoidManager::BoidManager(CMOManager& _cmo_manager)
     , max_boids_(1500)
 {
     register_rules();
-    configure_boid_settings();
 }
 
 void BoidManager::tick(GameData* _GD)
@@ -47,14 +45,14 @@ void BoidManager::draw(DrawData* _DD)
     }
 }
 
-BoidSettings& BoidManager::get_human_settings()
+Rule* BoidManager::get_rule(const std::string& _rule) const
 {
-    return human_settings_;
+    return rules_.at(_rule).get();
 }
 
-BoidSettings& BoidManager::get_zombie_settings()
+BoidSettings* BoidManager::get_boid_settings(const std::string& _type) const
 {
-    return zombie_settings_;
+    return boid_types_.at(_type).get();
 }
 
 int* BoidManager::get_num_boids()
@@ -62,41 +60,32 @@ int* BoidManager::get_num_boids()
     return &num_boids_;
 }
 
-void BoidManager::register_rules()
+void BoidManager::add_boid_type(const std::string& _str, std::unique_ptr<BoidSettings> _settings)
 {
-    rules_[Rule::ID::Separation] = std::make_unique<Separation>();
-    rules_[Rule::ID::Alignment] = std::make_unique<Alignment>();
-    rules_[Rule::ID::Cohesion] = std::make_unique<Cohesion>();
+    auto entry = boid_types_.find(_str);
+    if (entry != boid_types_.end())
+        return;
+
+    boid_types_[_str] = std::move(_settings);
 }
 
-void BoidManager::configure_boid_settings()
+void BoidManager::register_rules()
 {
-    human_settings_.type = BoidType::HUMAN;
-    human_settings_.model = fetch_model(BoidType::HUMAN);
-
-    zombie_settings_.type = BoidType::ZOMBIE;
-    zombie_settings_.model = fetch_model(BoidType::ZOMBIE);
-    zombie_settings_.max_speed = 5.0f;
-    zombie_settings_.max_steer = 0.5f;
-
-    human_settings_.weighted_rules.push_back({ rules_.at(Rule::ID::Separation).get(), 1.5f });
-    human_settings_.weighted_rules.push_back({ rules_.at(Rule::ID::Alignment).get(), 0.8f });
-    human_settings_.weighted_rules.push_back({ rules_.at(Rule::ID::Cohesion).get(), 0.8f });
-
-    zombie_settings_.weighted_rules.push_back({ rules_.at(Rule::ID::Separation).get(), 1.5f });
-    zombie_settings_.weighted_rules.push_back({ rules_.at(Rule::ID::Cohesion).get(), 0.8f });
+    rules_["separation"] = std::make_unique<Separation>();
+    rules_["alignment"] = std::make_unique<Alignment>();
+    rules_["cohesion"] = std::make_unique<Cohesion>();
 }
 
 void BoidManager::spawn_controls(GameData* _GD)
 {
     if (_GD->input_handler->get_key(DIK_H))
-        add_boid(BoidType::HUMAN, _GD->boid_spawn_pos);
+        add_boid("human", _GD->boid_spawn_pos);
 
     if (_GD->input_handler->get_key(DIK_Z))
-        add_boid(BoidType::ZOMBIE, _GD->boid_spawn_pos);
+        add_boid("zombie", _GD->boid_spawn_pos);
 }
 
-void BoidManager::add_boid(BoidType _type, Vector3 _pos)
+void BoidManager::add_boid(const std::string& _type, Vector3 _pos)
 {
     if (num_boids_ >= max_boids_)
         return;
@@ -109,24 +98,7 @@ void BoidManager::add_boid(BoidType _type, Vector3 _pos)
     boids_.push_back(std::move(boid));
 }
 
-CMOModel* BoidManager::fetch_model(BoidType _type) const
+BoidSettings* BoidManager::fetch_settings(const std::string& _type)
 {
-    switch (_type)
-    {
-        case HUMAN: return cmo_manager_.get_model("human");
-        case ZOMBIE: return cmo_manager_.get_model("zombie");
-
-        default: throw std::runtime_error("Error in fetch_model");
-    }
-}
-
-BoidSettings* BoidManager::fetch_settings(BoidType _type)
-{
-    switch (_type)
-    {
-        case HUMAN: return &human_settings_;
-        case ZOMBIE: return &zombie_settings_;
-
-        default: throw std::runtime_error("Error in fetch_settings");
-    }
+    return boid_types_.at(_type).get();
 }

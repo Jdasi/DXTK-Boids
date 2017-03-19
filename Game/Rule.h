@@ -14,13 +14,6 @@ struct BoidSettings;
 class Rule
 {
 public:
-    enum ID
-    {
-        Separation,
-        Alignment,
-        Cohesion
-    };
-
     Rule()
         : this_boid_(nullptr)
         , boid_settings_(nullptr)
