@@ -2,7 +2,7 @@
 #include "Boid.h"
 #include "GameData.h"
 
-Vector3 Cohesion::force(GameData* _GD, std::vector<Boid*>& _neighbours)
+Vector3 Cohesion::force(GameData* _GD, std::vector<Boid*>& _neighbours, float _weight)
 {
     Vector3 sum = Vector3::Zero;
 
@@ -45,7 +45,7 @@ Vector3 Cohesion::force(GameData* _GD, std::vector<Boid*>& _neighbours)
     if (count > 0)
     {
         sum /= static_cast<float>(count);
-        return seek(sum);
+        return seek(sum, _weight);
     }
     else
     {
@@ -53,7 +53,7 @@ Vector3 Cohesion::force(GameData* _GD, std::vector<Boid*>& _neighbours)
     }
 }
 
-Vector3 Cohesion::seek(Vector3 _target) const
+Vector3 Cohesion::seek(Vector3 _target, float _weight) const
 {
     Vector3 desired = _target - this_boid_->get_pos();
 
@@ -67,6 +67,6 @@ Vector3 Cohesion::seek(Vector3 _target) const
         steer *= boid_settings_->max_steer;
     }
 
-    steer *= 0.8f; // Temporary arbitrary weighting.
+    steer *= _weight;
     return steer;
 }

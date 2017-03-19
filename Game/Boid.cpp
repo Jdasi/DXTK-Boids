@@ -46,7 +46,7 @@ void Boid::modify_scan_modifier(float _f)
     scan_modifier_ += _f;
 }
 
-BoidSettings* Boid::getSettings()
+BoidSettings* Boid::getSettings() const
 {
     return settings_;
 }
@@ -64,10 +64,10 @@ const Vector3& Boid::get_velocity() const
 
 void Boid::rules(GameData* _GD)
 {
-    for (auto& rule : settings_->rules)
+    for (auto& weighted_rule : settings_->weighted_rules)
     {
-        rule->set_boid(this, settings_);
-        apply_force(rule->force(_GD, neighbours_));
+        weighted_rule.rule->set_boid(this);
+        apply_force(weighted_rule.rule->force(_GD, neighbours_, weighted_rule.weight));
     }
 }
 

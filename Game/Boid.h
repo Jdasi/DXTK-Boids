@@ -33,7 +33,7 @@ public:
     void set_scan_modifier(float _f);
     void modify_scan_modifier(float _f);
 
-    BoidSettings* getSettings();
+    BoidSettings* getSettings() const;
 
     void infect(BoidSettings* _settings);
 

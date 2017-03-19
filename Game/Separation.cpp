@@ -2,7 +2,7 @@
 #include "Boid.h"
 #include "GameData.h"
 
-Vector3 Separation::force(GameData* _GD, std::vector<Boid*>& _neighbours)
+Vector3 Separation::force(GameData* _GD, std::vector<Boid*>& _neighbours, float _weight)
 {
     Vector3 steer = Vector3::Zero;
 
@@ -56,6 +56,6 @@ Vector3 Separation::force(GameData* _GD, std::vector<Boid*>& _neighbours)
         }
     }
 
-    steer *= 1.5f; // Temporary arbitrary weighting.
+    steer *= _weight;
     return steer;
 }

@@ -1,282 +1,249 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Headers">
-      <UniqueIdentifier>{5ade7b34-9197-4220-b76c-033c31d67d42}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headers\Structs">
-      <UniqueIdentifier>{615ec226-36e4-4f45-83b0-83d681e5c503}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headers\Managers">
-      <UniqueIdentifier>{3052a15d-cd7e-4386-8a8b-ff689611e933}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headers\Utility">
-      <UniqueIdentifier>{36c69b90-1e4b-4b1d-b8b6-98cf5a0abfc4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headers\Objects">
-      <UniqueIdentifier>{4bce486d-b83b-49ff-bca1-90c765d78ae6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headers\Enums">
-      <UniqueIdentifier>{053d9823-32c2-4f8a-ab1f-005ae29598db}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source">
-      <UniqueIdentifier>{8e1bc308-fc3e-45d3-ac6e-5f8b8bcbd64f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Managers">
-      <UniqueIdentifier>{bf3ee5e3-cea7-4c5d-9c29-7d4f408694f7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Structs">
-      <UniqueIdentifier>{7290976c-7e4b-4fde-b44a-5162c18f1265}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Utility">
-      <UniqueIdentifier>{8d9010f6-83a4-4a8c-8190-645533a6d4e3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Objects">
-      <UniqueIdentifier>{c29977d7-2af2-4e41-b620-6fcd0b9ecea4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headers\Example VBGOs">
-      <UniqueIdentifier>{bbfb0d19-cf3f-4626-a128-5378e95b51bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Example VBGOs">
-      <UniqueIdentifier>{7a23280a-69b7-4395-b069-8c47af421bd4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headers\Boids">
+    <Filter Include="Boids">
       <UniqueIdentifier>{4d2c2998-13e6-4c4c-8721-2d5545461391}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Boids">
-      <UniqueIdentifier>{88923487-f4a2-4306-a7b5-92c2c5be82a1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headers\Resources">
-      <UniqueIdentifier>{c07a4d6b-2881-485f-a01a-96572ef4a1cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Resources">
-      <UniqueIdentifier>{23644783-c154-45cd-87be-cbd358a37264}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headers\Boids\Rules">
+    <Filter Include="Boids\Rules">
       <UniqueIdentifier>{c988fb7a-70d7-4059-b65c-541a8c6efa2c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Boids\Rules">
-      <UniqueIdentifier>{a5103874-0a7a-41a3-b266-7b65f078d64c}</UniqueIdentifier>
+    <Filter Include="Enums">
+      <UniqueIdentifier>{053d9823-32c2-4f8a-ab1f-005ae29598db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Example VBGOs">
+      <UniqueIdentifier>{bbfb0d19-cf3f-4626-a128-5378e95b51bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers">
+      <UniqueIdentifier>{3052a15d-cd7e-4386-8a8b-ff689611e933}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{4bce486d-b83b-49ff-bca1-90c765d78ae6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{c07a4d6b-2881-485f-a01a-96572ef4a1cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Structs">
+      <UniqueIdentifier>{615ec226-36e4-4f45-83b0-83d681e5c503}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{36c69b90-1e4b-4b1d-b8b6-98cf5a0abfc4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputHandler.h">
-      <Filter>Headers\Managers</Filter>
+      <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="StringUtils.h">
-      <Filter>Headers\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Headers</Filter>
+      <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="FileVBGO.h">
-      <Filter>Headers\Example VBGOs</Filter>
+      <Filter>Example VBGOs</Filter>
     </ClInclude>
     <ClInclude Include="MarchCubes.h">
-      <Filter>Headers\Example VBGOs</Filter>
+      <Filter>Example VBGOs</Filter>
     </ClInclude>
     <ClInclude Include="VBCube.h">
-      <Filter>Headers\Example VBGOs</Filter>
+      <Filter>Example VBGOs</Filter>
     </ClInclude>
     <ClInclude Include="VBPillow.h">
-      <Filter>Headers\Example VBGOs</Filter>
+      <Filter>Example VBGOs</Filter>
     </ClInclude>
     <ClInclude Include="VBSnail.h">
-      <Filter>Headers\Example VBGOs</Filter>
+      <Filter>Example VBGOs</Filter>
     </ClInclude>
     <ClInclude Include="VBSpiked.h">
-      <Filter>Headers\Example VBGOs</Filter>
+      <Filter>Example VBGOs</Filter>
     </ClInclude>
     <ClInclude Include="VBspiral.h">
-      <Filter>Headers\Example VBGOs</Filter>
+      <Filter>Example VBGOs</Filter>
     </ClInclude>
     <ClInclude Include="GameState.h">
-      <Filter>Headers\Enums</Filter>
+      <Filter>Enums</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Headers\Objects</Filter>
+      <Filter>Objects</Filter>
     </ClInclude>
     <ClInclude Include="CMOGO.h">
-      <Filter>Headers\Objects</Filter>
+      <Filter>Objects</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>Headers\Objects</Filter>
+      <Filter>Objects</Filter>
     </ClInclude>
     <ClInclude Include="GameObject2D.h">
-      <Filter>Headers\Objects</Filter>
+      <Filter>Objects</Filter>
     </ClInclude>
     <ClInclude Include="ImageGO2D.h">
-      <Filter>Headers\Objects</Filter>
+      <Filter>Objects</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
-      <Filter>Headers\Objects</Filter>
+      <Filter>Objects</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Headers\Objects</Filter>
+      <Filter>Objects</Filter>
     </ClInclude>
     <ClInclude Include="Terrain.h">
-      <Filter>Headers\Objects</Filter>
+      <Filter>Objects</Filter>
     </ClInclude>
     <ClInclude Include="TextGO2D.h">
-      <Filter>Headers\Objects</Filter>
+      <Filter>Objects</Filter>
     </ClInclude>
     <ClInclude Include="TPSCamera.h">
-      <Filter>Headers\Objects</Filter>
+      <Filter>Objects</Filter>
     </ClInclude>
     <ClInclude Include="VBGO.h">
-      <Filter>Headers\Objects</Filter>
+      <Filter>Objects</Filter>
     </ClInclude>
     <ClInclude Include="ConstantBuffer.h">
-      <Filter>Headers\Structs</Filter>
+      <Filter>Structs</Filter>
     </ClInclude>
     <ClInclude Include="DrawData.h">
-      <Filter>Headers\Structs</Filter>
+      <Filter>Structs</Filter>
     </ClInclude>
     <ClInclude Include="DrawData2D.h">
-      <Filter>Headers\Structs</Filter>
+      <Filter>Structs</Filter>
     </ClInclude>
     <ClInclude Include="GameData.h">
-      <Filter>Headers\Structs</Filter>
+      <Filter>Structs</Filter>
     </ClInclude>
     <ClInclude Include="Vertex.h">
-      <Filter>Headers\Structs</Filter>
+      <Filter>Structs</Filter>
     </ClInclude>
     <ClInclude Include="Boid.h">
-      <Filter>Headers\Boids</Filter>
+      <Filter>Boids</Filter>
     </ClInclude>
     <ClInclude Include="BoidManager.h">
-      <Filter>Headers\Boids</Filter>
+      <Filter>Boids</Filter>
     </ClInclude>
     <ClInclude Include="CMOManager.h">
-      <Filter>Headers\Managers</Filter>
+      <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="CMOModel.h">
-      <Filter>Headers\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectList.h">
-      <Filter>Headers</Filter>
+      <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="RandomEngine.h">
-      <Filter>Headers\Utility</Filter>
+      <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="Rule.h">
-      <Filter>Headers\Boids</Filter>
+      <Filter>Boids</Filter>
     </ClInclude>
     <ClInclude Include="Separation.h">
-      <Filter>Headers\Boids\Rules</Filter>
+      <Filter>Boids\Rules</Filter>
     </ClInclude>
     <ClInclude Include="Alignment.h">
-      <Filter>Headers\Boids\Rules</Filter>
+      <Filter>Boids\Rules</Filter>
     </ClInclude>
     <ClInclude Include="Cohesion.h">
-      <Filter>Headers\Boids\Rules</Filter>
+      <Filter>Boids\Rules</Filter>
     </ClInclude>
     <ClInclude Include="Rules.h">
-      <Filter>Headers\Boids</Filter>
+      <Filter>Boids</Filter>
     </ClInclude>
     <ClInclude Include="BoidSettings.h">
-      <Filter>Headers\Boids</Filter>
+      <Filter>Boids</Filter>
     </ClInclude>
     <ClInclude Include="JMath.h">
-      <Filter>Headers\Utility</Filter>
+      <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="BoidType.h">
-      <Filter>Headers\Boids</Filter>
+      <Filter>Boids</Filter>
     </ClInclude>
     <ClInclude Include="SimpleTimer.h">
-      <Filter>Headers\Utility</Filter>
+      <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="TabletopCamera.h">
-      <Filter>Headers\Objects</Filter>
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="ObjectList.h" />
+    <ClInclude Include="WeightedRule.h">
+      <Filter>Boids</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="InputHandler.cpp">
-      <Filter>Source\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="StringUtils.cpp">
-      <Filter>Source\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="FileVBGO.cpp">
-      <Filter>Source\Example VBGOs</Filter>
-    </ClCompile>
-    <ClCompile Include="MarchCubes.cpp">
-      <Filter>Source\Example VBGOs</Filter>
-    </ClCompile>
-    <ClCompile Include="VBCube.cpp">
-      <Filter>Source\Example VBGOs</Filter>
-    </ClCompile>
-    <ClCompile Include="VBSnail.cpp">
-      <Filter>Source\Example VBGOs</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="CMOGO.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Terrain.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="TPSCamera.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="VBGO.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject2D.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="ImageGO2D.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="TextGO2D.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Boid.cpp">
-      <Filter>Source\Boids</Filter>
-    </ClCompile>
-    <ClCompile Include="BoidManager.cpp">
-      <Filter>Source\Boids</Filter>
-    </ClCompile>
-    <ClCompile Include="CMOManager.cpp">
-      <Filter>Source\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="CMOModel.cpp">
-      <Filter>Source\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="RandomEngine.cpp">
-      <Filter>Source\Utility</Filter>
-    </ClCompile>
     <ClCompile Include="Alignment.cpp">
-      <Filter>Source\Boids\Rules</Filter>
+      <Filter>Boids\Rules</Filter>
     </ClCompile>
     <ClCompile Include="Cohesion.cpp">
-      <Filter>Source\Boids\Rules</Filter>
+      <Filter>Boids\Rules</Filter>
     </ClCompile>
     <ClCompile Include="Separation.cpp">
-      <Filter>Source\Boids\Rules</Filter>
+      <Filter>Boids\Rules</Filter>
     </ClCompile>
-    <ClCompile Include="JMath.cpp">
-      <Filter>Source\Utility</Filter>
+    <ClCompile Include="Boid.cpp">
+      <Filter>Boids</Filter>
     </ClCompile>
-    <ClCompile Include="SimpleTimer.cpp">
-      <Filter>Source\Utility</Filter>
+    <ClCompile Include="BoidManager.cpp">
+      <Filter>Boids</Filter>
+    </ClCompile>
+    <ClCompile Include="FileVBGO.cpp">
+      <Filter>Example VBGOs</Filter>
+    </ClCompile>
+    <ClCompile Include="MarchCubes.cpp">
+      <Filter>Example VBGOs</Filter>
+    </ClCompile>
+    <ClCompile Include="VBCube.cpp">
+      <Filter>Example VBGOs</Filter>
+    </ClCompile>
+    <ClCompile Include="VBSnail.cpp">
+      <Filter>Example VBGOs</Filter>
+    </ClCompile>
+    <ClCompile Include="CMOManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="InputHandler.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="CMOGO.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject2D.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageGO2D.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Objects</Filter>
     </ClCompile>
     <ClCompile Include="TabletopCamera.cpp">
-      <Filter>Source\Objects</Filter>
+      <Filter>Objects</Filter>
     </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="TextGO2D.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="TPSCamera.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="VBGO.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="CMOModel.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="JMath.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomEngine.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleTimer.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="StringUtils.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp" />
   </ItemGroup>
 </Project>

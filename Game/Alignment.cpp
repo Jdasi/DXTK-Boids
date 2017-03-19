@@ -2,7 +2,7 @@
 #include "Boid.h"
 #include "GameData.h"
 
-Vector3 Alignment::force(GameData* _GD, std::vector<Boid*>& _neighbours)
+Vector3 Alignment::force(GameData* _GD, std::vector<Boid*>& _neighbours, float _weight)
 {
     Vector3 sum = Vector3::Zero;
 
@@ -46,7 +46,7 @@ Vector3 Alignment::force(GameData* _GD, std::vector<Boid*>& _neighbours)
             steer *= boid_settings_->max_steer;
         }
 
-        steer *= 0.8f; // Temporary arbitrary weighting.
+        steer *= _weight;
         return steer;
     }
     else

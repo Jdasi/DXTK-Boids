@@ -29,12 +29,12 @@ public:
 
     virtual ~Rule() = default;
 
-    virtual Vector3 force(GameData* _GD, std::vector<Boid*>& _neighbours) = 0;
+    virtual Vector3 force(GameData* _GD, std::vector<Boid*>& _neighbours, float _weight) = 0;
 
-    void set_boid(Boid* _boid, BoidSettings* _boid_settings)
+    void set_boid(Boid* _boid)
     {
         this_boid_ = _boid;
-        boid_settings_ = _boid_settings;
+        boid_settings_ = this_boid_->getSettings();
     }
 
 protected:

@@ -79,12 +79,12 @@ void BoidManager::configure_boid_settings()
     zombie_settings_.max_speed = 5.0f;
     zombie_settings_.max_steer = 0.5f;
 
-    human_settings_.rules.push_back(rules_.at(Rule::ID::Separation).get());
-    human_settings_.rules.push_back(rules_.at(Rule::ID::Alignment).get());
-    human_settings_.rules.push_back(rules_.at(Rule::ID::Cohesion).get());
+    human_settings_.weighted_rules.push_back({ rules_.at(Rule::ID::Separation).get(), 1.5f });
+    human_settings_.weighted_rules.push_back({ rules_.at(Rule::ID::Alignment).get(), 0.8f });
+    human_settings_.weighted_rules.push_back({ rules_.at(Rule::ID::Cohesion).get(), 0.8f });
 
-    zombie_settings_.rules.push_back(rules_.at(Rule::ID::Separation).get());
-    zombie_settings_.rules.push_back(rules_.at(Rule::ID::Cohesion).get());
+    zombie_settings_.weighted_rules.push_back({ rules_.at(Rule::ID::Separation).get(), 1.5f });
+    zombie_settings_.weighted_rules.push_back({ rules_.at(Rule::ID::Cohesion).get(), 0.8f });
 }
 
 void BoidManager::spawn_controls(GameData* _GD)

@@ -1,5 +1,4 @@
 #pragma once
-#include <dinput.h>
 #include "Effects.h"
 #include "CommonStates.h"
 #include "SpriteBatch.h"

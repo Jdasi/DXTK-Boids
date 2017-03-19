@@ -41,6 +41,9 @@
     <MeshContentTask Include="Characters\zombie.FBX">
       <Filter>Models</Filter>
     </MeshContentTask>
+    <MeshContentTask Include="Characters\default_boid.FBX">
+      <Filter>Models</Filter>
+    </MeshContentTask>
   </ItemGroup>
   <ItemGroup>
     <Text Include="baseline.txt">
@@ -63,10 +66,8 @@
     <ImageContentTask Include="logo_small.png">
       <Filter>Textures</Filter>
     </ImageContentTask>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="concrete.jpg">
+    <ImageContentTask Include="concrete.jpg">
       <Filter>Textures</Filter>
-    </Image>
+    </ImageContentTask>
   </ItemGroup>
 </Project>

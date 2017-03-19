@@ -1,5 +1,6 @@
 #pragma once
 #include "BoidType.h"
+#include "WeightedRule.h"
 
 #include <vector>
 
@@ -18,6 +19,6 @@ struct BoidSettings
     float neighbour_scan = 7.0f;
     float infection_distance = 2.5f;
 
-    std::vector<Rule*> rules;
+    std::vector<WeightedRule> weighted_rules;
     CMOModel* model = nullptr;
 };

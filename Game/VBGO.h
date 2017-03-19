@@ -8,7 +8,7 @@
 //this is only used if the version for this object is not set to nullptr
 //=================================================================
 
-class VBGO :public GameObject
+class VBGO : public GameObject
 {
 public:
 	VBGO();
@@ -21,7 +21,7 @@ public:
 	static void init(ID3D11Device* _graphics_device);
 	static void clean_up();
 
-	//Update static const buffer required for deafult rendering
+	//Update static const buffer required for default rendering
 	static void update_constant_buffer(DrawData* _DD);
 
 protected:

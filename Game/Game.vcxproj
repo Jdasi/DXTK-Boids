@@ -138,6 +138,7 @@
     <ClInclude Include="DrawData2D.h" />
     <ClInclude Include="DrawData.h" />
     <ClInclude Include="FileVBGO.h" />
+    <ClInclude Include="WeightedRule.h" />
     <ClInclude Include="TabletopCamera.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameData.h" />

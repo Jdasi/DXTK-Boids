@@ -44,7 +44,7 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
 
     init_tweak_bar(_d3d_device);
 
-    //create GameData struct and populate its pointers
+    // Configure initial GameData struct settings.
     GD_.game_state = GS_PLAY_MAIN_CAM;
     GD_.input_handler = input_handler_.get();
 
