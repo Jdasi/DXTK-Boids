@@ -42,6 +42,7 @@ private:
     void update_spawn_selection();
     void spawn_controls(GameData* _GD);
     void add_boid(const std::string& _type, Vector3 _pos);
+    void garbage_collect_boids();
 
     CMOManager& cmo_manager_;
 
@@ -50,6 +51,7 @@ private:
     std::map<std::string, std::function<void(Boid*, Boid*)>> tag_functions_;
 
     std::vector<std::unique_ptr<Boid>> boids_;
+    bool boids_dirty_;
     int num_boids_;
     int editable_spawn_id_;
     BoidSettings* current_type_selection_;

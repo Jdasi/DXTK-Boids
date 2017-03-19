@@ -10,6 +10,7 @@
 
 BoidManager::BoidManager(CMOManager& _cmo_manager)
     : cmo_manager_(_cmo_manager)
+    , boids_dirty_(false)
     , num_boids_(0)
     , editable_spawn_id_(0)
     , current_type_selection_(nullptr)
@@ -41,6 +42,8 @@ void BoidManager::tick(GameData* _GD)
 
         boid->tick(_GD);
     }
+
+    garbage_collect_boids();
 }
 
 void BoidManager::draw(DrawData* _DD)
@@ -105,11 +108,32 @@ void BoidManager::register_rules()
 
 void BoidManager::register_tag_functions()
 {
-    // rhs converts lhs.
+    // lhs converts rhs.
     tag_functions_["infect"] = [](Boid* lhs, Boid* rhs)
     {
+        // Only try to convert foreign types.
+        if (lhs->getSettings()->type_id == rhs->getSettings()->type_id)
+            return;
+
         rhs->model_ = lhs->settings_->model;
         rhs->settings_ = lhs->settings_;
+    };
+
+    // lhs kills rhs.
+    tag_functions_["kill"] = [this](Boid* lhs, Boid* rhs)
+    {
+        // Only try to kill foreign types.
+        if (lhs->getSettings()->type_id == rhs->getSettings()->type_id)
+            return;
+
+        // Can only kill that which is alive.
+        if (!rhs->is_alive())
+            return;
+
+        rhs->set_alive(false);
+
+        boids_dirty_ = true;
+        --num_boids_;
     };
 }
 
@@ -146,4 +170,18 @@ void BoidManager::add_boid(const std::string& _type, Vector3 _pos)
     boid->set_pos(_pos);
 
     boids_.push_back(std::move(boid));
+}
+
+void BoidManager::garbage_collect_boids()
+{
+    if (!boids_dirty_)
+        return;
+
+    boids_.erase(std::remove_if(
+        boids_.begin(),
+        boids_.end(),
+        [](std::unique_ptr<Boid>& _boid) { return !_boid->is_alive(); }),
+        boids_.end());
+
+    boids_dirty_ = false;
 }

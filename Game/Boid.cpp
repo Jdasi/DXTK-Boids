@@ -9,6 +9,7 @@ Boid::Boid(BoidSettings* _settings)
     : CMOGO(_settings->model)
     , scan_modifier_(1.0f)
     , settings_(_settings)
+    , alive_(true)
 {
     neighbours_.reserve(500);
 
@@ -40,6 +41,16 @@ float Boid::get_scan_modifier() const
 void Boid::reset_scan_modifier()
 {
     scan_modifier_ = NEIGHBOUR_SCAN_MOD_MIN;
+}
+
+bool Boid::is_alive() const
+{
+    return alive_;
+}
+
+void Boid::set_alive(bool _value)
+{
+    alive_ = _value;
 }
 
 void Boid::modify_scan_modifier(float _f)

@@ -33,6 +33,9 @@ public:
     void reset_scan_modifier();
     void modify_scan_modifier(float _f);
 
+    bool is_alive() const;
+    void set_alive(bool _value);
+
     BoidSettings* getSettings() const;
 
     void infect(BoidSettings* _settings);
@@ -47,6 +50,7 @@ private:
     Vector3 velocity_;
     Vector3 acceleration_;
     float scan_modifier_;
+    bool alive_;
 
     BoidSettings* settings_;
 

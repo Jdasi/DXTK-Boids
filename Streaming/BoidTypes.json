@@ -7,6 +7,10 @@
 		"desired_separation": 5.0,
 		"neighbour_scan": 7.0,
 		"tag_distance": 3.0,
+		"tag_functions":
+		[
+			"kill"
+		],
 		"parameterised_rules":
 		[
 			{
