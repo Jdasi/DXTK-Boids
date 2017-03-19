@@ -268,15 +268,34 @@ void Game::init_tweak_bar(ID3D11Device* _d3d_device) const
     // Ant Tweak Bar initialisation.
     TwInit(TW_DIRECT3D11, _d3d_device); // for Direct3D 11
     TwWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-    TwBar* myBar = TwNewBar("Boid Settings");
+    TwBar* boid_bar = TwNewBar("Boid Settings");
 
     // Read-only boid counter.
-    int* num_boids = boid_manager_->get_num_boids();
-    TwAddVarRO(myBar, "Num Boids", TW_TYPE_INT32, num_boids, "");
-    TwAddSeparator(myBar, "sep1", "");
+    TwAddVarRO(boid_bar, "Num Boids", TW_TYPE_INT32, boid_manager_->get_num_boids(), "");
+    tweak_bar_spawn_selection(boid_bar);
+    TwAddSeparator(boid_bar, "sep1", "");
 
-    tweak_bar_human_settings(myBar);
-    tweak_bar_zombie_settings(myBar);
+    tweak_bar_human_settings(boid_bar);
+    tweak_bar_zombie_settings(boid_bar);
+}
+
+void Game::tweak_bar_spawn_selection(TwBar* _twbar) const
+{
+    auto& boid_types = boid_manager_->get_boid_types();
+    TwEnumVal* tw_enum = new TwEnumVal[boid_types.size()];
+    for (int i = 0; i < boid_types.size(); ++i)
+    {
+        auto it = std::find_if(boid_types.begin(), boid_types.end(), [i](const auto& _elem)
+        {
+            return _elem.second->type_id == i;
+        });
+
+        tw_enum[i].Label = it->second->type.c_str();
+        tw_enum[i].Value = i;
+    }
+
+    TwType spawn_type = TwDefineEnum("spawntypeenum", tw_enum, boid_types.size());
+    TwAddVarRW(_twbar, "spawntype", spawn_type, boid_manager_->get_spawn_selection(), " label='Spawn Type' ");
 }
 
 void Game::tweak_bar_human_settings(TwBar* _twbar) const

@@ -6,15 +6,20 @@
 #include "InputHandler.h"
 #include "Constants.h"
 
+#include <algorithm>
+
 BoidManager::BoidManager(CMOManager& _cmo_manager)
     : cmo_manager_(_cmo_manager)
     , num_boids_(0)
+    , editable_spawn_id_(0)
+    , current_type_selection_(nullptr)
 {
     register_rules();
 }
 
 void BoidManager::tick(GameData* _GD)
 {
+    update_spawn_selection();
     spawn_controls(_GD);
 
     for (auto& boid : boids_)
@@ -55,9 +60,24 @@ BoidSettings* BoidManager::get_boid_settings(const std::string& _type) const
     return boid_types_.at(_type).get();
 }
 
+int BoidManager::get_num_types() const
+{
+    return boid_types_.size();
+}
+
+const std::map<std::string, std::unique_ptr<BoidSettings>>& BoidManager::get_boid_types() const
+{
+    return boid_types_;
+}
+
 int* BoidManager::get_num_boids()
 {
     return &num_boids_;
+}
+
+int* BoidManager::get_spawn_selection()
+{
+    return &editable_spawn_id_;
 }
 
 void BoidManager::add_boid_type(const std::string& _str, std::unique_ptr<BoidSettings> _settings)
@@ -67,6 +87,7 @@ void BoidManager::add_boid_type(const std::string& _str, std::unique_ptr<BoidSet
         return;
 
     boid_types_[_str] = std::move(_settings);
+    current_type_selection_ = boid_types_.begin()->second.get();
 }
 
 void BoidManager::register_rules()
@@ -76,13 +97,26 @@ void BoidManager::register_rules()
     rules_["cohesion"] = std::make_unique<Cohesion>();
 }
 
+void BoidManager::update_spawn_selection()
+{
+    if (!current_type_selection_)
+        return;
+
+    if (current_type_selection_->type_id != editable_spawn_id_)
+    {
+        auto it = std::find_if(boid_types_.begin(), boid_types_.end(), [this](const auto& _elem)
+        {
+            return _elem.second->type_id == editable_spawn_id_;
+        });
+
+        current_type_selection_ = it->second.get();
+    }
+}
+
 void BoidManager::spawn_controls(GameData* _GD)
 {
-    if (_GD->input_handler->get_key(DIK_H))
-        add_boid("human", _GD->boid_spawn_pos);
-
-    if (_GD->input_handler->get_key(DIK_Z))
-        add_boid("zombie", _GD->boid_spawn_pos);
+    if (_GD->input_handler->get_key(DIK_V))
+        add_boid(current_type_selection_->type, _GD->boid_spawn_pos);
 }
 
 void BoidManager::add_boid(const std::string& _type, Vector3 _pos)
