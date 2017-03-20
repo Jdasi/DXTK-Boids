@@ -14,7 +14,7 @@ TabletopCamera::TabletopCamera(float _fov, float _aspect_ratio, float _near_plan
 
 void TabletopCamera::tick(GameData* _GD)
 {
-    if (_GD->game_state != GameState::GS_PLAY_MAIN_CAM)
+    if (_GD->active_camera != CAM_TT)
         return;
 
     orbiting_ = _GD->input_handler->get_mouse_button(1);

@@ -45,6 +45,11 @@ protected:
     void tweak_bar_human_settings(TwBar* _twbar) const;
     void tweak_bar_zombie_settings(TwBar* _twbar) const;
 
+    void tick_all_objects();
+    void handle_pause();
+    void handle_camera_change();
+    void draw_pause_text();
+
     HWND hWnd_;
     SimpleTimer timer_;
 
@@ -52,15 +57,15 @@ protected:
     std::unique_ptr<CMOManager> cmo_manager_;
     std::unique_ptr<BoidManager> boid_manager_;
 
-	TPSCamera* tps_camera_;             //TPS cam
-    TabletopCamera* tabletop_camera_;   //Tabletop cam
-	Light* light_;                      //base light
+    std::unique_ptr<TabletopCamera> tabletop_camera_;   // Tabletop cam
+	std::unique_ptr<TPSCamera> tps_camera_;             // TPS cam
+	Light* light_;                                      // Base light
 
-    std::list<GameObject *> game_objects_;      //data structure storing all GameObjects of this Game
-    std::list<GameObject2D *> game_objects_2d_; //ditto 2D objects
+    std::list<std::unique_ptr<GameObject>> game_objects_;      //data structure storing all GameObjects of this Game
+    std::list<std::unique_ptr<GameObject2D>> game_objects_2d_; //ditto 2D objects
 
 	//required for the CMO model rendering system
-	CommonStates* states_;
+	std::unique_ptr<CommonStates> states_;
 	std::unique_ptr<IEffectFactory> fx_factory_;
 
 	GameData GD_;		//Data to be shared to all Game Objects as they are ticked
@@ -70,6 +75,8 @@ protected:
 	//sound stuff
 	std::unique_ptr<AudioEngine> audio_engine_;
 
-	//tick functions for each state
-	void play_tick();
+    // GameState tick functions.
+	void simulating_tick();
+
+
 };

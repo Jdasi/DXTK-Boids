@@ -12,8 +12,9 @@ class InputHandler;
 
 struct GameData
 {
-	float delta_time;  //time step since last frame
-	GameState game_state; //global GameState
-    InputHandler* input_handler;
-    DirectX::SimpleMath::Vector3 boid_spawn_pos;
+	float delta_time; // Holds the time since the last cycle.
+	GameState game_state; // The state of the simulation.
+    ActiveCamera active_camera; // Which camera is currently being used.
+    InputHandler* input_handler; // Object for handling input.
+    DirectX::SimpleMath::Vector3 boid_spawn_pos; // Where boids will spawn.
 };

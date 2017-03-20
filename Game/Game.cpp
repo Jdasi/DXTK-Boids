@@ -2,6 +2,7 @@
 #include "ObjectList.h"
 #include "Constants.h"
 #include "FileUtils.h"
+#include "StringUtils.h"
 
 #include "SimpleMath.h"
 #include <AntTweakBar.h>
@@ -30,7 +31,7 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
 	srand((UINT)time(NULL));
 
     fx_factory_ = std::make_unique<EffectFactory>(_d3d_device);
-    states_ = new CommonStates(_d3d_device);
+    states_ = std::make_unique<CommonStates>(_d3d_device);
 
     //Tell the fxFactory to look to the correct build directory to pull stuff in from
 #ifdef DEBUG
@@ -47,14 +48,15 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
     enumerate_boid_types();
     init_tweak_bar(_d3d_device);
 
-    // Configure initial GameData struct settings.
-    GD_.game_state = GS_PLAY_MAIN_CAM;
+    // Configure GameData struct.
+    GD_.game_state = GS_SIMULATING;
+    GD_.active_camera = CAM_TT;
     GD_.input_handler = input_handler_.get();
 
-	//init render system for VBGOs
+	// Init render system for VBGOs.
 	VBGO::init(_d3d_device);
 
-	//find how big my window is to correctly calculate my aspect ratio
+	// Calculate aspect ratio.
 	RECT rc;
 	GetClientRect(hWnd_, &rc);
 	UINT width = rc.right - rc.left;
@@ -62,57 +64,38 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
 	float AR = (float)width / (float)height;
 
 	// Base light.
-	light_ = new Light(Vector3(0.0f, 100.0f, 160.0f), Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.5f, 0.5f, 0.5f, 1.0f));
-	game_objects_.push_back(light_);
+	auto light = std::make_unique<Light>(Vector3(0.0f, 100.0f, 160.0f), Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.5f, 0.5f, 0.5f, 1.0f));
+    light_ = light.get();
+	game_objects_.push_back(std::move(light));
 
     // Tabletop Simulator style camera to orbit around the simulation.
-    tabletop_camera_ = new TabletopCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, Vector3::UnitY, 0.3f, 70.0f);
-    game_objects_.push_back(tabletop_camera_);
+    tabletop_camera_ = std::make_unique<TabletopCamera>(0.25f * XM_PI, AR, 1.0f, 10000.0f, Vector3::UnitY, 0.5f, 150.0f);
 
-	// Player.
-	Player* pPlayer = new Player(cmo_manager_->get_model("BirdModelV1"));
-    pPlayer->set_pos({ 0, 10, 0 });
-	game_objects_.push_back(pPlayer);
+	// Player to fly around the scene when TPS is set up.
+	auto player = std::make_unique<Player>(cmo_manager_->get_model("BirdModelV1"));
+    player->set_pos({ 0, 10, 0 });
 
 	// TPS Camera to follow the Player's movements.
-	tps_camera_ = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 10.0f, 50.0f));
-	game_objects_.push_back(tps_camera_);
+	tps_camera_ = std::make_unique<TPSCamera>(0.25f * XM_PI, AR, 1.0f, 10000.0f, player.get(), Vector3::UnitY, Vector3(0.0f, 10.0f, 50.0f));
+    game_objects_.push_back(std::move(player));
 
-	//create DrawData struct and populate its pointers
+	// Configure DrawData struct.
 	DD_.d3d_immediate_context = nullptr;
-	DD_.states = states_;
-	DD_.camera = tabletop_camera_;
+	DD_.states = states_.get();
+	DD_.camera = tabletop_camera_.get();
 	DD_.light = light_;
 
-	//add some stuff to show off
-	FileVBGO* terrainBox = new FileVBGO("../Assets/terrainTex.txt", _d3d_device);
-    terrainBox->set_scale(10.0f, 0.5f, 10.0f);
-    terrainBox->set_pos({ 0, -0.5f, 0 });
-	game_objects_.push_back(terrainBox);
+	// Add terrain for boids to run around on.
+	auto terrain = std::make_unique<FileVBGO>("../Assets/terrainTex.txt", _d3d_device);
+    terrain->set_scale(10.0f, 0.5f, 10.0f);
+    terrain->set_pos({ 0, -0.5f, 0 });
+	game_objects_.push_back(std::move(terrain));
 };
 
 Game::~Game() 
 {
-	//tidy up VBGO render system
+	// Tidy up VBGO render system.
 	VBGO::clean_up();
-
-	//get rid of the game objects here
-    for (auto& obj : game_objects_)
-    {
-		delete obj;
-	}
-	game_objects_.clear();
-
-
-	//and the 2D ones
-    for (auto& obj : game_objects_2d_)
-    {
-		delete obj;
-	}
-	game_objects_2d_.clear();
-
-	//clear away CMO render system
-	delete states_;
 
     TwTerminate();
 }
@@ -125,7 +108,10 @@ bool Game::tick()
 
     // Tick core systems.
     input_handler_->tick();
-    boid_manager_->tick(&GD_);
+
+    // Tick cameras.
+    tabletop_camera_->tick(&GD_);
+    tps_camera_->tick(&GD_);
 
 	// Tick audio engine.
 	if (!audio_engine_->Update())
@@ -137,93 +123,87 @@ bool Game::tick()
 		}
 	}
 
-    // Quit on ESC.
+    // Quit on Escape key press.
 	if (input_handler_->get_key_down(DIK_ESCAPE))
 	{
 		return false;
 	}
 
+    handle_pause();
+    handle_camera_change();
+
 	switch (GD_.game_state)
 	{
-	    case GS_ATTRACT:
-		    break;
-	    case GS_PAUSE:
-		    break;
-	    case GS_GAME_OVER:
-		    break;
-	    case GS_PLAY_MAIN_CAM:
-	    case GS_PLAY_TPS_CAM:
-		    play_tick();
-		    break;
+        case GS_SIMULATING:
+        {
+            simulating_tick();
+        } break;
 
         default: {}
 	}
+
+    tick_all_objects();
 	
 	return true;
 };
 
-void Game::play_tick()
+void Game::draw_pause_text()
 {
-	//upon space bar switch camera state
-	if (input_handler_->get_key_down(DIK_SPACE))
-	{
-		if (GD_.game_state == GS_PLAY_MAIN_CAM)
-		{
-			GD_.game_state = GS_PLAY_TPS_CAM;
-		}
-		else
-		{
-			GD_.game_state = GS_PLAY_MAIN_CAM;
-		}
-	}
-
-	//update all objects
-    for (auto& obj : game_objects_)
+    if (GD_.game_state == GS_PAUSED)
     {
-		obj->tick(&GD_);
-	}
+        DD2D_.font->DrawString(DD2D_.sprites.get(),
+            StringUtils::char_to_wchar("PAUSED"),
+            XMFLOAT2(440, 0), Colors::White, 0, XMFLOAT2(0, 0), XMFLOAT2(0.75f, 0.75f));
 
-    for (auto& obj : game_objects_2d_)
+        DD2D_.font->DrawString(DD2D_.sprites.get(),
+            StringUtils::char_to_wchar("Press P to Unpause"),
+            XMFLOAT2(410, 35), Colors::White, 0, XMFLOAT2(0, 0), XMFLOAT2(0.5f, 0.5f));
+    }
+    else
     {
-		obj->tick(&GD_);
-	}
+        DD2D_.font->DrawString(DD2D_.sprites.get(),
+            StringUtils::char_to_wchar("Press P to Pause"),
+            XMFLOAT2(390, 0), Colors::White, 0, XMFLOAT2(0, 0), XMFLOAT2(0.75f, 0.75f));
+    }
+}
+
+void Game::simulating_tick()
+{
+    boid_manager_->tick(&GD_);
 }
 
 void Game::draw(ID3D11DeviceContext* _d3d_immediate_context)
 {
-	//set immediate context of the graphics device
+	// Set immediate context of the graphics device.
 	DD_.d3d_immediate_context = _d3d_immediate_context;
 
-	//set which camera to be used
-	DD_.camera = tabletop_camera_;
-	if (GD_.game_state == GS_PLAY_TPS_CAM)
-	{
-		DD_.camera = tps_camera_;
-	}
-
-	//update the constant buffer for the rendering of VBGOs
+	// Update the constant buffer for the rendering of VBGOs.
 	VBGO::update_constant_buffer(&DD_);
 
     // Draw Boids.
     boid_manager_->draw(&DD_);
     
-	//draw all objects
+	// Draw all other objects.
     for (auto& obj : game_objects_)
 	{
 		obj->draw(&DD_);
 	}
 
-	// Draw sprite batch stuff 
+	// Draw sprite batch stuff.
 	DD2D_.sprites->Begin();
     for (auto& obj : game_objects_2d_)
 	{
 		obj->draw(&DD2D_);
 	}
+
+    draw_pause_text();
+
 	DD2D_.sprites->End();
 
-	//drawing text screws up the Depth Stencil State, this puts it back again!
+	// Reset Depth Stencil State after drawing sprites.
     _d3d_immediate_context->OMSetDepthStencilState(states_->DepthDefault(), 0);
 
+    // Draw Ant Tweak Bar.
     TwDraw();
 }
 
@@ -232,11 +212,10 @@ void Game::enumerate_boid_types() const
     auto file = FileUtils::read_json("BoidTypes");
 
     int type_count = 0;
-    for (const auto& entry : file.members())
+    for (const auto& entry : file.object_value())
     {
         auto name = entry.name();
         const auto& data = entry.value();
-
         auto settings = std::make_unique<BoidSettings>();
 
         settings->type = name;
@@ -324,6 +303,51 @@ void Game::tweak_bar_human_settings(TwBar* _twbar) const
 
     TwAddVarRW(_twbar, "hscan", TW_TYPE_FLOAT, &human_settings->neighbour_scan,
         " label='Neighbour Scan' min=1.0 max=30.0 step=0.2 group='HumanSettings' ");
+}
+
+void Game::tick_all_objects()
+{
+    // Update all game objects.
+    for (auto& obj : game_objects_)
+    {
+        obj->tick(&GD_);
+    }
+
+    // Update all 2D game objects.
+    for (auto& obj : game_objects_2d_)
+    {
+        obj->tick(&GD_);
+    }
+}
+
+void Game::handle_pause()
+{
+    // Pause/Unpause on P key press.
+    if (input_handler_->get_key_down(DIK_P))
+    {
+        if (GD_.game_state == GS_SIMULATING)
+            GD_.game_state = GS_PAUSED;
+        else
+            GD_.game_state = GS_SIMULATING;
+    }
+}
+
+void Game::handle_camera_change()
+{
+    // Switch camera on Space key press.
+    if (input_handler_->get_key_down(DIK_SPACE))
+    {
+        if (GD_.active_camera == CAM_TT)
+        {
+            GD_.active_camera = CAM_TPS;
+            DD_.camera = tps_camera_.get();
+        }
+        else
+        {
+            GD_.active_camera = CAM_TT;
+            DD_.camera = tabletop_camera_.get();
+        }
+    }
 }
 
 void Game::tweak_bar_zombie_settings(TwBar* _twbar) const

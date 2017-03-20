@@ -11,9 +11,6 @@ Player::Player(CMOModel* _model)
 
 void Player::horizontal_movement(GameData* _GD)
 {
-    if (!visible_)
-        return;
-
     Matrix rot_mat = Matrix::CreateRotationY(yaw_);
 
     Vector3 forward_move = move_speed_ * Vector3::Forward;
@@ -33,9 +30,6 @@ void Player::horizontal_movement(GameData* _GD)
 
 void Player::vertical_movement(GameData* _GD)
 {
-    if (!visible_)
-        return;
-
     if (_GD->input_handler->get_key(DIK_F))
     {
         acceleration_.y += move_speed_;
@@ -49,9 +43,6 @@ void Player::vertical_movement(GameData* _GD)
 
 void Player::rotate(GameData* _GD)
 {
-    if (!visible_)
-        return;
-
     if (_GD->input_handler->get_key(DIK_A))
     {
         yaw_ += rotate_speed_ * _GD->delta_time;
@@ -77,15 +68,18 @@ void Player::limit_speed()
 
 void Player::tick(GameData* _GD)
 {
-    visible_ = _GD->game_state == GameState::GS_PLAY_TPS_CAM ? true : false;
-
-    horizontal_movement(_GD);
-    vertical_movement(_GD);
-    rotate(_GD);
-    limit_speed();
+    visible_ = _GD->active_camera == CAM_TPS;
 
     if (visible_)
+    {
+        horizontal_movement(_GD);
+        vertical_movement(_GD);
+        rotate(_GD);
+        
         _GD->boid_spawn_pos = Vector3(pos_.x, 0, pos_.z);
+    }
+    
+    limit_speed();
 
 	// Base behaviour.
 	CMOGO::tick(_GD);
