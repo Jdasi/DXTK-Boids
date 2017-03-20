@@ -78,5 +78,4 @@ protected:
     // GameState tick functions.
 	void simulating_tick();
 
-
 };

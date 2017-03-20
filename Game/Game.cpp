@@ -3,9 +3,9 @@
 #include "Constants.h"
 #include "FileUtils.h"
 #include "StringUtils.h"
+#include "TWCallbackFunctions.h"
 
 #include "SimpleMath.h"
-#include <AntTweakBar.h>
 
 #include <windows.h>
 #include <time.h>
@@ -262,8 +262,11 @@ void Game::init_tweak_bar(ID3D11Device* _d3d_device) const
 
     // Read-only boid counter.
     TwAddVarRO(boid_bar, "Num Boids", TW_TYPE_INT32, boid_manager_->get_num_boids(), "");
-    tweak_bar_spawn_selection(boid_bar);
     TwAddSeparator(boid_bar, "sep1", "");
+
+    tweak_bar_spawn_selection(boid_bar);
+    TwAddButton(boid_bar, "deltype", delete_all_of_spawn_type, boid_manager_.get(), " label='Delete Boids by Type' ");
+    TwAddSeparator(boid_bar, "sep2", "");
 
     tweak_bar_human_settings(boid_bar);
     tweak_bar_zombie_settings(boid_bar);

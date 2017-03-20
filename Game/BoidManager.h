@@ -36,6 +36,8 @@ public:
     const std::map<std::string, std::unique_ptr<BoidSettings>>& get_boid_types() const;
     void add_boid_type(const std::string& _str, std::unique_ptr<BoidSettings> _settings);
 
+    void delete_selected_type();
+
 private:
     void register_rules();
     void register_tag_functions();

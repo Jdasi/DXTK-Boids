@@ -99,6 +99,22 @@ void BoidManager::add_boid_type(const std::string& _str, std::unique_ptr<BoidSet
     current_type_selection_ = boid_types_.begin()->second.get();
 }
 
+void BoidManager::delete_selected_type()
+{
+    auto type_str = current_type_selection_->type;
+
+    for (auto& boid : boids_)
+    {
+        if (boid->settings_->type == type_str)
+        {
+            boid->set_alive(false);
+            --num_boids_;
+        }
+    }
+
+    boids_dirty_ = true;
+}
+
 void BoidManager::register_rules()
 {
     rules_["separation"] = std::make_unique<Separation>();

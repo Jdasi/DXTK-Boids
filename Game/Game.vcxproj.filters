@@ -159,6 +159,9 @@
     <ClInclude Include="ParameterisedRule.h">
       <Filter>Boids</Filter>
     </ClInclude>
+    <ClInclude Include="TWCallbackFunctions.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Alignment.cpp">
