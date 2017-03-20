@@ -268,8 +268,7 @@ void Game::init_tweak_bar(ID3D11Device* _d3d_device) const
     TwAddButton(boid_bar, "deltype", delete_all_of_spawn_type, boid_manager_.get(), " label='Delete Boids by Type' ");
     TwAddSeparator(boid_bar, "sep2", "");
 
-    tweak_bar_human_settings(boid_bar);
-    tweak_bar_zombie_settings(boid_bar);
+    tweak_bar_boid_settings(boid_bar);
 }
 
 void Game::tweak_bar_spawn_selection(TwBar* _twbar) const
@@ -291,21 +290,32 @@ void Game::tweak_bar_spawn_selection(TwBar* _twbar) const
     TwAddVarRW(_twbar, "spawntype", spawn_type, boid_manager_->get_editable_spawn_id(), " label='Spawn Type' ");
 }
 
-void Game::tweak_bar_human_settings(TwBar* _twbar) const
+void Game::tweak_bar_boid_settings(TwBar* _twbar) const
 {
-    BoidSettings* human_settings = boid_manager_->get_boid_settings("human");
+    const std::map<std::string, std::unique_ptr<BoidSettings>>& boid_types = boid_manager_->get_boid_types();
+    for (auto& elem : boid_types)
+    {
+        std::string var_prefix = elem.second->type;
+        std::string group_value;
+        group_value.append(" group='" + var_prefix + "settings' ");
 
-    TwAddVarRW(_twbar, "hmaxspeed", TW_TYPE_FLOAT, &human_settings->max_speed,
-        " label='Max Speed' min=1.0 max=30.0 step=0.2 group='HumanSettings' ");
+        TwAddVarRW(_twbar, (var_prefix + "maxspeed").c_str(), TW_TYPE_FLOAT, &elem.second->max_speed,
+            (" label='Max Speed' min=1.0 max=30.0 step=0.2 " + group_value).c_str());
 
-    TwAddVarRW(_twbar, "hmaxsteer", TW_TYPE_FLOAT, &human_settings->max_steer,
-        " label='Max Steer' min=0.0 max=5.0 step=0.2 group='HumanSettings' ");
+        TwAddVarRW(_twbar, (var_prefix + "maxsteer").c_str(), TW_TYPE_FLOAT, &elem.second->max_steer,
+            (" label='Max Steer' min=0.0 max=5.0 step=0.2 " + group_value).c_str());
 
-    TwAddVarRW(_twbar, "hdesiredsep", TW_TYPE_FLOAT, &human_settings->desired_separation,
-        " label='Desired Separation' min=0.0 max=30.0 step=0.2 group='HumanSettings' ");
+        TwAddVarRW(_twbar, (var_prefix + "desiredsep").c_str(), TW_TYPE_FLOAT, &elem.second->desired_separation,
+            (" label='Desired Separation' min=0.0 max=30.0 step=0.2 " + group_value).c_str());
 
-    TwAddVarRW(_twbar, "hscan", TW_TYPE_FLOAT, &human_settings->neighbour_scan,
-        " label='Neighbour Scan' min=1.0 max=30.0 step=0.2 group='HumanSettings' ");
+        TwAddVarRW(_twbar, (var_prefix + "scan").c_str(), TW_TYPE_FLOAT, &elem.second->neighbour_scan,
+            (" label='Neighbour Scan' min=1.0 max=30.0 step=0.2 " + group_value).c_str());
+
+        TwAddVarRW(_twbar, (var_prefix + "tag").c_str(), TW_TYPE_FLOAT, &elem.second->tag_distance,
+            (" label='Tag Range' min=1.0 max=30.0 step=0.2 " + group_value).c_str());
+
+        TwAddSeparator(_twbar, (var_prefix + "sep").c_str(), "");
+    }
 }
 
 void Game::tick_all_objects()
@@ -351,24 +361,4 @@ void Game::handle_camera_change()
             DD_.camera = tabletop_camera_.get();
         }
     }
-}
-
-void Game::tweak_bar_zombie_settings(TwBar* _twbar) const
-{
-    BoidSettings* zombie_settings = boid_manager_->get_boid_settings("zombie");
-
-    TwAddVarRW(_twbar, "zmaxspeed", TW_TYPE_FLOAT, &zombie_settings->max_speed,
-        " label='Max Speed' min=1.0 max=30.0 step=0.2 group='ZombieSettings' ");
-
-    TwAddVarRW(_twbar, "zmaxsteer", TW_TYPE_FLOAT, &zombie_settings->max_steer,
-        " label='Max Steer' min=0.0 max=5.0 step=0.2 group='ZombieSettings' ");
-
-    TwAddVarRW(_twbar, "zdesiredsep", TW_TYPE_FLOAT, &zombie_settings->desired_separation,
-        " label='Desired Separation' min=0.0 max=30.0 step=0.2 group='ZombieSettings' ");
-
-    TwAddVarRW(_twbar, "zscan", TW_TYPE_FLOAT, &zombie_settings->neighbour_scan,
-        " label='Neighbour Scan' min=1.0 max=30.0 step=0.2 group='ZombieSettings' ");
-
-    TwAddVarRW(_twbar, "ztag", TW_TYPE_FLOAT, &zombie_settings->tag_distance,
-        " label='Tag Range' min=1.0 max=30.0 step=0.2 group='ZombieSettings' ");
 }

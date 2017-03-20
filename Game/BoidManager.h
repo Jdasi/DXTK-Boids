@@ -30,13 +30,11 @@ public:
 
     Rule* get_rule(const std::string& _rule) const;
     std::function<void(Boid*, Boid*)> get_tag_function(const std::string& _str);
-    BoidSettings* get_boid_settings(const std::string& _type) const;
 
-    int get_num_types() const;
     const std::map<std::string, std::unique_ptr<BoidSettings>>& get_boid_types() const;
     void add_boid_type(const std::string& _str, std::unique_ptr<BoidSettings> _settings);
 
-    void delete_selected_type();
+    void delete_all_of_current_type_selection();
 
 private:
     void register_rules();

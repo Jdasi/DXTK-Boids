@@ -64,16 +64,6 @@ std::function<void(Boid*, Boid*)> BoidManager::get_tag_function(const std::strin
     return tag_functions_.at(_str);
 }
 
-BoidSettings* BoidManager::get_boid_settings(const std::string& _type) const
-{
-    return boid_types_.at(_type).get();
-}
-
-int BoidManager::get_num_types() const
-{
-    return boid_types_.size();
-}
-
 const std::map<std::string, std::unique_ptr<BoidSettings>>& BoidManager::get_boid_types() const
 {
     return boid_types_;
@@ -99,7 +89,7 @@ void BoidManager::add_boid_type(const std::string& _str, std::unique_ptr<BoidSet
     current_type_selection_ = boid_types_.begin()->second.get();
 }
 
-void BoidManager::delete_selected_type()
+void BoidManager::delete_all_of_current_type_selection()
 {
     auto type_str = current_type_selection_->type;
 
