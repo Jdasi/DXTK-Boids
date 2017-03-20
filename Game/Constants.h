@@ -21,6 +21,8 @@ const float NEIGHBOUR_SCAN_MOD_GROWTH   = 5.0f;     // Rate of boid awareness gr
 const float NEIGHBOUR_SCAN_MOD_MIN      = 1.0f;     // Min boid awareness bonus.
 const float NEIGHBOUR_SCAN_MOD_MAX      = 50.0f;    // Max boid awareness bonus.
 
+const float TT_CAM_X_SENSITIVITY        = 0.01f;    // Tabletop cam X sensitivity.
+const float TT_CAM_Y_SENSITIVITY        = 0.01f;    // Tabletop cam Y sensitivity.
 const float TT_CAM_MIN_ZOOM             = 40.0f;    // Min zoom of the Tabletop cam.
 const float TT_CAM_MAX_ZOOM             = 500.0f;   // Max zoom of the Tabletop cam.
 const float TT_CAM_MOVE_SPEED           = 30.0f;    // Speed of moving the Tabletop cam.

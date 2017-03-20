@@ -8,8 +8,6 @@ TabletopCamera::TabletopCamera(float _fov, float _aspect_ratio, float _near_plan
     : Camera(_fov, _aspect_ratio, _near_plane_dist, _far_plane_dist, _up)
     , dpos_(Vector3(0, 0, _initial_zoom))
     , orbiting_(false)
-    , sensitivity_x_(0.1f)
-    , sensitivity_y_(0.1f)
     , min_pitch_(-1.0f)
     , max_pitch_(-0.15f)
     , speed_modifier_(1.0f)
@@ -48,8 +46,8 @@ void TabletopCamera::rotate_cam(GameData* _GD)
     if (!orbiting_)
         return;
 
-    yaw_ -= _GD->input_handler->get_mouse_state().lX * sensitivity_x_;
-    pitch_ -= _GD->input_handler->get_mouse_state().lY * sensitivity_y_;
+    yaw_ -= _GD->input_handler->get_mouse_state().lX * TT_CAM_X_SENSITIVITY;
+    pitch_ -= _GD->input_handler->get_mouse_state().lY * TT_CAM_Y_SENSITIVITY;
 
     pitch_ = JMath::clampf(pitch_, min_pitch_, max_pitch_);
 }
