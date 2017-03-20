@@ -128,6 +128,15 @@ void BoidManager::register_tag_functions()
         boids_dirty_ = true;
         --num_boids_;
     };
+
+    // lhs increases the scale of rhs (up to a threshold).
+    tag_functions_["grow"] = [](Boid* lhs, Boid* rhs)
+    {
+        if (rhs->get_scale().LengthSquared() > 0.1f)
+            return;
+
+        rhs->set_scale(rhs->get_scale() * 1.01f);
+    };
 }
 
 void BoidManager::update_spawn_selection()

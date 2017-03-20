@@ -11,8 +11,8 @@ Vector3 Cohesion::force(GameData* _GD, std::vector<Boid*>& _neighbours, Paramete
 
     for (auto& neighbour : _neighbours)
     {
-        // Ignore self.
-        if (this_boid_ == neighbour)
+        // Ignore self and dead boids.
+        if (this_boid_ == neighbour || !neighbour->is_alive())
             continue;
 
         // Don't go any further if neighbour's type is not listed in the rule's params.
@@ -49,10 +49,6 @@ Vector3 Cohesion::force(GameData* _GD, std::vector<Boid*>& _neighbours, Paramete
 
 void Cohesion::process_tag_functions(Boid* _neighbour, float _distance) const
 {
-    // Only tag alive boids.
-    if (!_neighbour->is_alive())
-        return;
-
     // Only tag foreign types.
     if (this_boid_->getSettings()->type_id == _neighbour->getSettings()->type_id)
         return;

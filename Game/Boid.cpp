@@ -8,8 +8,8 @@
 Boid::Boid(BoidSettings* _settings)
     : CMOGO(_settings->model)
     , scan_modifier_(1.0f)
-    , settings_(_settings)
     , alive_(true)
+    , settings_(_settings)
 {
     neighbours_.reserve(500);
 
