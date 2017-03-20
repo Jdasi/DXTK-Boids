@@ -35,8 +35,8 @@ public:
 	Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance);
 	virtual ~Game();
 
-	bool tick(); //tick the game state
-	void draw(ID3D11DeviceContext* _d3d_immediate_context); //render the current game state
+	bool tick();
+	void draw(ID3D11DeviceContext* _d3d_immediate_context);
 
 protected:
     void enumerate_boid_types() const;

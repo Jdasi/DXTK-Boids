@@ -13,7 +13,7 @@
 Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
     : hWnd_(_hWnd)
 {
-	//set up audio
+	// Set up audio.
 	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	AUDIO_ENGINE_FLAGS eflags = AudioEngine_Default;
 #ifdef _DEBUG
@@ -28,7 +28,7 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
 	DD2D_.font.reset(new SpriteFont(_d3d_device, L"..\\Assets\\italic.spritefont"));
 
 	//seed the random number generator
-	srand((UINT)time(NULL));
+	srand(static_cast<unsigned int>(time(nullptr)));
 
     fx_factory_ = std::make_unique<EffectFactory>(_d3d_device);
     states_ = std::make_unique<CommonStates>(_d3d_device);
@@ -40,7 +40,7 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
     ((EffectFactory*)fx_factory_.get())->SetDirectory(L"../Release");
 #endif
 
-    // Core systems.
+    // Create core systems.
     input_handler_ = std::make_unique<InputHandler>(_hWnd, _hInstance);
     cmo_manager_ = std::make_unique<CMOManager>(*_d3d_device, *fx_factory_);
     boid_manager_ = std::make_unique<BoidManager>(*cmo_manager_);
@@ -165,6 +165,7 @@ void Game::draw_pause_text() const
     }
 }
 
+// Ticks all objects and behaviour relevant to the Simulating GameState.
 void Game::simulating_tick()
 {
     boid_manager_->tick(&GD_);
@@ -218,15 +219,21 @@ void Game::draw(ID3D11DeviceContext* _d3d_immediate_context)
     TwDraw();
 }
 
+// Reads in the BoidTypes json file found in the Streaming directory.
 void Game::enumerate_boid_types() const
 {
+    // Read in JSON file.
     auto file = FileUtils::read_json("BoidTypes");
 
-    int type_count = 0;
+    int type_count = 0; // Used to assign each new type a unique id.
+
+    // Iterate through each type (aka entry) in the JSON file. This forms our Boid Types.
     for (const auto& entry : file.object_value())
     {
         auto name = entry.name();
         const auto& data = entry.value();
+
+        // Create a new BoidSettings struct which will store the new type's settings.
         auto settings = std::make_unique<BoidSettings>();
 
         settings->type = name;
@@ -242,16 +249,22 @@ void Game::enumerate_boid_types() const
         {
             auto function_names = data["tag_functions"].as_vector<std::string>();
             
+            /* For each function name, fetch the tag function with the same name
+             * from the BoidManager and add it to the BoidSettings list of tag functions.
+             */
             for (auto& function_name : function_names)
             {
                 settings->tag_functions.push_back(boid_manager_->get_tag_function(function_name));
             }
         }
 
+        // Process the list of rules that apply to the boid.
         json weighted_rules = json::array{data["parameterised_rules"].array_value()};
         for (auto& rules_entry : weighted_rules.array_value())
         {
+            // Access the BoidManager and fetch the rule with the entry's name.
             auto fetched_rule = boid_manager_->get_rule(rules_entry["rule"].as_string());
+
             auto rule_weight = rules_entry["weight"].as_double();
             auto valid_types = rules_entry["valid_types"].as_vector<std::string>();
 
@@ -260,13 +273,14 @@ void Game::enumerate_boid_types() const
             settings->parameterised_rules.push_back(parameterised_rule);
         }
 
+        // Finally, add the configured BoidSettings struct to the BoidManager's list.
         boid_manager_->add_boid_type(name, std::move(settings));
     }
 }
 
+// Sets up a new AntTweakBar for use in the simulation.
 void Game::init_tweak_bar(ID3D11Device* _d3d_device) const
 {
-    // Ant Tweak Bar initialisation.
     TwInit(TW_DIRECT3D11, _d3d_device); // for Direct3D 11
     TwWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     TwBar* boid_bar = TwNewBar("Boid Settings");
@@ -282,10 +296,16 @@ void Game::init_tweak_bar(ID3D11Device* _d3d_device) const
     tweak_bar_boid_settings(boid_bar);
 }
 
+/* Creates a drop-down menu on the tweak bar which allows the user to pick from the 
+ * list of enumerated boid types, for the purposes of determining which boid is spawned
+ * on a key press or which type is removed from the current simulation.
+ */
 void Game::tweak_bar_spawn_selection(TwBar* _twbar) const
 {
+    // Fetch all the boid types and make an enum of the same length.
     auto& boid_types = boid_manager_->get_boid_types();
     TwEnumVal* tw_enum = new TwEnumVal[boid_types.size()];
+
     for (int i = 0; i < boid_types.size(); ++i)
     {
         auto it = std::find_if(boid_types.begin(), boid_types.end(), [i](const auto& _elem)
@@ -293,17 +313,21 @@ void Game::tweak_bar_spawn_selection(TwBar* _twbar) const
             return _elem.second->type_id == i;
         });
 
-        tw_enum[i].Label = it->second->type.c_str();
-        tw_enum[i].Value = i;
+        tw_enum[i].Label = it->second->type.c_str(); // For human usability.
+        tw_enum[i].Value = i; // Used by BoidManager to spawn the correct boid.
     }
 
     TwType spawn_type = TwDefineEnum("spawntypeenum", tw_enum, boid_types.size());
     TwAddVarRW(_twbar, "spawntype", spawn_type, boid_manager_->get_editable_spawn_id(), " label='Spawn Type' ");
 }
 
+/* Fills the tweak bar with settings for each enumerated boid type.
+ * Ideally the variables listed here would be also enumerated for maximum flexibility, 
+ * but for now they are hard coded.
+ */
 void Game::tweak_bar_boid_settings(TwBar* _twbar) const
 {
-    const std::map<std::string, std::unique_ptr<BoidSettings>>& boid_types = boid_manager_->get_boid_types();
+    auto& boid_types = boid_manager_->get_boid_types();
     for (auto& elem : boid_types)
     {
         std::string var_prefix = elem.second->type;
@@ -325,25 +349,27 @@ void Game::tweak_bar_boid_settings(TwBar* _twbar) const
         TwAddVarRW(_twbar, (var_prefix + "tag").c_str(), TW_TYPE_FLOAT, &elem.second->tag_distance,
             (" label='Tag Range' min=1.0 max=30.0 step=0.2 " + group_value).c_str());
 
-        TwAddSeparator(_twbar, (var_prefix + "sep").c_str(), "");
+        TwAddSeparator(_twbar, (var_prefix + "sep").c_str(), group_value.c_str());
     }
 }
 
 void Game::handle_pause()
 {
-    // Pause/Unpause on P key press.
     if (input_handler_->get_key_down(DIK_P))
     {
         if (GD_.game_state == GS_SIMULATING)
+        {
             GD_.game_state = GS_PAUSED;
+        }
         else
+        {
             GD_.game_state = GS_SIMULATING;
+        }
     }
 }
 
 void Game::handle_camera_change()
 {
-    // Switch camera on Space key press.
     if (input_handler_->get_key_down(DIK_SPACE))
     {
         if (GD_.active_camera == CAM_TT)
