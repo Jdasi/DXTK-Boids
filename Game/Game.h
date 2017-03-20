@@ -20,9 +20,9 @@ using namespace DirectX;
 
 class GameObject;
 class GameObject2D;
-class Camera;
-class TPSCamera;
 class TabletopCamera;
+class TPSCamera;
+class Player;
 class Light;
 class InputHandler;
 class CMOManager;
@@ -44,10 +44,9 @@ protected:
     void tweak_bar_spawn_selection(TwBar* _twbar) const;
     void tweak_bar_boid_settings(TwBar* _twbar) const;
 
-    void tick_all_objects();
     void handle_pause();
     void handle_camera_change();
-    void draw_pause_text();
+    void draw_pause_text() const;
 
     HWND hWnd_;
     SimpleTimer timer_;
@@ -58,10 +57,11 @@ protected:
 
     std::unique_ptr<TabletopCamera> tabletop_camera_;   // Tabletop cam
 	std::unique_ptr<TPSCamera> tps_camera_;             // TPS cam
+    std::unique_ptr<Player> player_;                    // Controllable player object
 	Light* light_;                                      // Base light
 
-    std::list<std::unique_ptr<GameObject>> game_objects_;      //data structure storing all GameObjects of this Game
-    std::list<std::unique_ptr<GameObject2D>> game_objects_2d_; //ditto 2D objects
+    std::list<std::unique_ptr<GameObject>> sim_objects_;      // All GOs used in the sim
+    std::list<std::unique_ptr<GameObject2D>> sim_objects_2d_; // All GO2Ds used in the sim
 
 	//required for the CMO model rendering system
 	std::unique_ptr<CommonStates> states_;
@@ -71,7 +71,7 @@ protected:
 	DrawData DD_;		//Data to be shared to all Game Objects as they are drawn
 	DrawData2D DD2D_;	//Data to be passed by game to all 2D Game Objects via Draw 
 
-	//sound stuff
+	// Sound engine.
 	std::unique_ptr<AudioEngine> audio_engine_;
 
     // GameState tick functions.

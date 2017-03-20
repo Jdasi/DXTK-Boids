@@ -5,7 +5,7 @@
 		"max_speed": 15.0,
 		"max_steer": 1.0,
 		"desired_separation": 5.0,
-		"neighbour_scan": 7.0,
+		"neighbour_scan": 20.0,
 		"tag_distance": 3.0,
 		"tag_functions":
 		[

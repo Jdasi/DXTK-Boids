@@ -66,18 +66,17 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
 	// Base light.
 	auto light = std::make_unique<Light>(Vector3(0.0f, 100.0f, 160.0f), Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.5f, 0.5f, 0.5f, 1.0f));
     light_ = light.get();
-	game_objects_.push_back(std::move(light));
+	sim_objects_.push_back(std::move(light));
 
     // Tabletop Simulator style camera to orbit around the simulation.
     tabletop_camera_ = std::make_unique<TabletopCamera>(0.25f * XM_PI, AR, 1.0f, 10000.0f, Vector3::UnitY, 0.5f, 150.0f);
 
 	// Player to fly around the scene when TPS is set up.
-	auto player = std::make_unique<Player>(cmo_manager_->get_model("BirdModelV1"));
-    player->set_pos({ 0, 10, 0 });
+	player_ = std::make_unique<Player>(cmo_manager_->get_model("BirdModelV1"));
+    player_->set_pos({ 0, 10, 0 });
 
 	// TPS Camera to follow the Player's movements.
-	tps_camera_ = std::make_unique<TPSCamera>(0.25f * XM_PI, AR, 1.0f, 10000.0f, player.get(), Vector3::UnitY, Vector3(0.0f, 10.0f, 50.0f));
-    game_objects_.push_back(std::move(player));
+	tps_camera_ = std::make_unique<TPSCamera>(0.25f * XM_PI, AR, 1.0f, 10000.0f, player_.get(), Vector3::UnitY, Vector3(0.0f, 10.0f, 50.0f));
 
 	// Configure DrawData struct.
 	DD_.d3d_immediate_context = nullptr;
@@ -89,7 +88,7 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
 	auto terrain = std::make_unique<FileVBGO>("../Assets/terrainTex.txt", _d3d_device);
     terrain->set_scale(10.0f, 0.5f, 10.0f);
     terrain->set_pos({ 0, -0.5f, 0 });
-	game_objects_.push_back(std::move(terrain));
+	sim_objects_.push_back(std::move(terrain));
 };
 
 Game::~Game() 
@@ -109,9 +108,10 @@ bool Game::tick()
     // Tick core systems.
     input_handler_->tick();
 
-    // Tick cameras.
+    // Tick cameras & player.
     tabletop_camera_->tick(&GD_);
     tps_camera_->tick(&GD_);
+    player_->tick(&GD_);
 
 	// Tick audio engine.
 	if (!audio_engine_->Update())
@@ -141,13 +141,11 @@ bool Game::tick()
 
         default: {}
 	}
-
-    tick_all_objects();
 	
 	return true;
 };
 
-void Game::draw_pause_text()
+void Game::draw_pause_text() const
 {
     if (GD_.game_state == GS_PAUSED)
     {
@@ -170,6 +168,18 @@ void Game::draw_pause_text()
 void Game::simulating_tick()
 {
     boid_manager_->tick(&GD_);
+
+    // Update all game objects.
+    for (auto& obj : sim_objects_)
+    {
+        obj->tick(&GD_);
+    }
+
+    // Update all 2D game objects.
+    for (auto& obj : sim_objects_2d_)
+    {
+        obj->tick(&GD_);
+    }
 }
 
 void Game::draw(ID3D11DeviceContext* _d3d_immediate_context)
@@ -180,18 +190,19 @@ void Game::draw(ID3D11DeviceContext* _d3d_immediate_context)
 	// Update the constant buffer for the rendering of VBGOs.
 	VBGO::update_constant_buffer(&DD_);
 
-    // Draw Boids.
+    // Draw boids & player.
     boid_manager_->draw(&DD_);
+    player_->draw(&DD_);
     
 	// Draw all other objects.
-    for (auto& obj : game_objects_)
+    for (auto& obj : sim_objects_)
 	{
 		obj->draw(&DD_);
 	}
 
 	// Draw sprite batch stuff.
 	DD2D_.sprites->Begin();
-    for (auto& obj : game_objects_2d_)
+    for (auto& obj : sim_objects_2d_)
 	{
 		obj->draw(&DD2D_);
 	}
@@ -315,21 +326,6 @@ void Game::tweak_bar_boid_settings(TwBar* _twbar) const
             (" label='Tag Range' min=1.0 max=30.0 step=0.2 " + group_value).c_str());
 
         TwAddSeparator(_twbar, (var_prefix + "sep").c_str(), "");
-    }
-}
-
-void Game::tick_all_objects()
-{
-    // Update all game objects.
-    for (auto& obj : game_objects_)
-    {
-        obj->tick(&GD_);
-    }
-
-    // Update all 2D game objects.
-    for (auto& obj : game_objects_2d_)
-    {
-        obj->tick(&GD_);
     }
 }
 
