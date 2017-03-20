@@ -307,8 +307,6 @@ void Game::tweak_bar_spawn_selection(TwBar* _twbar) const
 
     TwType spawn_type = TwDefineEnum("spawntypeenum", tw_enum, boid_types.size());
     TwAddVarRW(_twbar, "spawntype", spawn_type, boid_manager_->get_editable_spawn_id(), " label='Spawn Type' ");
-
-    
 }
 
 void Game::tweak_bar_human_settings(TwBar* _twbar) const

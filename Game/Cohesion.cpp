@@ -15,20 +15,13 @@ Vector3 Cohesion::force(GameData* _GD, std::vector<Boid*>& _neighbours, Paramete
         if (this_boid_ == neighbour)
             continue;
 
-        float distance = Vector3::Distance(this_boid_->get_pos(), neighbour->get_pos());
-        
-        // Perform tag functions.
-        if (distance > 0 && distance <= this_boid_->getSettings()->tag_distance)
-        {
-            for (auto& tag_function : this_boid_->getSettings()->tag_functions)
-            {
-                tag_function(this_boid_, neighbour);
-            }
-        }
-
         // Don't go any further if neighbour's type is not listed in the rule's params.
         if (!_rule_params->concerns_type(neighbour->getSettings()->type))
             continue;
+
+        float distance = Vector3::Distance(this_boid_->get_pos(), neighbour->get_pos());
+
+        process_tag_functions(neighbour, distance);
 
         if (distance > 0 && distance < (boid_settings_->neighbour_scan *
             this_boid_->get_scan_modifier()))
@@ -51,6 +44,26 @@ Vector3 Cohesion::force(GameData* _GD, std::vector<Boid*>& _neighbours, Paramete
     else
     {
         return Vector3::Zero;
+    }
+}
+
+void Cohesion::process_tag_functions(Boid* _neighbour, float _distance) const
+{
+    // Only tag alive boids.
+    if (!_neighbour->is_alive())
+        return;
+
+    // Only tag foreign types.
+    if (this_boid_->getSettings()->type_id == _neighbour->getSettings()->type_id)
+        return;
+
+    // Perform tag functions.
+    if (_distance > 0 && _distance <= this_boid_->getSettings()->tag_distance)
+    {
+        for (auto& tag_function : this_boid_->getSettings()->tag_functions)
+        {
+            tag_function(this_boid_, _neighbour);
+        }
     }
 }
 

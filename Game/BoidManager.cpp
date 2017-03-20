@@ -106,15 +106,16 @@ void BoidManager::register_rules()
     rules_["cohesion"] = std::make_unique<Cohesion>();
 }
 
+/* Tag functions can assume the following:
+ * - lhs and rhs are different boids.
+ * - lhs and rhs are both alive.
+ * - lhs and rhs are of a different boid type.
+ */
 void BoidManager::register_tag_functions()
 {
     // lhs converts rhs.
     tag_functions_["infect"] = [](Boid* lhs, Boid* rhs)
     {
-        // Only try to convert foreign types.
-        if (lhs->getSettings()->type_id == rhs->getSettings()->type_id)
-            return;
-
         rhs->model_ = lhs->settings_->model;
         rhs->settings_ = lhs->settings_;
     };
@@ -122,14 +123,6 @@ void BoidManager::register_tag_functions()
     // lhs kills rhs.
     tag_functions_["kill"] = [this](Boid* lhs, Boid* rhs)
     {
-        // Only try to kill foreign types.
-        if (lhs->getSettings()->type_id == rhs->getSettings()->type_id)
-            return;
-
-        // Can only kill that which is alive.
-        if (!rhs->is_alive())
-            return;
-
         rhs->set_alive(false);
 
         boids_dirty_ = true;

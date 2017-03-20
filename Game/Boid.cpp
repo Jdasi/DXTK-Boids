@@ -73,6 +73,10 @@ void Boid::rules(GameData* _GD)
 {
     for (auto& parameterised_rule : settings_->parameterised_rules)
     {
+        // Dead boids don't process rules.
+        if (!alive_)
+            break;
+
         parameterised_rule.get_rule()->set_boid(this);
         apply_force(parameterised_rule.get_rule()->force(_GD, neighbours_, &parameterised_rule));
     }
