@@ -1,6 +1,7 @@
 #pragma once
 #include "Rule.h"
 
+// Rule for steering a boid towards the average position of its neighbours.
 class Cohesion : public Rule
 {
 public:

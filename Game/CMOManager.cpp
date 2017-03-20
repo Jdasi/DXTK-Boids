@@ -32,6 +32,10 @@ CMOManager::~CMOManager()
     }
 }
 
+/* Returns a pointer to a CMOModel with the passed file name.
+ * The first time a model is requested it will be created if it can be found.
+ * Thereafter a pointer to the model is returned.
+ */
 CMOModel* CMOManager::get_model(const std::string& _file_name)
 {
     auto entry = loaded_models_.find(_file_name);
@@ -41,6 +45,7 @@ CMOModel* CMOManager::get_model(const std::string& _file_name)
     return create_model_entry(_file_name);
 }
 
+// Adds a new CMOModel entry to the map and returns a pointer to it.
 CMOModel* CMOManager::create_model_entry(const std::string& _file_name)
 {
     auto model = std::make_unique<CMOModel>(_file_name, d3d_device_, ef_, *raster_state_);

@@ -11,6 +11,10 @@ struct BoidData;
 struct GameData;
 struct BoidSettings;
 
+/* Abstract class for all Rules to inherit from and implement.
+ * This follows the 'Rules as Modules' design principle, and allows for easy
+ * expansion to boid behaviour by adding different rules.
+ */
 class Rule
 {
 public:
@@ -24,6 +28,7 @@ public:
 
     virtual Vector3 force(GameData* _GD, std::vector<Boid*>& _neighbours, ParameterisedRule* _rule_params) = 0;
 
+    // Tell the rule which boid it is going to be affecting.
     void set_boid(Boid* _boid)
     {
         this_boid_ = _boid;
@@ -31,7 +36,7 @@ public:
     }
 
 protected:
-    Boid* this_boid_;
-    BoidSettings* boid_settings_;
+    Boid* this_boid_; // The boid that is currently being acted upon.
+    BoidSettings* boid_settings_; // The current boid's settings for quick reference.
 
 };

@@ -19,11 +19,13 @@ BoidManager::BoidManager(CMOManager& _cmo_manager)
     register_tag_functions();
 }
 
+// Updates each boid in the vector, and handles the input for spawning new boids.
 void BoidManager::tick(GameData* _GD)
 {
     update_spawn_selection();
     spawn_controls(_GD);
 
+    // Each boid has a neighbour list which is populated based on their scan range.
     for (auto& boid : boids_)
     {
         boid->neighbours_.clear();
@@ -40,9 +42,11 @@ void BoidManager::tick(GameData* _GD)
             }
         }
 
+        // Once the boid knows about its neighbours, update it.
         boid->tick(_GD);
     }
 
+    // Erase any boids from the vector that are no longer alive.
     garbage_collect_boids();
 }
 
@@ -54,11 +58,13 @@ void BoidManager::draw(DrawData* _DD)
     }
 }
 
+// Fetches the registered rule with the same name as passed string.
 Rule* BoidManager::get_rule(const std::string& _rule) const
 {
     return rules_.at(_rule).get();
 }
 
+// Fetches the registered tag function with the same name as passed string.
 std::function<void(Boid*, Boid*)> BoidManager::get_tag_function(const std::string& _str)
 {
     return tag_functions_.at(_str);
@@ -79,6 +85,7 @@ int* BoidManager::get_editable_spawn_id()
     return &editable_spawn_id_;
 }
 
+// Adds a new type of boid to the BoidManager.
 void BoidManager::add_boid_type(const std::string& _str, std::unique_ptr<BoidSettings> _settings)
 {
     auto entry = boid_types_.find(_str);
@@ -89,6 +96,7 @@ void BoidManager::add_boid_type(const std::string& _str, std::unique_ptr<BoidSet
     current_type_selection_ = boid_types_.begin()->second.get();
 }
 
+// Removes all boids from the scene that are of the current type selection.
 void BoidManager::delete_all_of_current_type_selection()
 {
     auto type_str = current_type_selection_->type;
@@ -105,6 +113,7 @@ void BoidManager::delete_all_of_current_type_selection()
     boids_dirty_ = true;
 }
 
+// The rules that are available to boids.
 void BoidManager::register_rules()
 {
     rules_["separation"] = std::make_unique<Separation>();
@@ -112,7 +121,9 @@ void BoidManager::register_rules()
     rules_["cohesion"] = std::make_unique<Cohesion>();
 }
 
-/* Tag functions can assume the following:
+/* The tag functions that are available to boids.
+ *
+ * Tag functions can assume the following:
  * - lhs and rhs are different boids.
  * - lhs and rhs are both alive.
  * - lhs and rhs are of a different boid type.
@@ -145,11 +156,13 @@ void BoidManager::register_tag_functions()
     };
 }
 
+// Sets the spawn selection to the boid type with the id equal to the editable_spawn_id.
 void BoidManager::update_spawn_selection()
 {
     if (!current_type_selection_)
         return;
 
+    // Optimisation barrier to prevent unecessary find operations.
     if (current_type_selection_->type_id != editable_spawn_id_)
     {
         auto it = std::find_if(boid_types_.begin(), boid_types_.end(), [this](const auto& _elem)
@@ -167,6 +180,7 @@ void BoidManager::spawn_controls(GameData* _GD)
         add_boid(current_type_selection_->type, _GD->boid_spawn_pos);
 }
 
+// Adds a new boid of the passed type at the passed position.
 void BoidManager::add_boid(const std::string& _type, Vector3 _pos)
 {
     if (num_boids_ >= MAX_BOIDS)
@@ -180,6 +194,7 @@ void BoidManager::add_boid(const std::string& _type, Vector3 _pos)
     boids_.push_back(std::move(boid));
 }
 
+// Erase any boids from the vector that are no longer alive.
 void BoidManager::garbage_collect_boids()
 {
     if (!boids_dirty_)

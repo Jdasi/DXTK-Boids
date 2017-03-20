@@ -1,9 +1,10 @@
 #pragma once
 #include <dinput.h>
 
-/* Utility/helper class to decouple Game from Input handling.
- * Like other manager classes, InputHandler needs to be ticked for its
- * functionality to be properly updated.
+/* Utility/helper class to decouple Game from input handling.
+ *
+ * InputHandler needs to be ticked for its functionality to be properly updated.
+ *
  * InputHandler contains all DirectInput devices used for input, and provides
  * streamlined functions for detecting specific key presses.
  */

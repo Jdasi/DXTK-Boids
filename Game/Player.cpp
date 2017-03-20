@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "GameData.h"
 #include "InputHandler.h"
+#include "Constants.h"
 
 Player::Player(CMOModel* _model)
     : CMOGO(_model)
@@ -9,11 +10,12 @@ Player::Player(CMOModel* _model)
 	set_physics_enabled(true);
 }
 
+// Allow the player to move forward or backward based on input.
 void Player::horizontal_movement(GameData* _GD)
 {
     Matrix rot_mat = Matrix::CreateRotationY(yaw_);
 
-    Vector3 forward_move = move_speed_ * Vector3::Forward;
+    Vector3 forward_move = PLAYER_MOVE_SPEED * Vector3::Forward;
     forward_move = Vector3::Transform(forward_move, rot_mat);
 
     // Horizontal movement.
@@ -28,46 +30,50 @@ void Player::horizontal_movement(GameData* _GD)
     }
 }
 
+// Allow the player to move up or down based on input.
 void Player::vertical_movement(GameData* _GD)
 {
     if (_GD->input_handler->get_key(DIK_F))
     {
-        acceleration_.y += move_speed_;
+        acceleration_.y += PLAYER_MOVE_SPEED;
     }
 
     if (_GD->input_handler->get_key(DIK_R))
     {
-        acceleration_.y -= move_speed_;
+        acceleration_.y -= PLAYER_MOVE_SPEED;
     }
 }
 
+// Allow the player to rotate based on input.
 void Player::rotate(GameData* _GD)
 {
     if (_GD->input_handler->get_key(DIK_A))
     {
-        yaw_ += rotate_speed_ * _GD->delta_time;
+        yaw_ += PLAYER_ROTATE_SPEED * _GD->delta_time;
     }
 
     if (_GD->input_handler->get_key(DIK_D))
     {
-        yaw_ -= rotate_speed_ * _GD->delta_time;
+        yaw_ -= PLAYER_ROTATE_SPEED * _GD->delta_time;
     }
 }
 
+// Prevent the player from moving too fast.
 void Player::limit_speed()
 {
     float current_speed = pos_.Length();
 
-    if (current_speed > max_speed_)
+    if (current_speed > PLAYER_MAX_SPEED)
     {
         pos_.Normalize();
-        pos_ *= max_speed_;
+        pos_ *= PLAYER_MAX_SPEED;
         velocity_ *= -0.9f; // Simple bounce back.
     }
 }
 
 void Player::tick(GameData* _GD)
 {
+    // Player is only visible and controllable while the TPS camera is active.
     visible_ = _GD->active_camera == CAM_TPS;
 
     if (visible_)
@@ -79,6 +85,7 @@ void Player::tick(GameData* _GD)
         _GD->boid_spawn_pos = Vector3(pos_.x, 0, pos_.z);
     }
     
+    // The player can still slow down even when the TPS camera is not active.
     limit_speed();
 
 	// Base behaviour.

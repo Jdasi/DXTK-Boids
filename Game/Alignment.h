@@ -1,6 +1,7 @@
 #pragma once
 #include "Rule.h"
 
+// Rule for steering a boid towards the average heading of its neighbours.
 class Alignment : public Rule
 {
 public:

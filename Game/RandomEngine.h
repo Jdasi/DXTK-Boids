@@ -1,6 +1,7 @@
 #pragma once
 #include <random>
 
+// Simple static class for generating random numbers.
 class RandomEngine
 {
 public:

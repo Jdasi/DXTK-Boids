@@ -1,6 +1,7 @@
 #pragma once
 #include "Rule.h"
 
+// Rule for steering a boid away from close neighbours.
 class Separation : public Rule
 {
 public:

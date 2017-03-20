@@ -8,6 +8,11 @@ using namespace DirectX;
 
 class CMOModel;
 
+/* CMOManager centralises the creation of all CMO models used in the simulation.
+ *
+ * When a model is first requested, it is created and inserted into the map. Thereafter
+ * a pointer to that model is created to prevent duplication of loaded assets.
+ */
 class CMOManager
 {
 public:

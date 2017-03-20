@@ -96,6 +96,8 @@ bool InputHandler::get_key_up(int _dikb) const
     return false;
 }
 
+/* Check if a mouse button is pressed. Returns true as long as the button is pressed.
+ */
 bool InputHandler::get_mouse_button(int _button) const
 {
     if (mouse_state.rgbButtons[_button] & 0x80)
@@ -106,6 +108,9 @@ bool InputHandler::get_mouse_button(int _button) const
     return false;
 }
 
+/* Check if a mouse button has just been pressed.
+ * Returns true the first time it was pressed, otherwise returns false.
+ */
 bool InputHandler::get_mouse_button_down(int _button) const
 {
     if ((mouse_state.rgbButtons[_button] & 0x80) && !(prev_mouse_state.rgbButtons[_button] & 0x80))
@@ -116,6 +121,9 @@ bool InputHandler::get_mouse_button_down(int _button) const
     return false;
 }
 
+/* Check if a mouse button has just been released.
+ * Returns true the first time it was released, otherwise returns false.
+ */
 bool InputHandler::get_mouse_button_up(int _button) const
 {
     if (!(mouse_state.rgbButtons[_button] & 0x80) && (prev_mouse_state.rgbButtons[_button] & 0x80))

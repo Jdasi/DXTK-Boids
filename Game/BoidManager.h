@@ -16,6 +16,9 @@ class CMOManager;
 struct DrawData;
 struct GameData;
 
+/* Central class for managing the creation of all boids in the scene, as well as
+ * registering the rules and settings accessible by each boid type.
+ */
 class BoidManager
 {
 public:
@@ -51,9 +54,9 @@ private:
     std::map<std::string, std::function<void(Boid*, Boid*)>> tag_functions_;
 
     std::vector<std::unique_ptr<Boid>> boids_;
-    bool boids_dirty_;
-    int num_boids_;
-    int editable_spawn_id_;
-    BoidSettings* current_type_selection_;
+    bool boids_dirty_;                      // Flag to determine if items need removing from the vector.
+    int num_boids_;                         // Total number of active boids.
+    int editable_spawn_id_;                 // The id that Ant Tweak Bar changes to determine spawned type.
+    BoidSettings* current_type_selection_;  // The BoidSettings with the same id as the editable_spawn_id.
 
 };
