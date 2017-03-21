@@ -291,6 +291,7 @@ void Game::init_tweak_bar(ID3D11Device* _d3d_device) const
 
     tweak_bar_spawn_selection(boid_bar);
     TwAddButton(boid_bar, "deltype", delete_all_of_spawn_type, boid_manager_.get(), " label='Delete Boids by Type' ");
+    TwAddButton(boid_bar, "delall", delete_all_boids, boid_manager_.get(), " label='Delete All Boids' ");
     TwAddSeparator(boid_bar, "sep2", "");
 
     tweak_bar_boid_settings(boid_bar);
@@ -348,8 +349,6 @@ void Game::tweak_bar_boid_settings(TwBar* _twbar) const
 
         TwAddVarRW(_twbar, (var_prefix + "tag").c_str(), TW_TYPE_FLOAT, &elem.second->tag_distance,
             (" label='Tag Range' min=1.0 max=30.0 step=0.2 " + group_value).c_str());
-
-        TwAddSeparator(_twbar, (var_prefix + "sep").c_str(), group_value.c_str());
     }
 }
 

@@ -113,6 +113,17 @@ void BoidManager::delete_all_of_current_type_selection()
     boids_dirty_ = true;
 }
 
+void BoidManager::delete_all_boids()
+{
+    for (auto& boid : boids_)
+    {
+        boid->set_alive(false);
+        --num_boids_;
+    }
+
+    boids_dirty_ = true;
+}
+
 // The rules that are available to boids.
 void BoidManager::register_rules()
 {

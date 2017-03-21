@@ -38,6 +38,7 @@ public:
     void add_boid_type(const std::string& _str, std::unique_ptr<BoidSettings> _settings);
 
     void delete_all_of_current_type_selection();
+    void delete_all_boids();
 
 private:
     void register_rules();
