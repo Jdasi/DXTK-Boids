@@ -31,14 +31,16 @@ public:
     int* get_num_boids();
     int* get_editable_spawn_id();
 
-    Rule* get_rule(const std::string& _rule) const;
+    Rule* get_rule(const std::string& _rule);
     std::function<void(Boid*, Boid*)> get_tag_function(const std::string& _str);
 
-    const std::map<std::string, std::unique_ptr<BoidSettings>>& get_boid_types() const;
-    void add_boid_type(const std::string& _str, std::unique_ptr<BoidSettings> _settings);
+    std::map<std::string, BoidSettings>& get_boid_types();
+    void add_boid_type(const std::string& _str, BoidSettings _settings);
 
     void delete_all_of_current_type_selection();
     void delete_all_boids();
+
+    void reset();
 
 private:
     void register_rules();
@@ -51,7 +53,8 @@ private:
     CMOManager& cmo_manager_;
 
     std::map<std::string, std::unique_ptr<Rule>> rules_;
-    std::map<std::string, std::unique_ptr<BoidSettings>> boid_types_;
+    std::map<std::string, BoidSettings> boid_types_;
+    std::vector<BoidSettings> boid_types_defaults_; // For the purposes of resetting the sim.
     std::map<std::string, std::function<void(Boid*, Boid*)>> tag_functions_;
 
     std::vector<std::unique_ptr<Boid>> boids_;

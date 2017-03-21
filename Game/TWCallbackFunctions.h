@@ -18,3 +18,9 @@ inline void TW_CALL delete_all_boids(void* _client_data)
     auto boid_manager = static_cast<BoidManager*>(_client_data);
     boid_manager->delete_all_boids();
 }
+
+inline void TW_CALL reset_boid_manager(void* _client_data)
+{
+    auto boid_manager = static_cast<BoidManager*>(_client_data);
+    boid_manager->reset();
+}

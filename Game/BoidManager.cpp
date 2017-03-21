@@ -59,7 +59,7 @@ void BoidManager::draw(DrawData* _DD)
 }
 
 // Fetches the registered rule with the same name as passed string.
-Rule* BoidManager::get_rule(const std::string& _rule) const
+Rule* BoidManager::get_rule(const std::string& _rule)
 {
     return rules_.at(_rule).get();
 }
@@ -70,7 +70,7 @@ std::function<void(Boid*, Boid*)> BoidManager::get_tag_function(const std::strin
     return tag_functions_.at(_str);
 }
 
-const std::map<std::string, std::unique_ptr<BoidSettings>>& BoidManager::get_boid_types() const
+std::map<std::string, BoidSettings>& BoidManager::get_boid_types()
 {
     return boid_types_;
 }
@@ -86,14 +86,16 @@ int* BoidManager::get_editable_spawn_id()
 }
 
 // Adds a new type of boid to the BoidManager.
-void BoidManager::add_boid_type(const std::string& _str, std::unique_ptr<BoidSettings> _settings)
+void BoidManager::add_boid_type(const std::string& _str, BoidSettings _settings)
 {
     auto entry = boid_types_.find(_str);
     if (entry != boid_types_.end())
         return;
 
-    boid_types_[_str] = std::move(_settings);
-    current_type_selection_ = boid_types_.begin()->second.get();
+    boid_types_[_str] = _settings;
+
+    current_type_selection_ = &boid_types_.begin()->second;
+    boid_types_defaults_.push_back(_settings);
 }
 
 // Removes all boids from the scene that are of the current type selection.
@@ -124,12 +126,30 @@ void BoidManager::delete_all_boids()
     boids_dirty_ = true;
 }
 
+// Delete all boids and revert all settings to their enumerated defaults.
+void BoidManager::reset()
+{
+    delete_all_boids();
+
+    // Shamelessly overwrite the current boid settings with the defaults.
+    for (auto& elem : boid_types_)
+    {
+        for (auto& settings : boid_types_defaults_)
+        {
+            if (settings.type_id == elem.second.type_id)
+            {
+                elem.second = settings;
+            }
+        }
+    }
+}
+
 // The rules that are available to boids.
 void BoidManager::register_rules()
 {
-    rules_["separation"] = std::make_unique<Separation>();
-    rules_["alignment"] = std::make_unique<Alignment>();
-    rules_["cohesion"] = std::make_unique<Cohesion>();
+    rules_.emplace("separation", std::make_unique<Separation>());
+    rules_.emplace("alignment", std::make_unique<Alignment>());
+    rules_.emplace("cohesion", std::make_unique<Cohesion>());
 }
 
 /* The tag functions that are available to boids.
@@ -178,10 +198,10 @@ void BoidManager::update_spawn_selection()
     {
         auto it = std::find_if(boid_types_.begin(), boid_types_.end(), [this](const auto& _elem)
         {
-            return _elem.second->type_id == editable_spawn_id_;
+            return _elem.second.type_id == editable_spawn_id_;
         });
 
-        current_type_selection_ = it->second.get();
+        current_type_selection_ = &it->second;
     }
 }
 
@@ -199,7 +219,7 @@ void BoidManager::add_boid(const std::string& _type, Vector3 _pos)
 
     ++num_boids_;
 
-    auto boid = std::make_unique<Boid>(boid_types_.at(_type).get());
+    auto boid = std::make_unique<Boid>(&boid_types_.at(_type));
     boid->set_pos(_pos);
 
     boids_.push_back(std::move(boid));

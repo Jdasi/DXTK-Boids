@@ -11,7 +11,7 @@ Boid::Boid(BoidSettings* _settings)
     , alive_(true)
     , settings_(_settings)
 {
-    neighbours_.reserve(500);
+    neighbours_.reserve(MAX_BOIDS / 4);
 
     fudge_ = Matrix::CreateRotationY(XM_PI * 1.5f);
     set_scale(0.1f);
@@ -104,6 +104,9 @@ void Boid::wrap()
 
 void Boid::move(GameData* _GD)
 {
+    if (settings_->max_speed <= 0)
+        return;
+
     velocity_ += acceleration_;
 
     // Limit speed.
@@ -119,7 +122,7 @@ void Boid::move(GameData* _GD)
 
 void Boid::update_world()
 {
-    auto dir = velocity_;
+    Vector3 dir = velocity_;
     dir.Normalize();
 
     Matrix scaleMat = Matrix::CreateScale(scale_);

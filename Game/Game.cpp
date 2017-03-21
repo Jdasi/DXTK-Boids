@@ -234,16 +234,16 @@ void Game::enumerate_boid_types() const
         const auto& data = entry.value();
 
         // Create a new BoidSettings struct which will store the new type's settings.
-        auto settings = std::make_unique<BoidSettings>();
+        BoidSettings settings;
 
-        settings->type = name;
-        settings->type_id = type_count++;
-        settings->model = cmo_manager_->get_model(data["model"].as_string());
-        settings->max_speed = data["max_speed"].as_double();
-        settings->max_steer = data["max_steer"].as_double();
-        settings->desired_separation = data["desired_separation"].as_double();
-        settings->neighbour_scan = data["neighbour_scan"].as_double();
-        settings->tag_distance = data["tag_distance"].as_double();
+        settings.type = name;
+        settings.type_id = type_count++;
+        settings.model = cmo_manager_->get_model(data["model"].as_string());
+        settings.max_speed = data["max_speed"].as_double();
+        settings.max_steer = data["max_steer"].as_double();
+        settings.desired_separation = data["desired_separation"].as_double();
+        settings.neighbour_scan = data["neighbour_scan"].as_double();
+        settings.tag_distance = data["tag_distance"].as_double();
 
         if (data.has_member("tag_functions"))
         {
@@ -254,7 +254,7 @@ void Game::enumerate_boid_types() const
              */
             for (auto& function_name : function_names)
             {
-                settings->tag_functions.push_back(boid_manager_->get_tag_function(function_name));
+                settings.tag_functions.push_back(boid_manager_->get_tag_function(function_name));
             }
         }
 
@@ -270,11 +270,11 @@ void Game::enumerate_boid_types() const
 
             ParameterisedRule parameterised_rule(fetched_rule, rule_weight, valid_types);
 
-            settings->parameterised_rules.push_back(parameterised_rule);
+            settings.parameterised_rules.push_back(parameterised_rule);
         }
 
         // Finally, add the configured BoidSettings struct to the BoidManager's list.
-        boid_manager_->add_boid_type(name, std::move(settings));
+        boid_manager_->add_boid_type(name, settings);
     }
 }
 
@@ -285,12 +285,12 @@ void Game::init_tweak_bar(ID3D11Device* _d3d_device) const
     TwWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     TwBar* boid_bar = TwNewBar("Boid Settings");
 
-    // Read-only boid counter.
     TwAddVarRO(boid_bar, "Num Boids", TW_TYPE_INT32, boid_manager_->get_num_boids(), "");
+    TwAddButton(boid_bar, "resetsim", reset_boid_manager, boid_manager_.get(), " label='Reset Simulation' ");
     TwAddSeparator(boid_bar, "sep1", "");
 
     tweak_bar_spawn_selection(boid_bar);
-    TwAddButton(boid_bar, "deltype", delete_all_of_spawn_type, boid_manager_.get(), " label='Delete Boids by Type' ");
+    TwAddButton(boid_bar, "deltype", delete_all_of_spawn_type, boid_manager_.get(), " label='Delete Boids of Type' ");
     TwAddButton(boid_bar, "delall", delete_all_boids, boid_manager_.get(), " label='Delete All Boids' ");
     TwAddSeparator(boid_bar, "sep2", "");
 
@@ -311,10 +311,10 @@ void Game::tweak_bar_spawn_selection(TwBar* _twbar) const
     {
         auto it = std::find_if(boid_types.begin(), boid_types.end(), [i](const auto& _elem)
         {
-            return _elem.second->type_id == i;
+            return _elem.second.type_id == i;
         });
 
-        tw_enum[i].Label = it->second->type.c_str(); // For human usability.
+        tw_enum[i].Label = it->second.type.c_str(); // For human usability.
         tw_enum[i].Value = i; // Used by BoidManager to spawn the correct boid.
     }
 
@@ -331,24 +331,24 @@ void Game::tweak_bar_boid_settings(TwBar* _twbar) const
     auto& boid_types = boid_manager_->get_boid_types();
     for (auto& elem : boid_types)
     {
-        std::string var_prefix = elem.second->type;
+        std::string var_prefix = elem.second.type;
         std::string group_value;
         group_value.append(" group='" + var_prefix + "settings' ");
 
-        TwAddVarRW(_twbar, (var_prefix + "maxspeed").c_str(), TW_TYPE_FLOAT, &elem.second->max_speed,
-            (" label='Max Speed' min=1.0 max=30.0 step=0.2 " + group_value).c_str());
+        TwAddVarRW(_twbar, (var_prefix + "maxspeed").c_str(), TW_TYPE_FLOAT, &elem.second.max_speed,
+            (" label='Max Speed' min=0.0 max=50.0 step=0.1 " + group_value).c_str());
 
-        TwAddVarRW(_twbar, (var_prefix + "maxsteer").c_str(), TW_TYPE_FLOAT, &elem.second->max_steer,
-            (" label='Max Steer' min=0.0 max=5.0 step=0.2 " + group_value).c_str());
+        TwAddVarRW(_twbar, (var_prefix + "maxsteer").c_str(), TW_TYPE_FLOAT, &elem.second.max_steer,
+            (" label='Max Steer' min=0.0 max=2.0 step=0.1 " + group_value).c_str());
 
-        TwAddVarRW(_twbar, (var_prefix + "desiredsep").c_str(), TW_TYPE_FLOAT, &elem.second->desired_separation,
-            (" label='Desired Separation' min=0.0 max=30.0 step=0.2 " + group_value).c_str());
+        TwAddVarRW(_twbar, (var_prefix + "desiredsep").c_str(), TW_TYPE_FLOAT, &elem.second.desired_separation,
+            (" label='Desired Separation' min=0.0 max=50.0 step=0.1 " + group_value).c_str());
 
-        TwAddVarRW(_twbar, (var_prefix + "scan").c_str(), TW_TYPE_FLOAT, &elem.second->neighbour_scan,
-            (" label='Neighbour Scan' min=1.0 max=30.0 step=0.2 " + group_value).c_str());
+        TwAddVarRW(_twbar, (var_prefix + "scan").c_str(), TW_TYPE_FLOAT, &elem.second.neighbour_scan,
+            (" label='Neighbour Scan' min=5.0 max=50.0 step=0.1 " + group_value).c_str());
 
-        TwAddVarRW(_twbar, (var_prefix + "tag").c_str(), TW_TYPE_FLOAT, &elem.second->tag_distance,
-            (" label='Tag Range' min=1.0 max=30.0 step=0.2 " + group_value).c_str());
+        TwAddVarRW(_twbar, (var_prefix + "tag").c_str(), TW_TYPE_FLOAT, &elem.second.tag_distance,
+            (" label='Tag Range' min=0.0 max=20.0 step=0.1 " + group_value).c_str());
     }
 }
 
