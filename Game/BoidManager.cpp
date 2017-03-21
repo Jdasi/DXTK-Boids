@@ -139,6 +139,7 @@ void BoidManager::reset()
             if (settings.type_id == elem.second.type_id)
             {
                 elem.second = settings;
+                break;
             }
         }
     }

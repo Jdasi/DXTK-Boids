@@ -104,6 +104,7 @@ void Boid::wrap()
 
 void Boid::move(GameData* _GD)
 {
+    // Don't perform any calculations if the boid is unable to move.
     if (settings_->max_speed <= 0)
         return;
 
