@@ -31,6 +31,7 @@ Vector3 Cohesion::force(GameData* _GD, std::vector<Boid*>& _neighbours, Paramete
         }
     }
 
+    // Increase the search radius if no valid neighbours, otherwise shrink it.
     if (count <= 0)
         this_boid_->modify_scan_modifier(NEIGHBOUR_SCAN_MOD_GROWTH * _GD->delta_time);
     else
@@ -41,10 +42,8 @@ Vector3 Cohesion::force(GameData* _GD, std::vector<Boid*>& _neighbours, Paramete
         sum /= static_cast<float>(count);
         return seek(sum, _rule_params->get_weight());
     }
-    else
-    {
-        return Vector3::Zero;
-    }
+
+    return Vector3::Zero;
 }
 
 void Cohesion::process_tag_functions(Boid* _neighbour, float _distance) const

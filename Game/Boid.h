@@ -47,10 +47,10 @@ private:
 
     Vector3 velocity_;
     Vector3 acceleration_;
-    float scan_modifier_;
-    bool alive_;
+    float scan_modifier_; // A value that increases the search radius for other boids.
+    bool alive_; // Whether the boid is alive or dead.
 
-    BoidSettings* settings_;
-    std::vector<Boid*> neighbours_;
+    BoidSettings* settings_; // Common settings of boids with this type (essentially a Breed).
+    std::vector<Boid*> neighbours_; // Which agents are around the boid.
 
 };

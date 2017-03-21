@@ -29,6 +29,7 @@ Vector3 Alignment::force(GameData* _GD, std::vector<Boid*>& _neighbours, Paramet
         }
     }
 
+    // Increase the search radius if no valid neighbours, otherwise shrink it.
     if (count <= 0)
         this_boid_->modify_scan_modifier(NEIGHBOUR_SCAN_MOD_GROWTH * _GD->delta_time);
     else
