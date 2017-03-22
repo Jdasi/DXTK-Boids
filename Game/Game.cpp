@@ -72,7 +72,7 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
     tabletop_camera_ = std::make_unique<TabletopCamera>(0.25f * XM_PI, AR, 1.0f, 10000.0f, Vector3::UnitY, 0.5f, 150.0f);
 
 	// Player to fly around the scene when TPS is set up.
-	player_ = std::make_unique<Player>(cmo_manager_->get_model("BirdModelV1"));
+	player_ = std::make_unique<Player>(cmo_manager_->get_model("bird"));
     player_->set_pos({ 0, 10, 0 });
 
 	// TPS Camera to follow the Player's movements.
@@ -239,6 +239,13 @@ void Game::enumerate_boid_types() const
         settings.type = name;
         settings.type_id = type_count++;
         settings.model = cmo_manager_->get_model(data["model"].as_string());
+
+        if (data.has_member("model_scale"))
+            settings.model_scale = data["model_scale"].as_double();
+
+        if (data.has_member("fudge_y"))
+            settings.fudge_y = data["fudge_y"].as_double();
+
         settings.max_speed = data["max_speed"].as_double();
         settings.max_steer = data["max_steer"].as_double();
         settings.desired_separation = data["desired_separation"].as_double();

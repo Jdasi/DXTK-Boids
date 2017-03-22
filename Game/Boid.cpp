@@ -13,8 +13,8 @@ Boid::Boid(BoidSettings* _settings)
 {
     neighbours_.reserve(MAX_BOIDS / 4);
 
-    fudge_ = Matrix::CreateRotationY(XM_PI * 1.5f);
-    set_scale(0.1f);
+    fudge_ = Matrix::CreateRotationY(XM_PI * _settings->fudge_y);
+    set_scale(_settings->model_scale);
 
     float angle = RandomEngine::range(0, XM_PI * 2);
     velocity_ = Vector3(cos(angle), 0, sin(angle));

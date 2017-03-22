@@ -16,6 +16,8 @@ struct BoidSettings
     std::string type;
     int type_id = 0;
     CMOModel* model = nullptr;
+    float model_scale = 1.0f;
+    float fudge_y = 1.0f;
 
     float max_speed = 15.0f;
     float max_steer = 1.0f;

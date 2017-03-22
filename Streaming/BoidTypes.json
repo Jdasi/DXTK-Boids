@@ -2,6 +2,8 @@
 	"default": 
 	{
 		"model": "default_boid",
+		"model_scale": 0.1,
+		"fudge_y": 1.5,
 		"max_speed": 15.0,
 		"max_steer": 1.0,
 		"desired_separation": 5.0,
@@ -45,6 +47,8 @@
 	"human": 
 	{
 		"model": "human",
+		"model_scale": 0.1,
+		"fudge_y": 1.5,
 		"max_speed": 15.0,
 		"max_steer": 1.0,
 		"desired_separation": 5.0,
@@ -83,6 +87,8 @@
 	"zombie": 
 	{
 		"model": "zombie",
+		"model_scale": 0.1,
+		"fudge_y": 1.5,
 		"max_speed": 5.0,
 		"max_steer": 0.5,
 		"desired_separation": 5.0,

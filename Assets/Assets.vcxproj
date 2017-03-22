@@ -152,12 +152,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <MeshContentTask Include="Bird\BirdModelV1.fbx" />
+    <MeshContentTask Include="Bird\bird.fbx" />
     <MeshContentTask Include="Characters\default_boid.FBX" />
     <MeshContentTask Include="Characters\human.FBX" />
     <MeshContentTask Include="Characters\zombie.FBX" />
     <MeshContentTask Include="Table\table.FBX" />
-    <MeshContentTask Include="Vase\JEMINA vase -up.fbx" />
+    <MeshContentTask Include="Vase\vase.fbx" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="baseline.txt" />
