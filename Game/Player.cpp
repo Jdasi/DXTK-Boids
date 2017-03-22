@@ -30,20 +30,6 @@ void Player::horizontal_movement(GameData* _GD)
     }
 }
 
-// Allow the player to move up or down based on input.
-void Player::vertical_movement(GameData* _GD)
-{
-    if (_GD->input_handler->get_key(DIK_F))
-    {
-        acceleration_.y += PLAYER_MOVE_SPEED;
-    }
-
-    if (_GD->input_handler->get_key(DIK_R))
-    {
-        acceleration_.y -= PLAYER_MOVE_SPEED;
-    }
-}
-
 // Allow the player to rotate based on input.
 void Player::rotate(GameData* _GD)
 {
@@ -79,7 +65,6 @@ void Player::tick(GameData* _GD)
     if (visible_)
     {
         horizontal_movement(_GD);
-        vertical_movement(_GD);
         rotate(_GD);
         
         _GD->boid_spawn_pos = Vector3(pos_.x, 0, pos_.z);

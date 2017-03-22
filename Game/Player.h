@@ -17,7 +17,6 @@ public:
 
 private:
     void horizontal_movement(GameData*_GD);
-    void vertical_movement(GameData* _GD);
     void rotate(GameData* _GD);
     void limit_speed();
 
