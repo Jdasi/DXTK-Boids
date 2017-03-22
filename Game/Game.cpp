@@ -79,6 +79,7 @@ Game::Game(ID3D11Device* _d3d_device, HWND _hWnd, HINSTANCE _hInstance)
 	tps_camera_ = std::make_unique<TPSCamera>(0.25f * XM_PI, AR, 1.0f, 10000.0f, player_.get(), Vector3::UnitY, Vector3(0.0f, 10.0f, 50.0f));
 
 	// Configure DrawData struct.
+    DD_.d3d_device = _d3d_device;
 	DD_.d3d_immediate_context = nullptr;
 	DD_.states = states_.get();
 	DD_.camera = tabletop_camera_.get();
@@ -219,6 +220,21 @@ void Game::draw(ID3D11DeviceContext* _d3d_immediate_context)
     TwDraw();
 }
 
+/* Resets the simulation and recompiles the JSON file, allowing for edits to be made 
+ * to the flocking behaviours and tested without needing to restart the program.
+ */
+void Game::recompile_json() const
+{
+    // Delete all boids and boid types ready for recompilation.
+    boid_manager_->reset();
+
+    // A new TW bar will be created as part of recompilation.
+    TwTerminate();
+
+    enumerate_boid_types();
+    init_tweak_bar(DD_.d3d_device);
+}
+
 // Reads in the BoidTypes json file found in the Streaming directory.
 void Game::enumerate_boid_types() const
 {
@@ -293,12 +309,12 @@ void Game::init_tweak_bar(ID3D11Device* _d3d_device) const
     TwBar* boid_bar = TwNewBar("Boid Settings");
 
     TwAddVarRO(boid_bar, "Num Boids", TW_TYPE_INT32, boid_manager_->get_num_boids(), "");
-    TwAddButton(boid_bar, "resetsim", reset_boid_manager, boid_manager_.get(), " label='Reset Simulation' ");
+    TwAddButton(boid_bar, "recompile", tw_recompile_json, (void*)this, " label='Recompile JSON' ");
     TwAddSeparator(boid_bar, "sep1", "");
 
     tweak_bar_spawn_selection(boid_bar);
-    TwAddButton(boid_bar, "deltype", delete_all_of_spawn_type, boid_manager_.get(), " label='Delete Boids of Type' ");
-    TwAddButton(boid_bar, "delall", delete_all_boids, boid_manager_.get(), " label='Delete All Boids' ");
+    TwAddButton(boid_bar, "deltype", tw_delete_all_of_spawn_type, boid_manager_.get(), " label='Delete Boids of Type' ");
+    TwAddButton(boid_bar, "delall", tw_delete_all_boids, boid_manager_.get(), " label='Delete All Boids' ");
     TwAddSeparator(boid_bar, "sep2", "");
 
     tweak_bar_boid_settings(boid_bar);

@@ -13,8 +13,9 @@ class Light;
 
 struct DrawData
 {
-	ID3D11DeviceContext* d3d_immediate_context;
-	CommonStates* states;
-	Camera* camera;
-	Light* light;
+    ID3D11Device* d3d_device = nullptr;
+	ID3D11DeviceContext* d3d_immediate_context = nullptr;
+	CommonStates* states = nullptr;
+	Camera* camera = nullptr;
+	Light* light = nullptr;
 };

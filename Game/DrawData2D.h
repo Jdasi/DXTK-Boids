@@ -10,6 +10,6 @@ using namespace DirectX;
 
 struct DrawData2D
 {
-    std::unique_ptr<SpriteBatch>	sprites;
+    std::unique_ptr<SpriteBatch> sprites;
 	std::unique_ptr<SpriteFont> font;
 };

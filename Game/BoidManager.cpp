@@ -95,7 +95,6 @@ void BoidManager::add_boid_type(const std::string& _str, BoidSettings _settings)
     boid_types_[_str] = _settings;
 
     current_type_selection_ = &boid_types_.begin()->second;
-    boid_types_defaults_.push_back(_settings);
 }
 
 // Removes all boids from the scene that are of the current type selection.
@@ -126,23 +125,11 @@ void BoidManager::delete_all_boids()
     boids_dirty_ = true;
 }
 
-// Delete all boids and revert all settings to their enumerated defaults.
+// Delete all boids and clear all boid types ready for recompile.
 void BoidManager::reset()
 {
     delete_all_boids();
-
-    // Shamelessly overwrite the current boid settings with the defaults.
-    for (auto& elem : boid_types_)
-    {
-        for (auto& settings : boid_types_defaults_)
-        {
-            if (settings.type_id == elem.second.type_id)
-            {
-                elem.second = settings;
-                break;
-            }
-        }
-    }
+    boid_types_.clear();
 }
 
 // The rules that are available to boids.

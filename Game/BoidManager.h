@@ -54,7 +54,6 @@ private:
 
     std::map<std::string, std::unique_ptr<Rule>> rules_;
     std::map<std::string, BoidSettings> boid_types_;
-    std::vector<BoidSettings> boid_types_defaults_; // For the purposes of resetting the sim.
     std::map<std::string, std::function<void(Boid*, Boid*)>> tag_functions_;
 
     std::vector<std::unique_ptr<Boid>> boids_;
