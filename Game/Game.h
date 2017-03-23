@@ -38,7 +38,7 @@ public:
 	bool tick();
 	void draw(ID3D11DeviceContext* _d3d_immediate_context);
 
-    void recompile_json() const;
+    void recompile_json();
 
 protected:
     void enumerate_boid_types() const;

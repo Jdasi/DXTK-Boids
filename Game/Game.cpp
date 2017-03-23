@@ -223,7 +223,7 @@ void Game::draw(ID3D11DeviceContext* _d3d_immediate_context)
 /* Resets the simulation and recompiles the JSON file, allowing for edits to be made 
  * to the flocking behaviours and tested without needing to restart the program.
  */
-void Game::recompile_json() const
+void Game::recompile_json()
 {
     // Delete all boids and boid types ready for recompilation.
     boid_manager_->reset();
@@ -233,6 +233,8 @@ void Game::recompile_json() const
 
     enumerate_boid_types();
     init_tweak_bar(DD_.d3d_device);
+
+    boid_manager_->tick(&GD_);
 }
 
 // Reads in the BoidTypes json file found in the Streaming directory.

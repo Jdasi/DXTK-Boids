@@ -153,6 +153,7 @@ void BoidManager::register_tag_functions()
     tag_functions_["infect"] = [](Boid* lhs, Boid* rhs)
     {
         rhs->model_ = lhs->settings_->model;
+        rhs->set_scale(lhs->get_scale());
         rhs->settings_ = lhs->settings_;
     };
 
