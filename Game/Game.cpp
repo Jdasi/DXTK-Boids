@@ -332,7 +332,7 @@ void Game::tweak_bar_spawn_selection(TwBar* _twbar) const
     auto& boid_types = boid_manager_->get_boid_types();
     TwEnumVal* tw_enum = new TwEnumVal[boid_types.size()];
 
-    for (int i = 0; i < boid_types.size(); ++i)
+    for (unsigned int i = 0; i < boid_types.size(); ++i)
     {
         auto it = std::find_if(boid_types.begin(), boid_types.end(), [i](const auto& _elem)
         {

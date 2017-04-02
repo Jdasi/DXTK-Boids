@@ -10,9 +10,6 @@
     <Filter Include="Enums">
       <UniqueIdentifier>{053d9823-32c2-4f8a-ab1f-005ae29598db}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Example VBGOs">
-      <UniqueIdentifier>{bbfb0d19-cf3f-4626-a128-5378e95b51bc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Managers">
       <UniqueIdentifier>{3052a15d-cd7e-4386-8a8b-ff689611e933}</UniqueIdentifier>
     </Filter>
@@ -35,27 +32,6 @@
     </ClInclude>
     <ClInclude Include="StringUtils.h">
       <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="FileVBGO.h">
-      <Filter>Example VBGOs</Filter>
-    </ClInclude>
-    <ClInclude Include="MarchCubes.h">
-      <Filter>Example VBGOs</Filter>
-    </ClInclude>
-    <ClInclude Include="VBCube.h">
-      <Filter>Example VBGOs</Filter>
-    </ClInclude>
-    <ClInclude Include="VBPillow.h">
-      <Filter>Example VBGOs</Filter>
-    </ClInclude>
-    <ClInclude Include="VBSnail.h">
-      <Filter>Example VBGOs</Filter>
-    </ClInclude>
-    <ClInclude Include="VBSpiked.h">
-      <Filter>Example VBGOs</Filter>
-    </ClInclude>
-    <ClInclude Include="VBspiral.h">
-      <Filter>Example VBGOs</Filter>
     </ClInclude>
     <ClInclude Include="GameState.h">
       <Filter>Enums</Filter>
@@ -162,6 +138,9 @@
     <ClInclude Include="TWCallbackFunctions.h">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="FileVBGO.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Alignment.cpp">
@@ -178,18 +157,6 @@
     </ClCompile>
     <ClCompile Include="BoidManager.cpp">
       <Filter>Boids</Filter>
-    </ClCompile>
-    <ClCompile Include="FileVBGO.cpp">
-      <Filter>Example VBGOs</Filter>
-    </ClCompile>
-    <ClCompile Include="MarchCubes.cpp">
-      <Filter>Example VBGOs</Filter>
-    </ClCompile>
-    <ClCompile Include="VBCube.cpp">
-      <Filter>Example VBGOs</Filter>
-    </ClCompile>
-    <ClCompile Include="VBSnail.cpp">
-      <Filter>Example VBGOs</Filter>
     </ClCompile>
     <ClCompile Include="CMOManager.cpp">
       <Filter>Managers</Filter>
@@ -254,6 +221,9 @@
     </ClCompile>
     <ClCompile Include="ParameterisedRule.cpp">
       <Filter>Boids</Filter>
+    </ClCompile>
+    <ClCompile Include="FileVBGO.cpp">
+      <Filter>Objects</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

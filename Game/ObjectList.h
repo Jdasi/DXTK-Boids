@@ -6,21 +6,13 @@
 #include "TabletopCamera.h"
 #include "CMOGO.h"
 #include "VBGO.h"
+#include "FileVBGO.h"
 #include "Light.h"
 #include "Player.h"
 #include "Terrain.h"
 #include "InputHandler.h"
 #include "CMOManager.h"
 #include "BoidManager.h"
-
-// VBGO examples.
-#include "VBCube.h"
-#include "VBPillow.h"
-#include "VBSpiked.h"
-#include "VBspiral.h"
-#include "VBSnail.h"
-#include "fileVBGO.h"
-#include "MarchCubes.h"
 
 // 2D Examples.
 #include "GameObject2D.h"
